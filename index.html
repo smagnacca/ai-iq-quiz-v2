@@ -159,29 +159,51 @@ a{color:inherit;text-decoration:none}
 .urgency-text span{color:var(--white)}
 
 /* ═══ SECTIONS ═══ */
-.section{display:none;padding:48px 0 60px;animation:fadeUp .4s ease}
+.section{display:none;padding:32px 0 40px;animation:fadeUp .4s ease}
 .section.active{display:block}
 .card{background:var(--white);border:1px solid var(--border);border-radius:4px;border-top:3px solid var(--babson-green);animation:fadeUp .35s ease,borderCycle 10s ease-in-out infinite .4s;overflow:hidden}
 .card-body{padding:44px 48px 36px}
 
 /* ═══ GATE ═══ */
-.gate-icon{width:80px;height:80px;margin:0 auto 24px;background:linear-gradient(135deg,var(--babson-green),var(--peacock));border-radius:50%;display:flex;align-items:center;justify-content:center}
-.gate-icon svg{width:36px;height:36px;fill:none;stroke:var(--gold-light);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.gate-title{font-family:'Merriweather',serif;font-size:1.5rem;color:var(--babson-green);text-align:center;margin-bottom:8px}
-.gate-sub{color:var(--text-soft);text-align:center;font-size:.9rem;margin-bottom:28px;max-width:400px;margin-left:auto;margin-right:auto}
-.gate-benefits{text-align:center;margin-bottom:24px;font-size:.82rem}
+.gate-layout{display:grid;grid-template-columns:1fr 1fr;gap:0;max-width:960px;margin:0 auto;min-height:0}
+.gate-sketch-panel{background:linear-gradient(165deg,var(--babson-green),var(--peacock));padding:40px 32px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:4px 0 0 4px;border-top:3px solid var(--babson-green);position:relative;overflow:hidden}
+.gate-sketch-panel::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 30%,rgba(238,175,0,.1),transparent 60%);pointer-events:none}
+.gate-sketch-title{font-family:'Merriweather',serif;font-size:1.1rem;color:var(--white);text-align:center;margin-bottom:8px;position:relative;z-index:1}
+.gate-sketch-sub{font-size:.82rem;color:rgba(255,255,255,.7);text-align:center;margin-bottom:20px;position:relative;z-index:1;line-height:1.5}
+.gate-sketches{display:flex;gap:20px;position:relative;z-index:1;margin-bottom:16px}
+.gate-sketch-box{flex:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:12px 8px;text-align:center}
+.gate-sketch-box svg{width:100%;height:auto;max-height:160px}
+.gate-sketch-label{font-size:.68rem;font-weight:600;color:var(--bright-gold);text-transform:uppercase;letter-spacing:.1em;margin-top:8px}
+.gate-sketch-stat{font-family:'Merriweather',serif;font-size:2rem;font-weight:700;color:var(--bright-gold);margin:4px 0 2px}
+.gate-sketch-stat-label{font-size:.72rem;color:rgba(255,255,255,.65)}
+@keyframes sketchDraw{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
+@keyframes confettiPop{0%{opacity:0;transform:scale(0)}40%{opacity:1;transform:scale(1.2)}100%{opacity:1;transform:scale(1)}}
+.sketch-line{stroke-dasharray:1000;animation:sketchDraw 2.5s ease forwards}
+.sketch-confetti{opacity:0;animation:confettiPop .5s ease forwards}
+.gate-form-panel{border-radius:0 4px 4px 0}
+.gate-icon{width:60px;height:60px;margin:0 auto 16px;background:linear-gradient(135deg,var(--babson-green),var(--peacock));border-radius:50%;display:flex;align-items:center;justify-content:center}
+.gate-icon svg{width:28px;height:28px;fill:none;stroke:var(--gold-light);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.gate-title{font-family:'Merriweather',serif;font-size:1.3rem;color:var(--babson-green);text-align:center;margin-bottom:6px}
+.gate-sub{color:var(--text-soft);text-align:center;font-size:.85rem;margin-bottom:18px;max-width:400px;margin-left:auto;margin-right:auto}
+.gate-benefits{text-align:center;margin-bottom:16px;font-size:.82rem}
 .gate-benefits-list{display:inline-block;text-align:left}
-.gate-benefits-item{padding:6px 0;color:var(--text-soft);display:flex;gap:8px;align-items:flex-start}
+.gate-benefits-item{padding:4px 0;color:var(--text-soft);display:flex;gap:8px;align-items:flex-start}
 .gate-benefits-item:before{content:'✓';color:var(--success);font-weight:700;flex-shrink:0}
-.gate-trust{display:flex;justify-content:center;gap:20px;margin-bottom:24px;flex-wrap:wrap}
-.gate-trust-item{display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(--text-soft)}
-.gate-trust-item svg{width:14px;height:14px;stroke:var(--success);fill:none;stroke-width:2}
+.gate-trust{display:flex;justify-content:center;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.gate-trust-item{display:flex;align-items:center;gap:5px;font-size:.68rem;color:var(--text-soft)}
+.gate-trust-item svg{width:13px;height:13px;stroke:var(--success);fill:none;stroke-width:2}
+@media(max-width:768px){
+  .gate-layout{grid-template-columns:1fr}
+  .gate-sketch-panel{border-radius:4px 4px 0 0;padding:32px 24px}
+  .gate-form-panel{border-radius:0 0 4px 4px}
+  .gate-sketches{flex-direction:row}
+}
 .field{margin-bottom:16px}
 .field label{display:block;font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-soft);margin-bottom:5px}
 .field input,.field select{width:100%;border:1.5px solid var(--border);border-radius:3px;padding:12px 14px;font-size:.9rem;font-family:'Inter',sans-serif;background:var(--cream);transition:border-color .18s,background .18s,box-shadow .18s}
 .field input:focus,.field select:focus{outline:none;border-color:var(--babson-green);background:var(--white);box-shadow:0 0 0 3px rgba(0,102,68,.1)}
 .field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' fill='none' stroke='%236B6560' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;cursor:pointer}
-.btn-start{display:block;width:100%;background:var(--mango);color:var(--babson-green);border:none;padding:15px;font-size:1rem;font-weight:700;cursor:pointer;border-radius:3px;transition:all .2s;margin-top:6px;box-shadow:0 2px 8px rgba(238,175,0,.2)}
+.btn-start{display:block;width:100%;background:var(--mango);color:var(--white);border:none;padding:15px;font-size:1rem;font-weight:700;cursor:pointer;border-radius:3px;transition:all .2s;margin-top:6px;box-shadow:0 2px 8px rgba(238,175,0,.2);animation:ctaFlash 3s ease-in-out infinite}
 .btn-start:hover{background:var(--bright-gold);box-shadow:0 4px 12px rgba(238,175,0,.3);transform:translateY(-1px)}
 .btn-start:disabled{background:#C8C4BC;cursor:default;box-shadow:none}
 .gate-privacy{text-align:center;font-size:.7rem;color:var(--text-soft);margin-top:12px}
@@ -526,26 +548,125 @@ a{color:inherit;text-decoration:none}
 
 <!-- ═══════════ GATE ═══════════ -->
 <section class="section" id="gateSection">
-  <div class="container">
-    <div class="card" style="max-width:520px;margin:0 auto">
-      <div class="card-body" style="text-align:center">
-        <div class="gate-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
-        <h2 class="gate-title">Ready to Discover Your Score?</h2>
-        <p class="gate-sub">Enter your details to start your personalized AI Skills IQ assessment.</p>
-        <div class="gate-benefits">
-          <ul class="gate-benefits-list">
-            <li class="gate-benefits-item">See where you rank among 12,000+ professionals</li>
-            <li class="gate-benefits-item">Get personalized AI skill insights</li>
-            <li class="gate-benefits-item">Free — takes just 3 minutes</li>
-          </ul>
+  <div style="padding:0 20px">
+    <div class="gate-layout">
+      <!-- LEFT: Sketch Illustrations -->
+      <div class="gate-sketch-panel">
+        <h3 class="gate-sketch-title">Your AI Skills Journey Starts Here</h3>
+        <p class="gate-sketch-sub">Join 12,000+ professionals who've discovered their AI readiness score</p>
+        <div class="gate-sketches">
+          <!-- Sketch 1: Stressed professional taking test -->
+          <div class="gate-sketch-box">
+            <svg viewBox="0 0 180 200" xmlns="http://www.w3.org/2000/svg">
+              <!-- Desk -->
+              <path class="sketch-line" d="M20,155 Q25,153 90,155 Q155,157 160,155" stroke="rgba(255,255,255,.5)" fill="none" stroke-width="1.8" stroke-linecap="round" style="animation-delay:.2s"/>
+              <!-- Paper on desk -->
+              <rect x="55" y="128" width="42" height="28" rx="2" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="1.2" class="sketch-line" style="animation-delay:.4s"/>
+              <line x1="62" y1="136" x2="88" y2="136" stroke="rgba(255,255,255,.35)" stroke-width="1" class="sketch-line" style="animation-delay:.6s"/>
+              <line x1="62" y1="141" x2="85" y2="141" stroke="rgba(255,255,255,.35)" stroke-width="1" class="sketch-line" style="animation-delay:.7s"/>
+              <line x1="62" y1="146" x2="80" y2="146" stroke="rgba(255,255,255,.35)" stroke-width="1" class="sketch-line" style="animation-delay:.8s"/>
+              <!-- Pencil -->
+              <line x1="100" y1="138" x2="108" y2="125" stroke="var(--bright-gold)" stroke-width="2" stroke-linecap="round" class="sketch-line" style="animation-delay:.9s"/>
+              <!-- Person body -->
+              <path class="sketch-line" d="M76,125 Q76,100 76,95" stroke="rgba(255,255,255,.7)" fill="none" stroke-width="2" stroke-linecap="round" style="animation-delay:.3s"/>
+              <!-- Shoulders/arms -->
+              <path class="sketch-line" d="M55,110 Q66,102 76,100 Q86,102 97,110" stroke="rgba(255,255,255,.6)" fill="none" stroke-width="1.8" stroke-linecap="round" style="animation-delay:.5s"/>
+              <!-- Arm to head (stressed pose) -->
+              <path class="sketch-line" d="M60,108 Q58,95 65,82" stroke="rgba(255,255,255,.6)" fill="none" stroke-width="1.5" stroke-linecap="round" style="animation-delay:.6s"/>
+              <!-- Head -->
+              <circle cx="76" cy="72" r="18" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.8" class="sketch-line" style="animation-delay:.1s"/>
+              <!-- Hair -->
+              <path class="sketch-line" d="M58,68 Q62,52 76,50 Q90,52 94,68" stroke="rgba(255,255,255,.5)" fill="none" stroke-width="1.5" stroke-linecap="round" style="animation-delay:.2s"/>
+              <!-- Worried expression -->
+              <path d="M69,70 Q72,67 75,70" stroke="rgba(255,255,255,.5)" fill="none" stroke-width="1" stroke-linecap="round"/>
+              <path d="M79,70 Q82,67 85,70" stroke="rgba(255,255,255,.5)" fill="none" stroke-width="1" stroke-linecap="round"/>
+              <path d="M72,80 Q76,78 80,80" stroke="rgba(255,255,255,.45)" fill="none" stroke-width="1" stroke-linecap="round"/>
+              <!-- Question marks floating -->
+              <text x="115" y="60" fill="var(--bright-gold)" font-size="16" font-weight="700" opacity=".7" class="sketch-confetti" style="animation-delay:1.5s">?</text>
+              <text x="40" y="50" fill="var(--bright-gold)" font-size="12" font-weight="700" opacity=".5" class="sketch-confetti" style="animation-delay:1.8s">?</text>
+              <text x="125" y="40" fill="var(--bright-gold)" font-size="14" font-weight="700" opacity=".6" class="sketch-confetti" style="animation-delay:2.1s">?</text>
+              <!-- Coffee cup -->
+              <path class="sketch-line" d="M125,140 L125,155 Q125,158 128,158 L140,158 Q143,158 143,155 L143,140 Z" stroke="rgba(255,255,255,.4)" fill="none" stroke-width="1.2" style="animation-delay:1s"/>
+              <path d="M143,145 Q150,145 150,150 Q150,155 143,155" stroke="rgba(255,255,255,.3)" fill="none" stroke-width="1" stroke-linecap="round"/>
+              <!-- Steam -->
+              <path d="M130,138 Q128,132 132,128" stroke="rgba(255,255,255,.25)" fill="none" stroke-width="1" stroke-linecap="round"/>
+              <path d="M136,136 Q134,130 138,126" stroke="rgba(255,255,255,.2)" fill="none" stroke-width="1" stroke-linecap="round"/>
+            </svg>
+            <div class="gate-sketch-label">Before</div>
+          </div>
+          <!-- Sketch 2: Celebrating success -->
+          <div class="gate-sketch-box">
+            <svg viewBox="0 0 180 200" xmlns="http://www.w3.org/2000/svg">
+              <!-- Person body -->
+              <path class="sketch-line" d="M90,125 Q90,100 90,95" stroke="rgba(255,255,255,.7)" fill="none" stroke-width="2" stroke-linecap="round" style="animation-delay:.3s"/>
+              <!-- Shoulders -->
+              <path class="sketch-line" d="M65,105 Q78,97 90,95 Q102,97 115,105" stroke="rgba(255,255,255,.6)" fill="none" stroke-width="1.8" stroke-linecap="round" style="animation-delay:.5s"/>
+              <!-- Arms raised in victory -->
+              <path class="sketch-line" d="M68,105 Q55,85 48,55" stroke="rgba(255,255,255,.6)" fill="none" stroke-width="2" stroke-linecap="round" style="animation-delay:.7s"/>
+              <path class="sketch-line" d="M112,105 Q125,85 132,55" stroke="rgba(255,255,255,.6)" fill="none" stroke-width="2" stroke-linecap="round" style="animation-delay:.7s"/>
+              <!-- Fists -->
+              <circle cx="46" cy="52" r="5" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="1.5" class="sketch-confetti" style="animation-delay:1.2s"/>
+              <circle cx="134" cy="52" r="5" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="1.5" class="sketch-confetti" style="animation-delay:1.2s"/>
+              <!-- Head -->
+              <circle cx="90" cy="72" r="18" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.8" class="sketch-line" style="animation-delay:.1s"/>
+              <!-- Hair -->
+              <path class="sketch-line" d="M72,68 Q76,52 90,50 Q104,52 108,68" stroke="rgba(255,255,255,.5)" fill="none" stroke-width="1.5" stroke-linecap="round" style="animation-delay:.2s"/>
+              <!-- Happy face - big smile -->
+              <circle cx="82" cy="70" r="2" fill="rgba(255,255,255,.6)"/>
+              <circle cx="98" cy="70" r="2" fill="rgba(255,255,255,.6)"/>
+              <path d="M80,78 Q90,88 100,78" stroke="rgba(255,255,255,.6)" fill="none" stroke-width="1.5" stroke-linecap="round"/>
+              <!-- Score card held up -->
+              <rect x="58" y="128" width="64" height="40" rx="3" fill="rgba(255,255,255,.1)" stroke="var(--bright-gold)" stroke-width="1.5" class="sketch-confetti" style="animation-delay:1s"/>
+              <text x="90" y="145" text-anchor="middle" fill="var(--bright-gold)" font-size="11" font-weight="700" font-family="Merriweather,serif" class="sketch-confetti" style="animation-delay:1.3s">AI SKILLS IQ</text>
+              <text x="90" y="162" text-anchor="middle" fill="var(--white)" font-size="16" font-weight="700" font-family="Merriweather,serif" class="sketch-confetti" style="animation-delay:1.5s">92%</text>
+              <!-- Confetti / stars -->
+              <text x="30" y="40" fill="var(--bright-gold)" font-size="14" class="sketch-confetti" style="animation-delay:1.6s">✨</text>
+              <text x="145" y="35" fill="var(--bright-gold)" font-size="16" class="sketch-confetti" style="animation-delay:1.8s">⭐</text>
+              <text x="25" y="90" fill="var(--mango)" font-size="12" class="sketch-confetti" style="animation-delay:2s">🎉</text>
+              <text x="150" y="85" fill="var(--bright-gold)" font-size="13" class="sketch-confetti" style="animation-delay:2.2s">✨</text>
+              <text x="60" y="30" fill="var(--bright-gold)" font-size="10" class="sketch-confetti" style="animation-delay:2.4s">💰</text>
+              <text x="120" y="25" fill="var(--bright-gold)" font-size="11" class="sketch-confetti" style="animation-delay:2.6s">📈</text>
+              <!-- Upward arrow (promotion/growth) -->
+              <path class="sketch-line" d="M155,180 L155,100" stroke="var(--bright-gold)" stroke-width="2" stroke-linecap="round" style="animation-delay:1.4s"/>
+              <path class="sketch-line" d="M148,110 L155,100 L162,110" stroke="var(--bright-gold)" stroke-width="2" stroke-linecap="round" fill="none" style="animation-delay:1.6s"/>
+              <!-- $ signs -->
+              <text x="15" y="150" fill="rgba(255,255,255,.35)" font-size="18" font-weight="700" class="sketch-confetti" style="animation-delay:2s">$</text>
+              <text x="155" y="155" fill="rgba(255,255,255,.3)" font-size="14" font-weight="700" class="sketch-confetti" style="animation-delay:2.3s">$</text>
+            </svg>
+            <div class="gate-sketch-label">After</div>
+          </div>
         </div>
-        <div class="gate-trust">
-          <div class="gate-trust-item"><svg viewBox="0 0 24 24" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Secure</div>
-          <div class="gate-trust-item"><svg viewBox="0 0 24 24" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> No spam</div>
-          <div class="gate-trust-item"><svg viewBox="0 0 24 24" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l2 2"/></svg> 3 minutes</div>
+        <div style="display:flex;gap:28px;justify-content:center;position:relative;z-index:1">
+          <div style="text-align:center">
+            <div class="gate-sketch-stat">56%</div>
+            <div class="gate-sketch-stat-label">Wage premium<br/>for AI-skilled pros</div>
+          </div>
+          <div style="text-align:center">
+            <div class="gate-sketch-stat">77%</div>
+            <div class="gate-sketch-stat-label">Employers expect<br/>AI-ready hires</div>
+          </div>
         </div>
       </div>
-      <div style="padding:0 48px 36px" id="gateForm">
+      <!-- RIGHT: Form -->
+      <div class="card gate-form-panel" style="border-radius:0 4px 4px 0">
+        <div class="card-body" style="text-align:center;padding:32px 36px 20px">
+          <div class="gate-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+          <h2 class="gate-title">Ready to Discover Your Score?</h2>
+          <p class="gate-sub">Enter your details to start your personalized AI Skills IQ assessment.</p>
+          <div class="gate-benefits">
+            <ul class="gate-benefits-list">
+              <li class="gate-benefits-item">See where you rank among 12,000+ professionals</li>
+              <li class="gate-benefits-item">Get personalized AI skill insights</li>
+              <li class="gate-benefits-item">Free — takes just 3 minutes</li>
+            </ul>
+          </div>
+          <div class="gate-trust">
+            <div class="gate-trust-item"><svg viewBox="0 0 24 24" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Secure</div>
+            <div class="gate-trust-item"><svg viewBox="0 0 24 24" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> No spam</div>
+            <div class="gate-trust-item"><svg viewBox="0 0 24 24" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l2 2"/></svg> 3 min</div>
+          </div>
+        </div>
+        <div style="padding:0 36px 28px" id="gateForm">
         <div class="field"><label for="firstName">First Name</label><input type="text" id="firstName" placeholder="e.g. Sarah" required autocomplete="given-name"/></div>
         <div class="field"><label for="email">Email Address</label><input type="email" id="email" placeholder="you@company.com" required autocomplete="email"/></div>
         <div class="field"><label for="industry">Industry</label>
@@ -571,6 +692,7 @@ a{color:inherit;text-decoration:none}
         <p class="gate-spots"><span id="gateSpots">47</span> personalized reports remaining today</p>
       </div>
     </div>
+    </div><!-- /gate-layout -->
   </div>
 </section>
 

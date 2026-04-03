@@ -993,6 +993,12 @@ function closeExitModal(){
 
 function submitQuizData(results){
   const payload={timestamp:new Date().toISOString(),firstName:userData.firstName,email:userData.email,industry:userData.industry||'',score:results.pct,totalCorrect:results.totalCorrect,totalQuestions:results.totalQuestions,categories:results.cats,answers:answers.map((a,i)=>({question:i+1,category:QUESTIONS[i].category,selected:a?.selected??-1,correct:a?.correct,isCorrect:a?.isCorrect??false,timedOut:a?.timedOut??false,timeTaken:a?.timeTaken??0})),completionTime:Math.round((Date.now()-quizStartTime)/1000)};
+  // Fire-and-forget POST to Netlify Function → Google Sheets (non-blocking)
+  fetch('/.netlify/functions/submit-lead',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(payload)
+  }).then(r=>{if(r.ok)console.log('Lead captured to Google Sheets');else console.warn('Lead capture response:',r.status)})
+    .catch(err=>console.warn('Lead capture failed (non-blocking):',err));
   console.log('Quiz submission:',JSON.stringify(payload,null,2));
 }
 

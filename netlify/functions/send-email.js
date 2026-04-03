@@ -3,7 +3,8 @@
 // Env vars needed: GMAIL_USER (salesforlife2@gmail.com), GMAIL_APP_PASSWORD
 // Uses nodemailer — add to package.json
 
-const nodemailer = require('nodemailer');
+// Uses Resend API (free tier: 100 emails/day)
+// Env vars needed: RESEND_API_KEY
 
 // ──── EMAIL TEMPLATES ────
 
@@ -217,16 +218,27 @@ function followUp3Email(data) {
   };
 }
 
-// ──── TRANSPORT ────
+// ──── RESEND SEND FUNCTION ────
 
-function createTransport() {
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.GMAIL_USER || 'salesforlife2@gmail.com',
-      pass: process.env.GMAIL_APP_PASSWORD,
+async function sendViaResend(to, subject, html) {
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
     },
+    body: JSON.stringify({
+      from: 'Practical AI Skills IQ <onboarding@resend.dev>',
+      to: [to],
+      subject,
+      html,
+    }),
   });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error('Resend failed: ' + err);
+  }
+  return res.json();
 }
 
 // ──── MAIN HANDLER ────
@@ -244,12 +256,9 @@ exports.handler = async (event) => {
   try {
     const body = JSON.parse(event.body || '{}');
     const { type, email, data } = body;
-    // type: 'confirmation' | 'followup1' | 'followup2'
 
     if (!email) return { statusCode: 400, headers, body: JSON.stringify({ error: 'Email required' }) };
-    if (!process.env.GMAIL_APP_PASSWORD) return { statusCode: 500, headers, body: JSON.stringify({ error: 'Gmail not configured' }) };
-
-    const transport = createTransport();
+    if (!process.env.RESEND_API_KEY) return { statusCode: 500, headers, body: JSON.stringify({ error: 'Resend not configured' }) };
 
     let template;
     switch (type) {
@@ -269,12 +278,7 @@ exports.handler = async (event) => {
         return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid email type' }) };
     }
 
-    await transport.sendMail({
-      from: `"Practical AI Skills IQ" <${process.env.GMAIL_USER || 'salesforlife2@gmail.com'}>`,
-      to: email,
-      subject: template.subject,
-      html: template.html,
-    });
+    await sendViaResend(email, template.subject, template.html);
 
     return { statusCode: 200, headers, body: JSON.stringify({ success: true, type }) };
   } catch (err) {

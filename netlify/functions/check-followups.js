@@ -6,7 +6,7 @@
 // Env vars: GOOGLE_SERVICE_ACCOUNT_JSON, GMAIL_USER, GMAIL_APP_PASSWORD
 
 const { createSign } = require('crypto');
-const nodemailer = require('nodemailer');
+// Uses Resend API instead of nodemailer
 
 const SHEET_ID = '1RHtpqWJMbQPhTTBzF2HU5hzg9SISutY_m40UU_vCleE';
 const SHEET_TAB = 'AI_IQ_Quiz_Leads';
@@ -50,17 +50,26 @@ async function updateCell(token, cell, value) {
   });
 }
 
-// ──── Email sender ────
-function createTransport() {
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: { user: process.env.GMAIL_USER || 'salesforlife2@gmail.com', pass: process.env.GMAIL_APP_PASSWORD },
+// ──── Resend email sender ────
+async function sendViaResend(to, subject, html) {
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: 'Practical AI Skills IQ <onboarding@resend.dev>',
+      to: [to],
+      subject,
+      html,
+    }),
   });
+  if (!res.ok) throw new Error('Resend failed: ' + await res.text());
+  return res.json();
 }
 
-async function sendFollowUp(transport, email, type, data) {
-  // Dynamically require the email templates from send-email module
-  // For simplicity, inline the key email content here
+async function sendFollowUp(email, type, data) {
   const { firstName, score, industry, cats } = data;
   const siteUrl = process.env.URL || 'https://practical-ai-skills-iq.netlify.app';
   const checkoutUrl = `${siteUrl}/?retarget=1&name=${encodeURIComponent(firstName)}&email=${encodeURIComponent(email)}`;
@@ -143,16 +152,13 @@ async function sendFollowUp(transport, email, type, data) {
     </div>`;
   }
 
-  await transport.sendMail({
-    from: `"Practical AI Skills IQ" <${process.env.GMAIL_USER || 'salesforlife2@gmail.com'}>`,
-    to: email, subject, html,
-  });
+  await sendViaResend(email, subject, html);
 }
 
 // ──── MAIN HANDLER (Scheduled) ────
 exports.handler = async () => {
   try {
-    if (!process.env.GOOGLE_SERVICE_ACCOUNT_JSON || !process.env.GMAIL_APP_PASSWORD) {
+    if (!process.env.GOOGLE_SERVICE_ACCOUNT_JSON || !process.env.RESEND_API_KEY) {
       console.log('Missing env vars — skipping follow-up check');
       return { statusCode: 200, body: 'Skipped: missing config' };
     }
@@ -160,7 +166,6 @@ exports.handler = async () => {
     const sa = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
     const token = await getAccessToken(sa);
     const rows = await getSheetData(token);
-    const transport = createTransport();
     const now = Date.now();
     let sent = 0;
 
@@ -204,7 +209,7 @@ exports.handler = async () => {
       // Follow-up 1: Send after 2 hours (price teaser)
       if (hoursSince >= 2 && !fu1Sent) {
         try {
-          await sendFollowUp(transport, email, 'followup1', data);
+          await sendFollowUp(email, 'followup1', data);
           await updateCell(token, `V${rowNum}`, 'TRUE');
           sent++;
           console.log(`Follow-up 1 sent to ${email}`);
@@ -214,7 +219,7 @@ exports.handler = async () => {
       // Follow-up 2: Send after 4 hours (urgency/scarcity)
       if (hoursSince >= 4 && !fu2Sent) {
         try {
-          await sendFollowUp(transport, email, 'followup2', data);
+          await sendFollowUp(email, 'followup2', data);
           await updateCell(token, `W${rowNum}`, 'TRUE');
           sent++;
           console.log(`Follow-up 2 sent to ${email}`);
@@ -224,7 +229,7 @@ exports.handler = async () => {
       // Follow-up 3: Send after 6 hours (insight-focused, myIQ style)
       if (hoursSince >= 6 && !fu3Sent) {
         try {
-          await sendFollowUp(transport, email, 'followup3', data);
+          await sendFollowUp(email, 'followup3', data);
           await updateCell(token, `X${rowNum}`, 'TRUE');
           sent++;
           console.log(`Follow-up 3 sent to ${email}`);

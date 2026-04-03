@@ -4,7 +4,6 @@
   "private": true,
   "description": "Practical AI Skills IQ Quiz with Stripe payments, personalized reports, and email automation",
   "dependencies": {
-    "nodemailer": "^6.9.0",
     "stripe": "^14.0.0"
   }
 }

@@ -56,44 +56,66 @@ function confirmationEmail(data) {
 }
 
 function followUp1Email(data) {
-  const { firstName, score, industry } = data;
-  const scoreLabel = score >= 80 ? 'impressive' : score >= 60 ? 'solid' : score >= 40 ? 'revealing' : 'eye-opening';
+  const { firstName, score, industry, cats } = data;
+
+  // Find strongest category for personalized subject + header
+  let topCat = '', topPct = 0;
+  if (cats && typeof cats === 'object') {
+    Object.entries(cats).forEach(([cat, d]) => {
+      const pct = Math.round(d.correct / d.total * 100);
+      if (pct > topPct) { topPct = pct; topCat = cat; }
+    });
+  }
+  const hasTopCat = topCat && topPct >= 50;
+  const subject = hasTopCat
+    ? `${firstName}, you scored ${topPct}% in ${topCat} — but one skill area may be holding you back`
+    : `${firstName}, your AI score of ${score}% — here's what it means`;
+  const headerTitle = hasTopCat
+    ? `You Excelled in ${topCat}`
+    : `Your AI Skills Assessment`;
+  const headerSub = hasTopCat
+    ? 'But your full AI Skills profile tells a bigger story'
+    : `Personalized results for ${firstName}`;
 
   return {
-    subject: `${firstName}, your AI score of ${score}% — here's what it means`,
+    subject,
     html: `
 <!DOCTYPE html>
 <html><head><meta charset="UTF-8"/></head>
 <body style="font-family:Arial,sans-serif;background:#F7FAFC;margin:0;padding:0">
 <div style="max-width:600px;margin:0 auto;background:#FFFFFF">
   <div style="background:#006644;padding:28px 24px;text-align:center">
-    <h1 style="color:#FFFFFF;font-size:20px;margin:0">Your AI Skills Assessment</h1>
+    <h1 style="color:#FFFFFF;font-size:20px;margin:0;font-family:Arial,sans-serif">${headerTitle}</h1>
+    <p style="color:rgba(255,255,255,.6);font-size:13px;margin:8px 0 0;font-family:Arial,sans-serif">${headerSub}</p>
   </div>
   <div style="padding:32px 24px">
-    <p style="font-size:16px;color:#2D3748;margin-bottom:16px">Dear ${firstName},</p>
-    <p style="font-size:14px;color:#4A5568;line-height:1.6;margin-bottom:16px">
-      Earlier today you took the Practical AI Skills IQ Quiz and scored <strong>${score}%</strong> — a ${scoreLabel} result.
+    <p style="font-size:16px;color:#2D3748;margin-bottom:16px;font-family:Arial,sans-serif">Dear ${firstName},</p>
+    <p style="font-size:14px;color:#4A5568;line-height:1.6;margin-bottom:16px;font-family:Arial,sans-serif">
+      ${hasTopCat
+        ? `You scored <span style="color:#27AE60;font-weight:800;font-size:16px">${topPct}% in ${topCat}</span> on the Practical AI Skills IQ Quiz — that's exceptional. But your overall score of <strong style="color:#006644;font-size:16px">${score}%</strong> tells a more nuanced story.`
+        : `You took the Practical AI Skills IQ Quiz and scored <strong style="color:#006644;font-size:16px">${score}%</strong> — but that number is just the surface.`
+      }
     </p>
-    <p style="font-size:14px;color:#4A5568;line-height:1.6;margin-bottom:16px">
-      But your score is just the starting point. Your <strong>personalized AI Skills Report</strong> reveals:
+    <p style="font-size:14px;color:#4A5568;line-height:1.6;margin-bottom:16px;font-family:Arial,sans-serif">
+      Your score is just the starting point. Your <strong style="color:#005172;font-size:15px">Personalized AI Skills Report</strong> reveals:
     </p>
-    <ul style="font-size:14px;color:#4A5568;line-height:1.8;padding-left:20px;margin-bottom:20px">
-      <li>Exactly which of your 6 skill categories are strengths vs. critical gaps</li>
-      <li>How you compare to other ${industry || 'professional'}s in your industry</li>
-      <li>A week-by-week action plan tailored to your specific results</li>
-      <li>The categories with the highest career ROI for you personally</li>
+    <ul style="font-size:14px;color:#4A5568;line-height:2;padding-left:20px;margin-bottom:20px;font-family:Arial,sans-serif">
+      <li>Exactly which of your 6 skill categories are <strong style="color:#27AE60">strengths</strong> vs. <strong style="color:#C0392B">critical gaps</strong></li>
+      <li><strong style="color:#005172">How you compare</strong> to other ${industry || 'professional'}s in your industry</li>
+      <li>A <strong style="color:#006644">week-by-week action plan</strong> tailored to your specific results</li>
+      <li>The categories with the <strong style="color:#C9A84C">highest career ROI</strong> for you personally</li>
     </ul>
-    <div style="background:linear-gradient(135deg,#006644,#005172);border-radius:12px;padding:24px;text-align:center;margin-bottom:20px">
-      <p style="color:rgba(255,255,255,.8);font-size:13px;margin:0 0 4px;text-decoration:line-through">$9.99</p>
-      <p style="color:#FFFFFF;font-size:24px;font-weight:bold;margin:0 0 8px">Just $1.00</p>
-      <p style="color:rgba(255,255,255,.6);font-size:12px;margin:0 0 16px">90% off — limited time offer</p>
-      <a href="${data.checkoutUrl}" style="display:inline-block;background:#EEAF00;color:#1B4332;font-weight:bold;font-size:15px;padding:14px 36px;border-radius:8px;text-decoration:none">Get My Full Report — $1 →</a>
+    <div style="background:#006644;border-radius:12px;padding:24px;text-align:center;margin-bottom:20px">
+      <p style="color:rgba(255,255,255,.8);font-size:14px;margin:0 0 6px;text-decoration:line-through;font-family:Arial,sans-serif">$9.99</p>
+      <p style="color:#EEAF00;font-size:28px;font-weight:900;margin:0 0 4px;font-family:Georgia,serif">Just $1.00</p>
+      <p style="color:rgba(255,255,255,.5);font-size:12px;margin:0 0 16px;font-family:Arial,sans-serif">90% off — limited time offer</p>
+      <a href="${data.checkoutUrl}" style="display:inline-block;background:#EEAF00;color:#1B4332;font-weight:bold;font-size:15px;padding:14px 36px;border-radius:8px;text-decoration:none;border:2px solid #C9A84C;font-family:Arial,sans-serif">Get My Full Report — $1 →</a>
     </div>
-    <p style="font-size:12px;color:#A0AEC0;text-align:center">
-      PwC reports a 56% wage premium for AI-skilled professionals. Your report shows exactly where to invest.
+    <p style="font-size:12px;color:#A0AEC0;text-align:center;font-family:Arial,sans-serif">
+      PwC reports a <strong style="color:#718096">56% wage premium</strong> for AI-skilled professionals. Your report shows exactly where to invest.
     </p>
   </div>
-  <div style="background:#F7FAFC;padding:16px 24px;text-align:center;font-size:11px;color:#A0AEC0">
+  <div style="background:#F7FAFC;padding:16px 24px;text-align:center;font-size:11px;color:#A0AEC0;font-family:Arial,sans-serif">
     © 2026 Practical AI Skills IQ. All rights reserved.
   </div>
 </div>
@@ -102,40 +124,63 @@ function followUp1Email(data) {
 }
 
 function followUp2Email(data) {
-  const { firstName, score } = data;
+  const { firstName, score, cats } = data;
+
+  // Find best and worst categories for personalized gap-contrast hook
+  let topCat = '', topPct = 0, lowCat = '', lowPct = 100;
+  if (cats && typeof cats === 'object') {
+    Object.entries(cats).forEach(([cat, d]) => {
+      const pct = Math.round(d.correct / d.total * 100);
+      if (pct > topPct) { topPct = pct; topCat = cat; }
+      if (pct < lowPct) { lowPct = pct; lowCat = cat; }
+    });
+  }
+  const hasGapData = topCat && lowCat && topPct > lowPct;
+  const gapSize = topPct - lowPct;
+
+  const subject = hasGapData
+    ? `${firstName}, your ${lowCat.split(' ').slice(0,3).join(' ')} score is ${gapSize} points behind your strongest skill`
+    : `Last chance, ${firstName} — $1 report offer expires tonight`;
 
   return {
-    subject: `Last chance, ${firstName} — $1 report offer expires tonight`,
+    subject,
     html: `
 <!DOCTYPE html>
 <html><head><meta charset="UTF-8"/></head>
 <body style="font-family:Arial,sans-serif;background:#F7FAFC;margin:0;padding:0">
 <div style="max-width:600px;margin:0 auto;background:#FFFFFF">
   <div style="background:#005172;padding:28px 24px;text-align:center">
-    <h1 style="color:#FFFFFF;font-size:20px;margin:0">⏰ Your $1 Offer Expires Soon</h1>
+    <h1 style="color:#FFFFFF;font-size:20px;margin:0;font-family:Arial,sans-serif">⏰ One Skill Gap Is Costing You</h1>
+    <p style="color:rgba(255,255,255,.6);font-size:13px;margin:8px 0 0;font-family:Arial,sans-serif">And the $1 offer to see exactly which one expires soon</p>
   </div>
   <div style="padding:32px 24px">
-    <p style="font-size:16px;color:#2D3748;margin-bottom:16px">Dear ${firstName},</p>
-    <p style="font-size:14px;color:#4A5568;line-height:1.6;margin-bottom:16px">
-      I wanted to make sure you saw this before the offer expires.
+    <p style="font-size:16px;color:#2D3748;margin-bottom:16px;font-family:Arial,sans-serif">Dear ${firstName},</p>
+    <p style="font-size:14px;color:#4A5568;line-height:1.6;margin-bottom:16px;font-family:Arial,sans-serif">
+      ${hasGapData
+        ? `Something stood out in your quiz results: you scored <span style="color:#27AE60;font-weight:800">${topPct}%</span> in ${topCat}, but <span style="color:#C0392B;font-weight:800">${lowPct}%</span> in ${lowCat}. That <strong style="color:#C0392B">${gapSize}-point gap</strong> between your best and worst skill could be quietly undermining your strongest areas.`
+        : `You scored <strong style="color:#006644">${score}%</strong> on the AI Skills IQ Quiz — which means there are specific, identifiable gaps holding you back from the top tier.`
+      }
     </p>
-    <p style="font-size:14px;color:#4A5568;line-height:1.6;margin-bottom:16px">
-      You scored <strong>${score}%</strong> on the AI Skills IQ Quiz — which means there are specific, identifiable gaps holding you back from the top tier.
+    <p style="font-size:14px;color:#4A5568;line-height:1.6;margin-bottom:16px;font-family:Arial,sans-serif">
+      Your full report shows exactly <strong style="color:#006644">where this gap is costing you</strong> and the <strong style="color:#005172">specific steps to close it</strong> — before it holds you back further.
     </p>
-    <p style="font-size:14px;color:#4A5568;line-height:1.6;margin-bottom:16px">
-      <strong>Here's what 2,847 professionals who got their report told us:</strong>
+    <p style="font-size:14px;color:#4A5568;line-height:1.6;margin-bottom:16px;font-family:Arial,sans-serif">
+      <strong>Here's what <span style="color:#006644">2,847 professionals</span> who got their report told us:</strong>
     </p>
-    <div style="background:#FAFAF7;border-left:4px solid #006644;padding:16px;margin-bottom:20px;font-size:13px;color:#4A5568;line-height:1.6;font-style:italic">
-      "I thought I was good with AI until I saw my category breakdown. The report showed me I was spending time on the wrong skills. Two weeks later, I'd automated 6 hours of weekly work I didn't even realize was automatable."
+    <div style="background:#FAFAF7;border-left:4px solid #006644;padding:16px;margin-bottom:20px;font-size:13px;color:#4A5568;line-height:1.6;font-style:italic;font-family:Arial,sans-serif;border-radius:0 8px 8px 0">
+      "I thought I was good with AI until I saw my <strong style="font-style:normal;color:#006644">category breakdown</strong>. The report showed me I was spending time on the <strong style="font-style:normal;color:#C0392B">wrong skills</strong>. Two weeks later, I'd <strong style="font-style:normal;color:#006644">automated 6 hours of weekly work</strong> I didn't even realize was automatable."
       <br/><strong style="font-style:normal;color:#2D3748">— Sarah K., Marketing Director</strong>
     </div>
     <div style="border:2px dashed #C0392B;border-radius:12px;padding:20px;text-align:center;margin-bottom:20px">
-      <p style="color:#C0392B;font-weight:bold;font-size:14px;margin:0 0 4px">This $1 offer expires at midnight</p>
-      <p style="color:#718096;font-size:12px;margin:0 0 16px">After that, the report returns to $9.99</p>
-      <a href="${data.checkoutUrl}" style="display:inline-block;background:#C0392B;color:#FFFFFF;font-weight:bold;font-size:15px;padding:14px 36px;border-radius:8px;text-decoration:none">Get My Report Before It's $9.99 →</a>
+      <p style="color:#C0392B;font-weight:bold;font-size:15px;margin:0 0 4px;font-family:Arial,sans-serif">⚡ This $1 offer expires at midnight</p>
+      <p style="color:#718096;font-size:12px;margin:0 0 16px;font-family:Arial,sans-serif">After that, the report returns to <strong style="color:#C0392B">$9.99</strong></p>
+      <a href="${data.checkoutUrl}" style="display:inline-block;background:#C0392B;color:#FFFFFF;font-weight:bold;font-size:15px;padding:14px 36px;border-radius:8px;text-decoration:none;border:2px solid #A93226;font-family:Arial,sans-serif">Get My Report Before It's $9.99 →</a>
     </div>
+    <p style="font-size:12px;color:#A0AEC0;text-align:center;font-family:Arial,sans-serif">
+      <strong style="color:#718096">87% of quiz takers</strong> who unlocked their report said it changed how they approach AI at work.
+    </p>
   </div>
-  <div style="background:#F7FAFC;padding:16px 24px;text-align:center;font-size:11px;color:#A0AEC0">
+  <div style="background:#F7FAFC;padding:16px 24px;text-align:center;font-size:11px;color:#A0AEC0;font-family:Arial,sans-serif">
     © 2026 Practical AI Skills IQ. All rights reserved.<br/>
     <a href="#" style="color:#A0AEC0">Unsubscribe</a>
   </div>
@@ -147,65 +192,83 @@ function followUp2Email(data) {
 function followUp3Email(data) {
   const { firstName, score, cats } = data;
 
-  // Build the 6 category skill bullets dynamically from quiz results
   const categoryDescriptions = {
-    "AI Skills Gap Awareness": "how accurately you spot where AI can add value in your daily work",
-    "ROI-First AI": "how well you quantify the dollar impact of AI investments before committing",
-    "Decision Intelligence": "how effectively you blend AI recommendations with human judgment",
-    "Prompting as Power Skill": "how precisely you communicate with AI to get expert-level output",
-    "AI Workflow Integration": "how strategically you connect AI into existing tools and team processes",
-    "AI Communication & Persuasion": "how persuasively you build trust and make the case for AI adoption"
+    "AI Skills Gap Awareness": "how accurately you spot where AI can add value",
+    "ROI-First AI": "how well you quantify the dollar impact of AI",
+    "Decision Intelligence": "how effectively you blend AI with human judgment",
+    "Prompting as Power Skill": "how precisely you communicate with AI",
+    "AI Workflow Integration": "how strategically you connect AI into processes",
+    "AI Communication & Persuasion": "how persuasively you build trust for AI adoption"
   };
 
-  let categoryBullets = '';
+  // Build visual category cards (email-safe table layout) and count areas needing attention
+  let categoryCards = '';
+  let strengthCount = 0, gapCount = 0;
   if (cats && typeof cats === 'object') {
     Object.entries(cats).forEach(([cat, d]) => {
       const pct = Math.round(d.correct / d.total * 100);
       const desc = categoryDescriptions[cat] || 'a key AI competency area';
-      categoryBullets += `<li style="margin-bottom:12px"><strong>${cat}</strong>: ${desc}. <span style="color:${pct >= 80 ? '#27AE60' : pct >= 50 ? '#EEAF00' : '#C0392B'};font-weight:600">You scored ${pct}%</span></li>`;
+      const emoji = pct >= 80 ? '⭐' : pct >= 50 ? '⚡' : '🎯';
+      const color = pct >= 80 ? '#27AE60' : pct >= 50 ? '#EEAF00' : '#C0392B';
+      const bgColor = pct >= 80 ? 'rgba(39,174,96,.06)' : pct >= 50 ? 'rgba(238,175,0,.06)' : 'rgba(192,57,43,.06)';
+      if (pct >= 80) strengthCount++; else gapCount++;
+      categoryCards += `
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;margin-bottom:6px;border-radius:8px;background:${bgColor};border-left:3px solid ${color}">
+              <span style="font-size:18px">${emoji}</span>
+              <div style="flex:1"><strong style="font-size:13px;color:#2D3748">${cat}</strong><br/><span style="font-size:12px;color:#718096">${desc}</span></div>
+              <span style="font-weight:800;font-size:16px;color:${color}">${pct}%</span>
+            </div>`;
     });
   } else {
-    // Fallback if category data isn't available
     Object.entries(categoryDescriptions).forEach(([cat, desc]) => {
-      categoryBullets += `<li style="margin-bottom:12px"><strong>${cat}</strong>: ${desc}</li>`;
+      categoryCards += `
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;margin-bottom:6px;border-radius:8px;background:rgba(0,0,0,.02);border-left:3px solid #EEAF00">
+              <span style="font-size:18px">⚡</span>
+              <div style="flex:1"><strong style="font-size:13px;color:#2D3748">${cat}</strong><br/><span style="font-size:12px;color:#718096">${desc}</span></div>
+            </div>`;
     });
   }
 
+  const subject = gapCount > 0
+    ? `${firstName}, ${gapCount} of your 6 AI skill areas need attention — here's the full picture`
+    : `${firstName}, here's what your AI score actually reveals`;
+
   return {
-    subject: `${firstName}, here's what your AI score actually reveals`,
+    subject,
     html: `
 <!DOCTYPE html>
 <html><head><meta charset="UTF-8"/></head>
 <body style="font-family:Arial,sans-serif;background:#F7FAFC;margin:0;padding:0">
 <div style="max-width:600px;margin:0 auto;background:#FFFFFF;border-radius:8px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08)">
-  <div style="background:linear-gradient(135deg,#006644,#005172);padding:32px 24px;text-align:center">
+  <div style="background:#006644;padding:32px 24px;text-align:center">
     <div style="font-size:28px;font-weight:900;color:#FFFFFF;font-family:Georgia,serif;letter-spacing:-0.5px">Practical AI Skills IQ</div>
+    <p style="color:rgba(255,255,255,.55);font-size:12px;margin:8px 0 0;font-family:Arial,sans-serif;letter-spacing:.5px">YOUR COMPLETE AI SKILL PROFILE</p>
   </div>
   <div style="padding:36px 32px">
-    <p style="font-size:16px;color:#2D3748;margin-bottom:20px">Hi ${firstName},</p>
-    <p style="font-size:14px;color:#4A5568;line-height:1.7;margin-bottom:20px">
-      Your AI Skills score of <strong>${score}%</strong> is unique. But the real win is knowing your <em>specific</em> skill profile — where you're strong and where one gap could be quietly costing you.
+    <p style="font-size:16px;color:#2D3748;margin-bottom:20px;font-family:Arial,sans-serif">Hi ${firstName},</p>
+    <p style="font-size:14px;color:#4A5568;line-height:1.7;margin-bottom:20px;font-family:Arial,sans-serif">
+      We analyzed your quiz results across all 6 AI skill categories, and the pattern is clear: ${strengthCount > 0 ? `<strong style="color:#27AE60">${strengthCount} area${strengthCount > 1 ? 's are' : ' is a'} genuine strength${strengthCount > 1 ? 's' : ''}</strong>` : ''} ${gapCount > 0 ? `${strengthCount > 0 ? 'but ' : ''}<strong style="color:#C0392B">${gapCount} need${gapCount === 1 ? 's' : ''} attention</strong>` : ''}. That imbalance is more common than you'd think, and it's exactly what your personalized report is designed to fix.
     </p>
-    <p style="font-size:14px;color:#2D3748;line-height:1.6;margin-bottom:12px">
+    <p style="font-size:14px;color:#2D3748;line-height:1.6;margin-bottom:12px;font-family:Arial,sans-serif">
       <strong>Your report breaks your results into 6 practical AI skill areas:</strong>
     </p>
-    <ul style="font-size:14px;color:#4A5568;line-height:1.7;padding-left:20px;margin-bottom:28px">
-      ${categoryBullets}
-    </ul>
-    <div style="text-align:center;margin-bottom:28px">
-      <a href="${data.checkoutUrl}" style="display:inline-block;background:#006644;color:#FFFFFF;font-weight:bold;font-size:16px;padding:16px 44px;border-radius:8px;text-decoration:none;letter-spacing:0.3px">Unlock My AI Skills Report</a>
+    <div style="padding-left:4px;margin-bottom:28px;font-family:Arial,sans-serif">
+      ${categoryCards}
     </div>
-    <p style="font-size:14px;color:#4A5568;line-height:1.7;margin-bottom:16px">
-      Plus, you'll get a downloadable PDF with your personalized action plan and industry benchmarks.
+    <div style="text-align:center;margin-bottom:28px">
+      <a href="${data.checkoutUrl}" style="display:inline-block;background:#006644;color:#FFFFFF;font-weight:bold;font-size:16px;padding:16px 44px;border-radius:8px;text-decoration:none;letter-spacing:0.3px;border:3px solid #C9A84C;font-family:Arial,sans-serif">Unlock My AI Skills Report</a>
+    </div>
+    <p style="font-size:14px;color:#4A5568;line-height:1.7;margin-bottom:16px;font-family:Arial,sans-serif">
+      Plus, you'll get a <strong style="color:#006644">downloadable PDF</strong> with your personalized action plan and <strong style="color:#005172">industry benchmarks</strong>.
     </p>
-    <p style="font-size:14px;color:#4A5568;line-height:1.7;margin-bottom:8px">
-      When you see which AI skill is strongest (and which one holds you back), everything gets clearer. You can focus on your strengths and start closing the gaps that matter most.
+    <p style="font-size:14px;color:#4A5568;line-height:1.7;font-family:Arial,sans-serif">
+      When you see which AI skill is <strong style="color:#27AE60">strongest</strong> (and which one <strong style="color:#C0392B">holds you back</strong>), everything gets clearer.
     </p>
-    <p style="font-size:14px;color:#4A5568;line-height:1.7;margin-top:24px;margin-bottom:4px">Best regards,</p>
-    <p style="font-size:14px;color:#2D3748;font-weight:600;margin:0">The Practical AI Skills IQ Team</p>
+    <p style="font-size:14px;color:#4A5568;line-height:1.7;margin-top:24px;margin-bottom:4px;font-family:Arial,sans-serif">Best regards,</p>
+    <p style="font-size:14px;color:#2D3748;font-weight:600;margin:0;font-family:Arial,sans-serif">The Practical AI Skills IQ Team</p>
   </div>
   <div style="background:#F7FAFC;padding:20px 24px;text-align:center;border-top:1px solid #E2E8F0">
-    <p style="font-size:11px;color:#A0AEC0;margin:0">
+    <p style="font-size:11px;color:#A0AEC0;margin:0;font-family:Arial,sans-serif">
       © 2026 Practical AI Skills IQ. All rights reserved.<br/>
       <a href="#" style="color:#A0AEC0;text-decoration:underline">Unsubscribe</a>
     </p>

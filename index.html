@@ -241,17 +241,25 @@ a{color:inherit;text-decoration:none}
 .opt:hover{border-color:var(--peacock);background:#E8F5F7;transform:translateX(4px);box-shadow:0 2px 8px rgba(54,127,128,.1)}
 .opt.selected{border-color:var(--babson-green);background:#EAF7F0;transform:translateX(4px)}
 .opt.correct{border-color:var(--success);background:#E8F8F0;transform:translateX(4px)}
-.opt.incorrect{border-color:var(--danger);background:#FDF0EE}
+
 .opt-letter{width:30px;height:30px;border-radius:50%;border:1.5px solid #C8C4BC;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.82rem;font-weight:600;transition:all .2s}
 .opt:hover .opt-letter{background:rgba(0,102,68,.05);border-color:var(--peacock)}
 .opt.selected .opt-letter{background:var(--babson-green);border-color:var(--babson-green);color:var(--white)}
 .opt.correct .opt-letter{background:var(--success);border-color:var(--success);color:var(--white)}
-.opt.incorrect .opt-letter{background:var(--danger);border-color:var(--danger);color:var(--white)}
+
 .opt-text{font-size:1rem;line-height:1.55;padding-top:2px}
-.quiz-nav{display:flex;justify-content:flex-end}
+.quiz-nav{display:flex;justify-content:space-between;align-items:center;gap:12px}.quiz-nav-left{flex:1}.quiz-nav-right{display:flex;gap:10px;align-items:center}
 .btn-next{background:var(--babson-green);color:var(--white);border:none;padding:13px 32px;font-size:.9rem;font-weight:600;cursor:pointer;border-radius:3px;transition:all .2s;box-shadow:0 2px 8px rgba(0,102,68,.2)}
 .btn-next:hover{background:var(--courtyard);box-shadow:0 4px 12px rgba(0,102,68,.3);transform:translateY(-1px)}
 .btn-next:disabled{background:#B0ADA8;cursor:default;box-shadow:none}
+.btn-back{background:transparent;color:var(--text-soft);border:1.5px solid #ccc;padding:13px 22px;font-size:.9rem;font-weight:600;cursor:pointer;border-radius:3px;transition:all .2s}
+.btn-back:hover{background:#f5f3ef;border-color:#aaa;color:var(--text-dark)}
+.btn-back:disabled{opacity:0;pointer-events:none}
+.btn-submit{background:var(--bright-gold);color:#1B2E1B;border:none;padding:13px 32px;font-size:.9rem;font-weight:700;cursor:pointer;border-radius:3px;transition:all .2s;box-shadow:0 2px 8px rgba(201,168,76,.35)}
+.btn-submit:hover{background:#d4a815;box-shadow:0 4px 12px rgba(201,168,76,.5);transform:translateY(-1px)}
+.answered-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#ccc;margin:0 2px;vertical-align:middle;transition:background .3s}
+.answered-dot.done{background:var(--babson-green)}
+.answered-dot.current{background:var(--bright-gold);box-shadow:0 0 0 2px rgba(238,175,0,.3)}
 
 /* ═══ MOTIVATION TEASER (halfway) ═══ */
 .motivation{text-align:center;padding:16px 24px;border-radius:8px;font-size:1rem;font-weight:600;margin-bottom:22px;animation:slideUp .5s ease}
@@ -786,14 +794,22 @@ a{color:inherit;text-decoration:none}
       <span class="quiz-progress-text" id="progressText">Question 1 of 12</span>
       <div class="quiz-timer" id="quizTimer">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-        <span id="timerDisplay">20s</span>
+        <span id="timerDisplay">60s</span>
       </div>
     </div>
     <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
     <div id="motivationArea"></div>
     <div class="card">
       <div class="card-body" id="questionArea"></div>
-      <div style="padding:0 48px 36px"><div class="quiz-nav"><button class="btn-next" id="btnNext" onclick="nextQuestion()" disabled>Next Question →</button></div></div>
+      <div style="padding:0 48px 36px">
+        <div style="display:flex;justify-content:center;gap:5px;margin-bottom:16px" id="progressDots"></div>
+        <div class="quiz-nav">
+          <div class="quiz-nav-left"><button class="btn-back" id="btnBack" onclick="prevQuestion()">← Back</button></div>
+          <div class="quiz-nav-right">
+            <button class="btn-next" id="btnNext" onclick="nextQuestion()" disabled>Next Question →</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -947,35 +963,97 @@ function renderQuestion(){
   document.getElementById('progressText').textContent=`Question ${currentQ+1} of ${QUESTIONS.length}`;
   document.getElementById('progressFill').style.width=pct+'%';
   showMotivation();
-  timeLeft=q.difficulty==='hard'?40:q.difficulty==='medium'?35:30;startTimer();
+
+  // Restart timer only if this question hasn't been answered yet
+  if(!answers[currentQ]){timeLeft=60;startTimer();}else{clearInterval(timer);const d=document.getElementById('timerDisplay'),tE=document.getElementById('quizTimer');d.textContent='—';tE.classList.remove('warning');}
+
   const letters=['A','B','C','D'];
   let html=`<div class="q-category"><span class="label">${q.category}</span></div>`;
   if(q.scenario)html+=`<div class="q-scenario">${q.scenario}</div>`;
   html+=`<h2 class="q-text">${q.question}</h2><div class="options">`;
   q.options.forEach((opt,i)=>{html+=`<div class="opt" data-idx="${i}" onclick="selectOption(this,${i})"><div class="opt-letter">${letters[i]}</div><div class="opt-text">${opt}</div></div>`});
   html+=`</div>`;area.innerHTML=html;
-  document.getElementById('btnNext').disabled=true;
-  document.getElementById('btnNext').textContent=currentQ===QUESTIONS.length-1?'See My Results →':'Next Question →';
+
+  // Restore previous answer selection if revisiting
+  if(answers[currentQ]&&answers[currentQ].selected>=0){
+    const opts=document.querySelectorAll('.opt');
+    opts.forEach(o=>o.style.pointerEvents='none');
+    opts[answers[currentQ].selected].classList.add('selected-revisit');
+  }
+
+  updateNavButtons();
+  updateProgressDots();
+}
+
+function updateNavButtons(){
+  const isLast=currentQ===QUESTIONS.length-1;
+  const allAnswered=answers.filter(a=>a!==undefined).length===QUESTIONS.length;
+  const btnNext=document.getElementById('btnNext');
+  const btnBack=document.getElementById('btnBack');
+  const navRight=document.querySelector('.quiz-nav-right');
+
+  // Back button: disabled on first question
+  btnBack.disabled=currentQ===0;
+
+  // Remove any existing submit button
+  const existingSubmit=document.getElementById('btnSubmit');
+  if(existingSubmit)existingSubmit.remove();
+
+  if(isLast){
+    if(answers[currentQ]!==undefined){
+      // Last question answered: show Submit Quiz button
+      btnNext.style.display='none';
+      const sub=document.createElement('button');
+      sub.className='btn-submit';sub.id='btnSubmit';sub.textContent='Submit Quiz ✓';
+      sub.onclick=()=>showResults();
+      navRight.appendChild(sub);
+    } else {
+      btnNext.style.display='';
+      btnNext.disabled=answers[currentQ]===undefined;
+      btnNext.textContent='Submit Quiz ✓';
+    }
+  } else {
+    btnNext.style.display='';
+    btnNext.disabled=answers[currentQ]===undefined;
+    btnNext.textContent='Next Question →';
+  }
+}
+
+function updateProgressDots(){
+  const container=document.getElementById('progressDots');
+  if(!container)return;
+  let html='';
+  for(let i=0;i<QUESTIONS.length;i++){
+    const cls=i===currentQ?'answered-dot current':answers[i]!==undefined?'answered-dot done':'answered-dot';
+    html+=`<span class="${cls}" title="Q${i+1}"></span>`;
+  }
+  container.innerHTML=html;
 }
 
 function startTimer(){
   clearInterval(timer);const display=document.getElementById('timerDisplay'),timerEl=document.getElementById('quizTimer');
   display.textContent=timeLeft+'s';timerEl.classList.remove('warning');
-  timer=setInterval(()=>{timeLeft--;display.textContent=timeLeft+'s';if(timeLeft<=5)timerEl.classList.add('warning');if(timeLeft<=0){clearInterval(timer);const tq=QUESTIONS[currentQ];answers[currentQ]={selected:-1,correct:tq.correct,isCorrect:false,timeTaken:tq.difficulty==='hard'?40:tq.difficulty==='medium'?35:30,timedOut:true};showTimeoutFeedback()}},1000);
+  timer=setInterval(()=>{timeLeft--;display.textContent=timeLeft+'s';if(timeLeft<=5)timerEl.classList.add('warning');if(timeLeft<=0){clearInterval(timer);const tq=QUESTIONS[currentQ];answers[currentQ]={selected:-1,correct:tq.correct,isCorrect:false,timeTaken:60,timedOut:true};showTimeoutFeedback()}},1000);
 }
 
 function showTimeoutFeedback(){
-  const q=QUESTIONS[currentQ];document.querySelectorAll('.opt').forEach((o,i)=>{o.style.pointerEvents='none';if(i===q.correct)o.classList.add('correct')});
-  setTimeout(()=>nextQuestion(),1500);
+  document.querySelectorAll('.opt').forEach(o=>{o.style.pointerEvents='none'});
+  updateNavButtons();
+  updateProgressDots();
+  if(currentQ<QUESTIONS.length-1){setTimeout(()=>nextQuestion(),1500);}
 }
 
 function selectOption(el,idx){
   if(answers[currentQ]!==undefined)return;clearInterval(timer);
-  const q=QUESTIONS[currentQ],isCorrect=idx===q.correct,elapsed=(q.difficulty==='hard'?40:q.difficulty==='medium'?35:30)-timeLeft;
+  const q=QUESTIONS[currentQ],isCorrect=idx===q.correct,elapsed=60-timeLeft;
   answers[currentQ]={selected:idx,correct:q.correct,isCorrect,timeTaken:elapsed,timedOut:false};
-  document.querySelectorAll('.opt').forEach((o,i)=>{o.style.pointerEvents='none';if(i===q.correct)o.classList.add('correct');if(i===idx&&!isCorrect)o.classList.add('incorrect')});
-  document.getElementById('btnNext').disabled=false;
-  setTimeout(()=>{if(!document.getElementById('btnNext').disabled)nextQuestion()},1800);
+  document.querySelectorAll('.opt').forEach((o,i)=>{o.style.pointerEvents='none';if(i===idx)o.classList.add('selected-revisit')});
+  updateNavButtons();
+  updateProgressDots();
+  // Auto-advance only if not on last question
+  if(currentQ<QUESTIONS.length-1){
+    setTimeout(()=>nextQuestion(),1400);
+  }
 }
 
 function showMotivation(){
@@ -1004,7 +1082,13 @@ function showMotivation(){
   area.innerHTML=`<div class="motivation ${cls}">${msg}</div>${quoteHtml}`;
 }
 
-function nextQuestion(){currentQ++;if(currentQ>=QUESTIONS.length)showResults();else renderQuestion()}
+function nextQuestion(){
+  if(currentQ<QUESTIONS.length-1){currentQ++;renderQuestion();}
+  else if(answers[currentQ]!==undefined){showResults();}
+}
+function prevQuestion(){
+  if(currentQ>0){currentQ--;renderQuestion();}
+}
 
 function calculateResults(){
   const t=answers.filter(a=>a&&a.isCorrect).length,p=Math.round(t/QUESTIONS.length*100),cats={};

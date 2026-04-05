@@ -131,12 +131,12 @@ a{color:inherit;text-decoration:none}
 .trust-item:first-child::before{display:none}
 
 /* ═══ LAKHANI QUOTE BOX ═══ */
-.lakhani-box{max-width:960px;margin:24px auto 0;border-radius:10px;overflow:hidden;position:relative;opacity:0;animation:fadeUp 1s ease .4s forwards}
-.lakhani-box-inner{background:linear-gradient(135deg,#7B0000 0%,#B22222 50%,#8B0000 100%);padding:28px 36px;position:relative}
-.lakhani-box-inner::before{content:'"';position:absolute;top:-10px;left:20px;font-size:7rem;color:rgba(255,255,255,.06);font-family:'Merriweather',serif;line-height:1;pointer-events:none}
-.lakhani-box-inner blockquote{font-family:'Merriweather',serif;font-style:italic;font-size:1.05rem;font-weight:700;color:#fff;line-height:1.5;margin:0 0 12px;position:relative;z-index:1}
-.lakhani-box-inner cite{font-family:'Inter',sans-serif;font-style:normal;font-size:.75rem;color:rgba(255,255,255,.65);letter-spacing:.04em;position:relative;z-index:1}
-@media(max-width:640px){.lakhani-box-inner{padding:20px 24px}.lakhani-box-inner blockquote{font-size:.95rem}}
+.lakhani-box{border-radius:8px;overflow:hidden;position:relative;opacity:0;animation:fadeUp 1.4s ease 1.2s forwards}
+.lakhani-box-inner{background:linear-gradient(135deg,rgba(90,0,0,.72) 0%,rgba(140,20,20,.65) 100%);border:1px solid rgba(255,255,255,.1);padding:14px 18px;position:relative;backdrop-filter:blur(2px)}
+.lakhani-box-inner::before{content:'\201C';position:absolute;top:-8px;left:12px;font-size:4rem;color:rgba(255,255,255,.07);font-family:'Merriweather',serif;line-height:1;pointer-events:none}
+.lakhani-box-inner blockquote{font-family:'Merriweather',serif;font-style:italic;font-size:.82rem;font-weight:600;color:rgba(255,255,255,.92);line-height:1.55;margin:0 0 8px;position:relative;z-index:1}
+.lakhani-box-inner cite{font-family:'Inter',sans-serif;font-style:normal;font-size:.65rem;color:rgba(255,255,255,.5);letter-spacing:.03em;position:relative;z-index:1;display:block}
+@media(max-width:640px){.lakhani-box-inner{padding:12px 14px}.lakhani-box-inner blockquote{font-size:.78rem}}
 
 /* ═══ HOW IT WORKS ═══ */
 .how-section{padding:72px 20px;max-width:960px;margin:0 auto}
@@ -968,6 +968,14 @@ a{color:inherit;text-decoration:none}
           </div>
         </div>
         <div style="text-align:center;margin-top:12px;font-size:.6rem;color:rgba(255,255,255,.4);position:relative;z-index:1;line-height:1.4">Sources: PwC Global AI Jobs Barometer 2025; CarringtonCrisp See the Future 2026 (1,863 respondents, 40 countries)</div>
+
+        <!-- Lakhani quote — compact, inside green panel -->
+        <div class="lakhani-box" style="width:100%;margin-top:18px">
+          <div class="lakhani-box-inner">
+            <blockquote>"AI is not going to replace humans, but humans with AI are going to replace humans without AI."</blockquote>
+            <cite>— Professor Karim Lakhani, Harvard Business School</cite>
+          </div>
+        </div>
       </div>
       <!-- RIGHT: Form -->
       <div class="card gate-form-panel" style="border-radius:0 4px 4px 0">
@@ -1034,15 +1042,6 @@ a{color:inherit;text-decoration:none}
     </div><!-- /gate-layout -->
   </div>
 
-  <!-- Lakhani quote — fills green space below the gate cards -->
-  <div style="padding:0 20px 28px">
-    <div class="lakhani-box">
-      <div class="lakhani-box-inner">
-        <blockquote>"AI is not going to replace humans, but humans with AI are going to replace humans without AI."</blockquote>
-        <cite>— Professor Karim Lakhani, Harvard Business School</cite>
-      </div>
-    </div>
-  </div>
 </section>
 
 <!-- ═══════════ QUIZ ═══════════ -->

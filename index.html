@@ -134,12 +134,15 @@ a{color:inherit;text-decoration:none}
 .how-section{padding:72px 20px;max-width:960px;margin:0 auto}
 .how-title{text-align:center;font-family:'Merriweather',serif;font-size:2rem;color:var(--babson-green);margin-bottom:12px}
 .how-sub{text-align:center;color:var(--text-soft);font-size:1.05rem;margin-bottom:48px}
-.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
-.how-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:36px 28px;text-align:center;transition:all .25s;opacity:0;animation:staggerFadeUp .6s ease forwards;will-change:transform}
-.how-card:nth-child(1){animation-delay:0s}
-.how-card:nth-child(2){animation-delay:.15s}
-.how-card:nth-child(3){animation-delay:.3s}
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;position:relative;align-items:start}
+.how-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:36px 28px;text-align:center;transition:all .25s;opacity:0;transform:translateY(28px);will-change:transform,opacity}
+.how-card.card-visible{opacity:1;transform:translateY(0)}
 .how-card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,102,68,.14)}
+.how-arrow{display:flex;align-items:center;justify-content:center;position:absolute;top:50%;transform:translateY(-50%);opacity:0;transition:opacity .5s ease;pointer-events:none}
+.how-arrow.arrow-visible{opacity:1}
+.how-arrow-1{left:calc(33.33% - 20px)}
+.how-arrow-2{left:calc(66.66% - 20px)}
+.how-arrow svg{width:32px;height:32px}
 .how-icon{width:68px;height:68px;margin:0 auto 20px;background:linear-gradient(135deg,rgba(0,102,68,.1),rgba(54,127,128,.08));border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:2.2rem;animation:iconBounce 4s ease-in-out infinite}
 .how-card:nth-child(1) .how-icon{animation-delay:0s}
 .how-card:nth-child(2) .how-icon{animation-delay:1.3s}
@@ -378,7 +381,7 @@ a{color:inherit;text-decoration:none}
   .hero-buttons{justify-content:center}
   .hero-proof{justify-content:center}
   .bell-curve-wrap{max-width:300px;margin:0 auto}
-  .how-grid{grid-template-columns:1fr}
+  .how-grid{grid-template-columns:1fr}  .how-arrow{display:none}
   .card-body,.results-header,.breakdown,.insights,.upsell-inner,.why-matters,.course-cta{padding-left:24px;padding-right:24px}
   .score-ring{width:160px;height:160px}
   .score-pct{font-size:2.8rem}
@@ -568,20 +571,34 @@ a{color:inherit;text-decoration:none}
 <div id="howSection" class="how-section">
   <h2 class="how-title">How It Works</h2>
   <p class="how-sub">Three steps to discover your Practical AI Skills IQ</p>
-  <div class="how-grid">
-    <div class="how-card">
+  <div class="how-grid" id="howGrid">
+    <div class="how-card" id="howCard1">
       <div class="how-step">Step 1</div>
       <div class="how-icon">📋</div>
       <h3>Take the Assessment</h3>
       <p>12 scenario-based questions that test real-world AI skills — not textbook theory. Takes about 3 minutes.</p>
     </div>
-    <div class="how-card">
+    <!-- Arrow 1→2 -->
+    <div class="how-arrow how-arrow-1" id="howArrow1">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="15" stroke="#006644" stroke-width="1.5" fill="rgba(0,102,68,.07)"/>
+        <path d="M11 16h10M17 12l4 4-4 4" stroke="#006644" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="how-card" id="howCard2">
       <div class="how-step">Step 2</div>
       <div class="how-icon">📊</div>
       <h3>Get Your Score</h3>
       <p>See your AI Skills IQ score instantly, benchmarked against thousands of professionals in your industry.</p>
     </div>
-    <div class="how-card">
+    <!-- Arrow 2→3 -->
+    <div class="how-arrow how-arrow-2" id="howArrow2">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="15" stroke="#006644" stroke-width="1.5" fill="rgba(0,102,68,.07)"/>
+        <path d="M11 16h10M17 12l4 4-4 4" stroke="#006644" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="how-card" id="howCard3">
       <div class="how-step">Step 3</div>
       <div class="how-icon">🏆</div>
       <h3>Unlock Your Report</h3>
@@ -1240,6 +1257,42 @@ document.addEventListener('DOMContentLoaded',()=>{
   popIn(document.getElementById('badge3'), 4600);
   popIn(document.getElementById('badge4'), 4850);
   popIn(document.getElementById('badge5'), 5100);
+})();
+</script>
+<script>
+/* ── How It Works: scroll-triggered staggered card entrance + arrows ── */
+(function(){
+  var howCard1=document.getElementById('howCard1');
+  var howCard2=document.getElementById('howCard2');
+  var howCard3=document.getElementById('howCard3');
+  var howArrow1=document.getElementById('howArrow1');
+  var howArrow2=document.getElementById('howArrow2');
+  if(!howCard1) return;
+  var howAnimated=false;
+  function animateHowCards(){
+    if(howAnimated) return;
+    howAnimated=true;
+    howCard1.style.transition='opacity 2s ease, transform 2s ease';
+    howCard1.classList.add('card-visible');
+    setTimeout(function(){
+      if(howArrow1){howArrow1.style.transition='opacity 0.5s ease';howArrow1.classList.add('arrow-visible');}
+    },1800);
+    setTimeout(function(){
+      howCard2.style.transition='opacity 2s ease, transform 2s ease';
+      howCard2.classList.add('card-visible');
+    },2200);
+    setTimeout(function(){
+      if(howArrow2){howArrow2.style.transition='opacity 0.5s ease';howArrow2.classList.add('arrow-visible');}
+    },3800);
+    setTimeout(function(){
+      howCard3.style.transition='opacity 2s ease, transform 2s ease';
+      howCard3.classList.add('card-visible');
+    },4200);
+  }
+  var howObs=new IntersectionObserver(function(entries){
+    if(entries[0].isIntersecting){animateHowCards();howObs.disconnect();}
+  },{threshold:0.2});
+  howObs.observe(howCard1);
 })();
 </script>
 <script>

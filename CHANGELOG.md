@@ -1,5 +1,18 @@
 # Changelog — Practical AI Skills IQ Quiz
 
+## v16.8 — Lakhani Quote Moved Inside Green Gate Panel (2026-04-05)
+
+### Summary
+Relocated the Lakhani quote box from a standalone full-width block below the gate section to a compact, blended box inside the green left panel — positioned directly below the sources citation. Styled to dissolve in gracefully rather than dominate.
+
+### Changes
+- Removed standalone `<div style="padding:0 20px 28px">` Lakhani block that appeared below the gate layout
+- Added compact `.lakhani-box` inside `.gate-sketch-panel` after sources text
+- CSS restyled: semi-transparent dark red overlay (`rgba(90,0,0,.72)`) blends with green background, padding reduced (14px/18px), font reduced (.82rem), `fadeUp` animation with 1.2s delay (1.4s duration) for slow graceful dissolve
+- Commit: df31264
+
+---
+
 ## v16.7 — Send-a-Friend Referral Feature (2026-04-05)
 
 ### Summary

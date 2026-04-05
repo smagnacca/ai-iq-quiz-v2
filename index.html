@@ -583,6 +583,24 @@ a{color:inherit;text-decoration:none}
 .breakdown-bar{flex:1;margin:0 16px;height:8px;background:var(--border);border-radius:4px;overflow:hidden;position:relative}
 .breakdown-bar-fill{height:100%;border-radius:4px;width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
 .breakdown-bar-fill::after{content:'';position:absolute;top:0;left:-40%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);animation:barShine 2.5s ease-in-out 1.3s infinite}
+/* ── Results scroll-reveal enhancements ── */
+.breakdown-row{position:relative}
+.breakdown-score-display{font-family:'Merriweather',serif;font-weight:700;font-size:.95rem;min-width:44px;text-align:right;transition:color .4s}
+.results-section-label{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--babson-green);opacity:0;transform:translateY(8px);transition:opacity .5s ease,transform .5s ease;padding:20px 48px 10px;border-top:1px solid var(--border);margin-top:4px}
+.results-section-label.lbl-visible{opacity:1;transform:translateY(0)}
+.commitment-bridge{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease}
+.commitment-bridge.cb-visible{opacity:1;transform:translateY(0)}
+.sp-stat{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.sp-stat.sp-visible{opacity:1;transform:translateY(0)}
+.why-matters{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease}
+.why-matters.why-visible{opacity:1;transform:translateY(0)}
+.credentials-bar{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease .3s}
+.credentials-bar.cred-visible{opacity:1;transform:translateY(0)}
+.testimonial-card{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.testimonial-card.tc-visible{opacity:1;transform:translateY(0)}
+.results-quote-block{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
+.results-quote-block.rq-visible{opacity:1;transform:translateY(0)}
+@keyframes barShine{0%,100%{left:-40%}60%{left:120%}}
 @keyframes barShine{0%{left:-40%}100%{left:140%}}
 
 /* ── Insights ── */
@@ -1212,18 +1230,18 @@ a{color:inherit;text-decoration:none}
       <!-- ⑤ SOCIAL PROOF: Live numbers + percentile stats -->
       <div class="r-reveal" id="socialProofBlock">
         <div class="social-proof-strip">
-          <div class="sp-stat">
-            <span class="sp-num" id="spTakers">12,847</span>
+          <div class="sp-stat" id="spStat1">
+            <span class="sp-num" id="spTakers">0</span>
             <span class="sp-desc">professionals have taken this assessment</span>
           </div>
           <div class="sp-divider"></div>
-          <div class="sp-stat">
-            <span class="sp-num">56%</span>
+          <div class="sp-stat" id="spStat2">
+            <span class="sp-num" id="spWage">0%</span>
             <span class="sp-desc">wage premium for AI-skilled workers (PwC 2025)</span>
           </div>
           <div class="sp-divider"></div>
-          <div class="sp-stat">
-            <span class="sp-num">77%</span>
+          <div class="sp-stat" id="spStat3">
+            <span class="sp-num" id="spEmployers">0%</span>
             <span class="sp-desc">of employers now require AI-ready professionals</span>
           </div>
         </div>
@@ -2009,41 +2027,112 @@ function _renderResults(r){
     document.getElementById('resultsQuoteCite').textContent='Ed Bernier, Duke University Corporate Education | PwC AI Jobs Barometer 2025';
   }
 
-  // ── Intersection Observer for scroll-triggered reveals ────────
+  // ── Scroll-triggered animated reveals ────────────────────────
+  function countUp(el,target,duration,suffix,formatter){
+    if(!el)return;
+    const start=0,step=16,steps=Math.round(duration/step);
+    let current=0,tick=0;
+    const interval=setInterval(()=>{
+      tick++;
+      current=Math.round(target*(tick/steps));
+      if(current>=target){current=target;clearInterval(interval);}
+      el.textContent=formatter?formatter(current):(current+suffix);
+    },step);
+  }
+
   setTimeout(()=>{
-    const observer=new IntersectionObserver((entries)=>{
+    const obs=new IntersectionObserver((entries)=>{
       entries.forEach(entry=>{
-        if(entry.isIntersecting){
-          const el=entry.target;
-          el.classList.add('r-visible');
-          // Stagger children
+        if(!entry.isIntersecting)return;
+        const el=entry.target;
+        el.classList.add('r-visible');
+        obs.unobserve(el);
+
+        /* ── Breakdown: stagger rows + animate bar + count score ── */
+        if(el.id==='breakdownBlock'){
+          const lbl=el.querySelector('.results-section-label');
+          if(lbl)setTimeout(()=>lbl.classList.add('lbl-visible'),0);
           el.querySelectorAll('.breakdown-row').forEach((row,i)=>{
             setTimeout(()=>{
               row.classList.add('visible');
               const fill=row.querySelector('.breakdown-bar-fill');
-              if(fill)setTimeout(()=>{fill.style.width=fill.dataset.width+'%'},50);
-            },i*280);
+              const scoreEl=row.querySelector('.breakdown-score');
+              const target=parseInt(fill?.dataset.width||0);
+              // Grow bar
+              if(fill)setTimeout(()=>{fill.style.width=target+'%';},80);
+              // Count up score number
+              if(scoreEl){
+                const orig=scoreEl.textContent;scoreEl.textContent='0%';
+                setTimeout(()=>countUp(scoreEl,target,900,'%'),120);
+              }
+            },i*340);
           });
+        }
+
+        /* ── Insights: stagger slide-up ── */
+        if(el.id==='insightsBlock'){
+          const lbl=el.querySelector('.results-section-label');
+          if(lbl)setTimeout(()=>lbl.classList.add('lbl-visible'),0);
           el.querySelectorAll('.insight').forEach((ins,i)=>{
-            setTimeout(()=>ins.classList.add('visible'),i*200);
+            setTimeout(()=>ins.classList.add('visible'),i*220);
           });
-          // Feature list in upsell
-          if(el.id==='upsellBlock'){
-            ['uf1','uf2','uf3','uf4','uf5'].forEach((id,i)=>{
-              setTimeout(()=>{const f=document.getElementById(id);if(f)f.classList.add('f-visible')},300+i*220);
-            });
-            startCountdown();
-          }
-          observer.unobserve(el);
+        }
+
+        /* ── Commitment bridge ── */
+        if(el.id==='commitmentBlock'){
+          const cb=el.querySelector('.commitment-bridge');
+          if(cb)setTimeout(()=>cb.classList.add('cb-visible'),100);
+        }
+
+        /* ── Social proof: stagger stats + count up numbers ── */
+        if(el.id==='socialProofBlock'){
+          ['spStat1','spStat2','spStat3'].forEach((sid,i)=>{
+            setTimeout(()=>{
+              const stat=document.getElementById(sid);
+              if(stat)stat.classList.add('sp-visible');
+            },i*250);
+          });
+          setTimeout(()=>countUp(document.getElementById('spTakers'),12847,1600,'',n=>n.toLocaleString()),0);
+          setTimeout(()=>countUp(document.getElementById('spWage'),56,900,'%'),250);
+          setTimeout(()=>countUp(document.getElementById('spEmployers'),77,900,'%'),500);
+        }
+
+        /* ── Why This Matters + credentials ── */
+        if(el.id==='whyBlock'){
+          const wm=el.querySelector('.why-matters');
+          const cr=el.querySelector('.credentials-bar');
+          if(wm)setTimeout(()=>wm.classList.add('why-visible'),50);
+          if(cr)setTimeout(()=>cr.classList.add('cred-visible'),350);
+        }
+
+        /* ── Testimonials: stagger cards ── */
+        if(el.id==='testimonialsBlock'){
+          el.querySelectorAll('.testimonial-card').forEach((tc,i)=>{
+            setTimeout(()=>tc.classList.add('tc-visible'),i*300);
+          });
+        }
+
+        /* ── Quote block ── */
+        if(el.id==='resultsQuoteBlock'){
+          const qb=el.querySelector('.results-quote-block');
+          if(qb)setTimeout(()=>qb.classList.add('rq-visible'),100);
+        }
+
+        /* ── Upsell: feature list + countdown ── */
+        if(el.id==='upsellBlock'){
+          ['uf1','uf2','uf3','uf4','uf5'].forEach((id,i)=>{
+            setTimeout(()=>{const f=document.getElementById(id);if(f)f.classList.add('f-visible')},300+i*220);
+          });
+          startCountdown();
         }
       });
-    },{threshold:0.12,rootMargin:'0px 0px -60px 0px'});
+    },{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
 
     ['breakdownBlock','insightsBlock','commitmentBlock','socialProofBlock',
      'whyBlock','testimonialsBlock','resultsQuoteBlock','upsellBlock'].forEach(id=>{
-      const el=document.getElementById(id);if(el)observer.observe(el);
+      const el=document.getElementById(id);if(el)obs.observe(el);
     });
-  },2000);
+  },1200);
 
   submitQuizData(r);
 }

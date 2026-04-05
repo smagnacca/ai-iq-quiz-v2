@@ -1,5 +1,22 @@
 # Changelog — Practical AI Skills IQ Quiz
 
+## v17.4 — Results Page: Full Scroll-Reveal Animation System (2026-04-05)
+
+### Summary
+Complete results page scroll-reveal overhaul. Every section now builds gradually as the user scrolls, with sequential animations, bar-fill progress, score counters, and staggered reveals — nothing dumps all at once.
+
+### Changes
+- **Breakdown rows**: each fades in from left with 340ms stagger; progress bar grows to target width; score percentage counts from 0→target over 900ms using `countUp()`; section label fades in first
+- **Insight cards**: stagger 220ms each, slide up from translateY
+- **Commitment bridge**: fade-up on scroll entry
+- **Social proof stats**: each stat card staggers in 250ms apart; `12,847` counts up with toLocaleString formatter (1600ms); `56%` and `77%` count up (900ms each)
+- **Why This Matters**: fade-up with credentials bar delayed 350ms after
+- **Testimonials**: each card stagger 300ms
+- **Quote block**: gentle fade-up
+- **New `countUp()` utility**: reusable, supports custom formatter (for comma-separated numbers), step=16ms for 60fps feel
+- **New CSS classes**: `.lbl-visible`, `.cb-visible`, `.sp-visible`, `.why-visible`, `.cred-visible`, `.tc-visible`, `.rq-visible` — all with smooth ease transitions
+- IntersectionObserver fires at threshold 0.12 with 1200ms post-results delay
+
 ## v17.3 — Quiz UX: Auto-scroll, Nudge Timer, Submit Glow, Computing Overlay (2026-04-05)
 
 ### Summary

@@ -90,10 +90,7 @@ a{color:inherit;text-decoration:none}
 .bell-curve-wrap{background:rgba(255,255,255,.06);border:2px solid rgba(201,168,76,.4);border-radius:12px;padding:24px;width:100%;max-width:380px;animation:glowBorder 3s ease-in-out infinite}
 .bell-curve-title{text-align:center;font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-light);margin-bottom:12px}
 .bell-svg{width:100%;height:auto}
-.bell-svg .curve{fill:none;stroke:var(--gold-light);stroke-width:2.5;stroke-dasharray:600;animation:drawCurve 2s ease forwards}
-.bell-svg .fill-area{fill:rgba(201,168,76,.08);opacity:0;animation:fadeIn 1s ease .8s forwards}
 .bell-svg text{fill:rgba(255,255,255,.6);font-size:10px;font-family:'Inter',sans-serif}
-.bell-svg .pct-label{fill:var(--gold-light);font-weight:600;font-size:9px}
 
 /* ═══ FLOATING CTA BAR (scroll reveal) ═══ */
 .floating-cta{position:fixed;bottom:20px;left:20px;right:20px;background:linear-gradient(135deg,var(--babson-green),var(--courtyard));color:var(--white);padding:14px 24px;border-radius:8px;display:none;z-index:99;box-shadow:0 8px 32px rgba(0,102,68,.3);align-items:center;justify-content:space-between;gap:16px;animation:slideUp .4s ease}
@@ -452,21 +449,73 @@ a{color:inherit;text-decoration:none}
     <div class="hero-right">
       <div class="bell-curve-wrap">
         <div class="bell-curve-title">AI Skills IQ Distribution</div>
-        <svg class="bell-svg" viewBox="0 0 340 180" xmlns="http://www.w3.org/2000/svg">
-          <path class="fill-area" d="M30,155 C30,155 70,150 100,130 C130,110 140,60 170,30 C200,60 210,110 240,130 C270,150 310,155 310,155 L310,160 L30,160 Z"/>
-          <path class="curve" d="M30,155 C50,152 80,145 100,130 C120,115 140,70 155,42 C165,25 170,22 170,22 C170,22 175,25 185,42 C200,70 220,115 240,130 C260,145 290,152 310,155"/>
-          <text x="30" y="175" text-anchor="middle">30</text>
-          <text x="100" y="175" text-anchor="middle">50</text>
-          <text x="170" y="175" text-anchor="middle">70</text>
-          <text x="240" y="175" text-anchor="middle">90</text>
-          <text x="310" y="175" text-anchor="middle">100</text>
-          <text class="pct-label" x="75" y="142">8%</text>
-          <text class="pct-label" x="125" y="100">21%</text>
-          <text class="pct-label" x="170" y="16" text-anchor="middle">38%</text>
-          <text class="pct-label" x="215" y="100">21%</text>
-          <text class="pct-label" x="265" y="142">8%</text>
-          <line x1="170" y1="22" x2="170" y2="160" stroke="rgba(255,255,255,.15)" stroke-dasharray="4,4" stroke-width="1"/>
-          <text x="170" y="12" text-anchor="middle" fill="#DDD055" font-size="11" font-weight="700">Where are you?</text>
+        <svg id="bellSvg" class="bell-svg" viewBox="0 0 380 230" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+          <!-- Fill area -->
+          <path id="fillArea" d="M60,168 C80,165 110,158 135,143 C155,130 163,100 172,68 C175,52 178,36 180,25 C182,36 185,52 188,68 C197,100 205,130 225,143 C250,158 280,165 300,168 L300,172 L60,172 Z" fill="rgba(201,168,76,.10)" opacity="0"/>
+          <!-- Bell curve -->
+          <path id="bellCurve" d="M60,168 C80,165 110,158 135,143 C155,130 163,100 172,68 C175,52 178,36 180,25 C182,36 185,52 188,68 C197,100 205,130 225,143 C250,158 280,165 300,168" fill="none" stroke="#C9A84C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- X Axis -->
+          <line id="axisX" x1="60" y1="172" x2="308" y2="172" stroke="rgba(255,255,255,.7)" stroke-width="1.5" stroke-dasharray="260" stroke-dashoffset="260"/>
+          <polygon id="arrowX" points="308,168 308,176 316,172" fill="rgba(255,255,255,.65)" opacity="0"/>
+          <!-- Y Axis -->
+          <line id="axisY" x1="60" y1="172" x2="60" y2="14" stroke="rgba(255,255,255,.7)" stroke-width="1.5" stroke-dasharray="160" stroke-dashoffset="160"/>
+          <polygon id="arrowY" points="56,14 64,14 60,7" fill="rgba(255,255,255,.65)" opacity="0"/>
+          <!-- X ticks + labels -->
+          <g id="xTicks" opacity="0">
+            <line x1="60" y1="172" x2="60" y2="178" stroke="rgba(255,255,255,.5)" stroke-width="1.2"/>
+            <line x1="120" y1="172" x2="120" y2="178" stroke="rgba(255,255,255,.5)" stroke-width="1.2"/>
+            <line x1="180" y1="172" x2="180" y2="178" stroke="rgba(255,255,255,.5)" stroke-width="1.2"/>
+            <line x1="240" y1="172" x2="240" y2="178" stroke="rgba(255,255,255,.5)" stroke-width="1.2"/>
+            <line x1="300" y1="172" x2="300" y2="178" stroke="rgba(255,255,255,.5)" stroke-width="1.2"/>
+            <text x="60" y="193" text-anchor="middle" fill="rgba(255,255,255,.85)" font-size="10" font-family="Inter,sans-serif">30</text>
+            <text x="120" y="193" text-anchor="middle" fill="rgba(255,255,255,.85)" font-size="10" font-family="Inter,sans-serif">50</text>
+            <text x="180" y="193" text-anchor="middle" fill="rgba(255,255,255,.85)" font-size="10" font-family="Inter,sans-serif">70</text>
+            <text x="240" y="193" text-anchor="middle" fill="rgba(255,255,255,.85)" font-size="10" font-family="Inter,sans-serif">90</text>
+            <text x="300" y="193" text-anchor="middle" fill="rgba(255,255,255,.85)" font-size="10" font-family="Inter,sans-serif">100</text>
+            <text x="185" y="212" text-anchor="middle" fill="rgba(255,255,255,.6)" font-size="8.5" font-family="Inter,sans-serif" letter-spacing=".06em">AI Skills IQ Score</text>
+          </g>
+          <!-- Y ticks + labels -->
+          <g id="yTicks" opacity="0">
+            <line x1="54" y1="172" x2="60" y2="172" stroke="rgba(255,255,255,.5)" stroke-width="1.2"/>
+            <line x1="54" y1="132" x2="60" y2="132" stroke="rgba(255,255,255,.5)" stroke-width="1.2"/>
+            <line x1="54" y1="92" x2="60" y2="92" stroke="rgba(255,255,255,.5)" stroke-width="1.2"/>
+            <line x1="54" y1="52" x2="60" y2="52" stroke="rgba(255,255,255,.5)" stroke-width="1.2"/>
+            <text x="50" y="175" text-anchor="end" fill="rgba(255,255,255,.8)" font-size="9" font-family="Inter,sans-serif">0%</text>
+            <text x="50" y="135" text-anchor="end" fill="rgba(255,255,255,.8)" font-size="9" font-family="Inter,sans-serif">10%</text>
+            <text x="50" y="95" text-anchor="end" fill="rgba(255,255,255,.8)" font-size="9" font-family="Inter,sans-serif">20%</text>
+            <text x="50" y="55" text-anchor="end" fill="rgba(255,255,255,.8)" font-size="9" font-family="Inter,sans-serif">30%</text>
+            <text transform="rotate(-90)" x="-100" y="16" text-anchor="middle" fill="rgba(255,255,255,.6)" font-size="8.5" font-family="Inter,sans-serif" letter-spacing=".06em">% of Test-Takers</text>
+          </g>
+          <!-- Center dashed line -->
+          <line id="centerLine" x1="180" y1="25" x2="180" y2="172" stroke="rgba(255,255,255,.18)" stroke-dasharray="5,4" stroke-width="1" opacity="0"/>
+          <!-- Where are you label -->
+          <text id="whereLabel" x="180" y="14" text-anchor="middle" fill="#DDD055" font-size="10.5" font-weight="700" font-family="Inter,sans-serif" opacity="0">Where are you?</text>
+          <!-- Stat badges (JS-animated) -->
+          <g id="badge1" opacity="0">
+            <rect x="25" y="130" width="46" height="24" rx="5" fill="rgba(10,30,20,.88)" stroke="rgba(201,168,76,.55)" stroke-width="1.2"/>
+            <text x="48" y="147" text-anchor="middle" fill="#C9A84C" font-size="13" font-weight="700" font-family="Inter,sans-serif">8%</text>
+            <line x1="71" y1="142" x2="100" y2="154" stroke="rgba(201,168,76,.4)" stroke-width="1" stroke-dasharray="3,2"/>
+          </g>
+          <g id="badge2" opacity="0">
+            <rect x="88" y="88" width="50" height="24" rx="5" fill="rgba(10,30,20,.88)" stroke="rgba(201,168,76,.55)" stroke-width="1.2"/>
+            <text x="113" y="105" text-anchor="middle" fill="#C9A84C" font-size="13" font-weight="700" font-family="Inter,sans-serif">21%</text>
+            <line x1="113" y1="112" x2="140" y2="132" stroke="rgba(201,168,76,.4)" stroke-width="1" stroke-dasharray="3,2"/>
+          </g>
+          <g id="badge3" opacity="0">
+            <rect x="150" y="36" width="60" height="26" rx="6" fill="rgba(10,30,20,.92)" stroke="#DDD055" stroke-width="1.8"/>
+            <text x="180" y="54" text-anchor="middle" fill="#DDD055" font-size="14" font-weight="700" font-family="Inter,sans-serif">38%</text>
+            <line x1="180" y1="62" x2="180" y2="25" stroke="rgba(221,208,85,.45)" stroke-width="1" stroke-dasharray="3,2"/>
+          </g>
+          <g id="badge4" opacity="0">
+            <rect x="242" y="88" width="50" height="24" rx="5" fill="rgba(10,30,20,.88)" stroke="rgba(201,168,76,.55)" stroke-width="1.2"/>
+            <text x="267" y="105" text-anchor="middle" fill="#C9A84C" font-size="13" font-weight="700" font-family="Inter,sans-serif">21%</text>
+            <line x1="242" y1="100" x2="224" y2="130" stroke="rgba(201,168,76,.4)" stroke-width="1" stroke-dasharray="3,2"/>
+          </g>
+          <g id="badge5" opacity="0">
+            <rect x="309" y="130" width="46" height="24" rx="5" fill="rgba(10,30,20,.88)" stroke="rgba(201,168,76,.55)" stroke-width="1.2"/>
+            <text x="332" y="147" text-anchor="middle" fill="#C9A84C" font-size="13" font-weight="700" font-family="Inter,sans-serif">8%</text>
+            <line x1="309" y1="142" x2="278" y2="154" stroke="rgba(201,168,76,.4)" stroke-width="1" stroke-dasharray="3,2"/>
+          </g>
         </svg>
       </div>
     </div>
@@ -1112,5 +1161,70 @@ document.addEventListener('DOMContentLoaded',()=>{
   <input name="email" type="email"/>
   <input name="message" type="text"/>
 </form>
+
+<script>
+// ── Bell Curve Animation ──
+(function() {
+  var ease = function(t) { return t<0.5 ? 2*t*t : -1+(4-2*t)*t; };
+  function animateDash(el, dur, delay) {
+    var total = parseFloat(el.getAttribute('stroke-dasharray'));
+    el.setAttribute('stroke-dashoffset', total);
+    setTimeout(function() {
+      var start = performance.now();
+      (function frame(now) {
+        var t = Math.min((now - start) / dur, 1);
+        el.setAttribute('stroke-dashoffset', total * (1 - ease(t)));
+        if (t < 1) requestAnimationFrame(frame);
+      })(performance.now());
+    }, delay);
+  }
+  function fadeIn(el, dur, delay) {
+    el.style.opacity = 0;
+    setTimeout(function() {
+      var start = performance.now();
+      (function frame(now) {
+        var t = Math.min((now - start) / dur, 1);
+        el.style.opacity = ease(t);
+        if (t < 1) requestAnimationFrame(frame);
+      })(performance.now());
+    }, delay);
+  }
+  function popIn(el, delay) {
+    el.style.opacity = 0;
+    setTimeout(function() {
+      var dur = 450, start = performance.now();
+      (function frame(now) {
+        var t = Math.min((now - start) / dur, 1);
+        var scale = t < 0.7 ? 0.5 + (t/0.7)*0.65 : 1.15 - ((t-0.7)/0.3)*0.15;
+        el.style.transform = 'scale('+scale+')';
+        el.style.transformOrigin = '50% 50%';
+        el.style.opacity = Math.min(t*3, 1);
+        if (t < 1) requestAnimationFrame(frame);
+        else { el.style.transform = 'scale(1)'; el.style.opacity = 1; }
+      })(performance.now());
+    }, delay);
+  }
+  var curve = document.getElementById('bellCurve');
+  if (!curve) return;
+  var len = curve.getTotalLength();
+  curve.setAttribute('stroke-dasharray', len);
+  curve.setAttribute('stroke-dashoffset', len);
+  animateDash(document.getElementById('axisX'), 500, 200);
+  animateDash(document.getElementById('axisY'), 500, 350);
+  fadeIn(document.getElementById('arrowX'), 200, 700);
+  fadeIn(document.getElementById('arrowY'), 200, 850);
+  fadeIn(document.getElementById('xTicks'), 400, 700);
+  fadeIn(document.getElementById('yTicks'), 400, 800);
+  animateDash(curve, 3000, 900);
+  fadeIn(document.getElementById('fillArea'), 700, 4000);
+  fadeIn(document.getElementById('centerLine'), 400, 3800);
+  fadeIn(document.getElementById('whereLabel'), 400, 3900);
+  popIn(document.getElementById('badge1'), 4100);
+  popIn(document.getElementById('badge2'), 4350);
+  popIn(document.getElementById('badge3'), 4600);
+  popIn(document.getElementById('badge4'), 4850);
+  popIn(document.getElementById('badge5'), 5100);
+})();
+</script>
 </body>
 </html>

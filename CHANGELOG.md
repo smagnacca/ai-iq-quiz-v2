@@ -1,5 +1,23 @@
 # Changelog — Practical AI Skills IQ Quiz
 
+## v15.4 — Bell Curve Chart Enhancement (2026-04-05)
+
+### Summary
+Enhanced the homepage hero bell curve chart with animated X/Y axes, a smooth 3-second curve build animation, and enlarged stat badges lifted off the curve for readability. No other homepage elements were modified.
+
+### Files Changed
+| File | Change |
+|------|--------|
+| `index.html` | Bell curve SVG replaced with enhanced version + JS animation block injected |
+
+### Changes
+- **X and Y axes added** — both axes draw in sequentially (200–850ms) with white tick marks, axis labels (30/50/70/90/100 on X; 0%/10%/20%/30% on Y), and rotated Y-axis title "% of Test-Takers"
+- **Bell curve animates over 3 seconds** — JS-driven `stroke-dashoffset` animation using real `getTotalLength()` measurement; smooth cubic easing; starts at 900ms after axes appear; gold fill area fades in on completion
+- **Stat labels 25% larger and moved off the curve** — all 5 percentages (8%, 21%, 38%, 21%, 8%) now rendered as frosted dark badge boxes with gold borders, leader lines back to the curve, and pop-in animation sequenced after the curve finishes (4.1s–5.1s)
+- **Animation engine** — JS `requestAnimationFrame` used for all `<g>` element animations (CSS `@keyframes` on SVG groups silently fail; this approach is reliable cross-browser)
+
+---
+
 ## v15.3 — Production-Ready Automated PDF Generation + Bug Fixes (2026-04-04)
 
 ### Summary

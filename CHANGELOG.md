@@ -1,5 +1,25 @@
 # Changelog — Practical AI Skills IQ Quiz
 
+## v15.5 — Trust Bar Redesign: Gold-Bordered Card + Typewriter Headline (2026-04-05)
+
+### Summary
+Redesigned the authority/trust bar section on the homepage into a contained gold-bordered card with a scroll-triggered typewriter headline. Only this section was modified — no other homepage changes applied.
+
+### Files Changed
+| File | Change |
+|------|--------|
+| `index.html` | Trust bar CSS replaced, HTML restructured with wrapper + headline, typewriter JS injected |
+
+### Changes
+- **Gold-bordered card** — `.trust-bar-outer` wrapper + `.trust-bar` with `border: 1.5px solid rgba(201,168,76,.45)`, `border-radius: 12px`, and a soft gold box-shadow to visually separate this section from the quote above
+- **Eyebrow label** — "THE AI SKILLS GAP IS NOT A THEORY" in peacock blue uppercase above the headline
+- **Typewriter headline** — "The world's most respected research institutions agree: AI fluency is now the defining career divide." types out in Merriweather serif at 38ms/char, triggered by IntersectionObserver when section scrolls into view (threshold 0.4)
+- **Sub-line fade** — "The statistics powering this assessment are drawn from their research — not opinion." fades in after typewriter completes
+- **Marquee refinements** — speed adjusted to 22s, item text darkened to `#444` at 70% opacity, gold dot separators between publications
+- **Scroll animation** — `.trust-bar-outer` inherits `fadeUp` animation for section entrance
+
+---
+
 ## v15.4 — Bell Curve Chart Enhancement (2026-04-05)
 
 ### Summary

@@ -1442,14 +1442,35 @@ function updateProgressDots(){
 function startTimer(){
   clearInterval(timer);const display=document.getElementById('timerDisplay'),timerEl=document.getElementById('quizTimer');
   display.textContent=timeLeft+'s';timerEl.classList.remove('warning');
-  timer=setInterval(()=>{timeLeft--;display.textContent=timeLeft+'s';if(timeLeft<=5)timerEl.classList.add('warning');if(timeLeft<=0){clearInterval(timer);const tq=QUESTIONS[currentQ];answers[currentQ]={selected:-1,correct:tq.correct,isCorrect:false,timeTaken:60,timedOut:true};showTimeoutFeedback()}},1000);
+  timer=setInterval(()=>{
+    timeLeft--;
+    display.textContent=timeLeft+'s';
+    if(timeLeft<=5)timerEl.classList.add('warning');
+    if(timeLeft<=0){
+      clearInterval(timer);
+      timerEl.classList.remove('warning');
+      display.textContent='0s';
+      showTimeoutFeedback();
+    }
+  },1000);
 }
 
 function showTimeoutFeedback(){
-  document.querySelectorAll('.opt').forEach(o=>{o.style.pointerEvents='none'});
+  // Don't auto-answer or auto-advance — show a prompt and let user continue
+  let msg=document.getElementById('timeoutMsg');
+  if(!msg){
+    msg=document.createElement('div');
+    msg.id='timeoutMsg';
+    msg.style.cssText='margin:0 0 16px;padding:12px 18px;background:#FEE2E2;border:1.5px solid #EF4444;border-radius:6px;color:#B91C1C;font-size:.88rem;font-weight:600;text-align:center;animation:fadeUp .3s ease';
+    msg.textContent='⏱ Time\'s up — please select an answer and advance to the next question.';
+    const area=document.getElementById('questionArea');
+    // Insert before the options div
+    const opts=area.querySelector('.options');
+    if(opts)area.insertBefore(msg,opts);else area.appendChild(msg);
+  }
+  // Keep options fully interactive — user can still pick and answer
   updateNavButtons();
   updateProgressDots();
-  if(currentQ<QUESTIONS.length-1){setTimeout(()=>nextQuestion(),1500);}
 }
 
 function playClickSound(){
@@ -1470,9 +1491,9 @@ function showAnswerFlash(){
   f.style.opacity='1';setTimeout(()=>{f.style.opacity='0';},900);
 }
 function selectOption(el,idx){
-  // Block selection only if the question timed out (auto-answered)
-  if(answers[currentQ]!==undefined&&answers[currentQ].timedOut)return;
   clearInterval(timer);
+  // Remove timeout message if present
+  const msg=document.getElementById('timeoutMsg');if(msg)msg.remove();
   playClickSound();
   showAnswerFlash();
   const q=QUESTIONS[currentQ],isCorrect=idx===q.correct,elapsed=60-timeLeft;

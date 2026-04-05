@@ -219,11 +219,12 @@ a{color:inherit;text-decoration:none}
 .field input:focus,.field select:focus{outline:none;border-color:var(--babson-green);background:var(--white);box-shadow:0 0 0 3px rgba(0,102,68,.1)}
 .field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' fill='none' stroke='%236B6560' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;cursor:pointer}
 .quiz-instructions{background:linear-gradient(135deg,rgba(0,102,68,.04),rgba(238,175,0,.06));border:1.5px solid rgba(201,168,76,.35);border-radius:10px;padding:18px 20px;margin:18px 0 14px}
-.qi-header{font-size:.82rem;font-weight:700;color:var(--babson-green);letter-spacing:.04em;text-transform:uppercase;margin-bottom:12px}
+.qi-header{font-size:.82rem;font-weight:700;color:var(--babson-green);letter-spacing:.04em;text-transform:uppercase;margin-bottom:12px;opacity:0;transform:translateY(6px);transition:opacity .7s ease,transform .7s ease}
 .qi-list{list-style:none;padding:0;margin:0 0 12px;display:flex;flex-direction:column;gap:8px}
-.qi-list li{font-size:.85rem;color:var(--text);line-height:1.55;padding-left:20px;position:relative}
+.qi-list li{font-size:.85rem;color:var(--text);line-height:1.55;padding-left:20px;position:relative;opacity:0;transform:translateY(8px);transition:opacity .7s ease,transform .7s ease}
 .qi-list li::before{content:'→';position:absolute;left:0;color:var(--babson-green);font-weight:700}
-.qi-encouragement{font-size:.85rem;font-style:italic;color:var(--babson-green);font-weight:600;border-top:1px solid rgba(201,168,76,.25);padding-top:10px;margin-top:4px;line-height:1.5}
+.qi-encouragement{font-size:.85rem;font-style:italic;color:var(--babson-green);font-weight:600;border-top:1px solid rgba(201,168,76,.25);padding-top:10px;margin-top:4px;line-height:1.5;opacity:0;transform:translateY(6px);transition:opacity .8s ease,transform .8s ease}
+.qi-header.qi-visible,.qi-list li.qi-visible,.qi-encouragement.qi-visible{opacity:1;transform:translateY(0)}
 .btn-start{display:block;width:100%;background:var(--mango);color:var(--white);border:none;padding:15px;font-size:1rem;font-weight:700;cursor:pointer;border-radius:3px;transition:all .2s;margin-top:6px;box-shadow:0 2px 8px rgba(238,175,0,.2);animation:ctaFlash 3s ease-in-out infinite}
 .btn-start:hover{background:var(--bright-gold);box-shadow:0 4px 12px rgba(238,175,0,.3);transform:translateY(-1px)}
 .btn-start:disabled{background:#C8C4BC;cursor:default;box-shadow:none}
@@ -1016,14 +1017,14 @@ a{color:inherit;text-decoration:none}
           </select>
         </div>
         <div class="quiz-instructions">
-          <div class="qi-header">📋 Before You Begin — Quick Tips</div>
+          <div class="qi-header" id="qiHeader">📋 Before You Begin — Quick Tips</div>
           <ul class="qi-list">
-            <li><strong>Go with your gut.</strong> These questions are scenario-based — your first instinct is usually right. Don't overthink it.</li>
-            <li><strong>No tricks.</strong> Every question has one clearly best answer based on real-world AI application. Read each option fully before choosing.</li>
-            <li><strong>Pace yourself.</strong> A soft timer nudges you to keep moving, but there's no penalty — answer at your own pace.</li>
-            <li><strong>Be honest.</strong> The more accurately you answer, the more useful and personalised your results will be.</li>
+            <li id="qiTip1"><strong>Go with your gut.</strong> These questions are scenario-based — your first instinct is usually right. Don't overthink it.</li>
+            <li id="qiTip2"><strong>No tricks.</strong> Every question has one clearly best answer based on real-world AI application. Read each option fully before choosing.</li>
+            <li id="qiTip3"><strong>Pace yourself.</strong> A soft timer nudges you to keep moving, but there's no penalty — answer at your own pace.</li>
+            <li id="qiTip4"><strong>Be honest.</strong> The more accurately you answer, the more useful and personalised your results will be.</li>
           </ul>
-          <div class="qi-encouragement">You've got this. 💪 Most people find the results genuinely eye-opening — you might be surprised how much you already know.</div>
+          <div class="qi-encouragement" id="qiEncouragement">You've got this. 💪 Most people find the results genuinely eye-opening — you might be surprised how much you already know.</div>
         </div>
         <button class="btn-start" id="btnStartQuiz" onclick="startQuiz()">Start My Assessment →</button>
         <p class="gate-privacy">🔒 Your information is 100% secure and never shared.</p>
@@ -1373,6 +1374,7 @@ function runGateEntrance(){
   setTimeout(()=>{
     if(formFields){formFields.style.transition=`opacity .5s ease, transform .5s ease`;formFields.style.opacity='1';formFields.style.transform='translateY(0)'}
   },4600);
+
 }
 
 function animateCounterText(el, targetStr, dur){
@@ -1992,6 +1994,30 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
   },{threshold:0.4});
   obs.observe(el);
+})();
+</script>
+<script>
+/* ── Quick Tips scroll-reveal — fires when user scrolls the block into view ── */
+(function(){
+  var triggered=false;
+  var ids=['qiHeader','qiTip1','qiTip2','qiTip3','qiTip4','qiEncouragement'];
+  // stagger: 0ms, 1400ms, 2800ms, 4200ms, 5600ms, 7400ms
+  var delays=[0, 1400, 2800, 4200, 5600, 7400];
+  var anchor=document.getElementById('qiHeader');
+  if(!anchor) return;
+  var obs=new IntersectionObserver(function(entries){
+    if(entries[0].isIntersecting && !triggered){
+      triggered=true;
+      ids.forEach(function(id,i){
+        setTimeout(function(){
+          var el=document.getElementById(id);
+          if(el) el.classList.add('qi-visible');
+        }, delays[i]);
+      });
+      obs.disconnect();
+    }
+  },{threshold:0.3, rootMargin:'0px 0px -40px 0px'});
+  obs.observe(anchor);
 })();
 </script>
 </body>

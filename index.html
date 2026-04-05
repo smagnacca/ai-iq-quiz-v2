@@ -547,6 +547,30 @@ a{color:inherit;text-decoration:none}
   .results-header{padding:36px 24px 28px}
   .upsell-inner{padding:36px 24px 36px}
 }
+
+/* ═══ GATE CINEMATIC ENTRANCE ═══ */
+/* Left panel and right panel start hidden, animate in on showSection */
+.gate-sketch-panel{transition:opacity .7s ease,transform .7s ease}
+.gate-sketch-panel.gate-hidden{opacity:0;transform:translateX(-40px)}
+.gate-form-panel.gate-hidden{opacity:0;transform:translateX(40px)}
+.gate-form-panel{transition:opacity .7s ease,transform .7s ease}
+
+/* Individual sketch boxes slide up independently */
+.gate-sketch-box{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.gate-sketch-box.gate-box-visible{opacity:1;transform:translateY(0)}
+
+/* Stats count-up flash */
+.gate-sketch-stat{display:block}
+.gate-stat-flash{animation:statFlash .4s ease}
+@keyframes statFlash{0%{color:var(--bright-gold)}40%{color:#fff;text-shadow:0 0 20px rgba(255,255,255,.8)}100%{color:var(--bright-gold)}}
+
+/* Right panel content stagger */
+.gate-benefit-item-wrap{opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
+.gate-benefit-item-wrap.gb-visible{opacity:1;transform:translateY(0)}
+.gate-form-fields{opacity:0;transform:translateY(12px);transition:opacity .5s ease,transform .5s ease}
+.gate-form-fields.gf-visible{opacity:1;transform:translateY(0)}
+.gate-title-wrap{opacity:0;transform:translateY(8px);transition:opacity .5s ease,transform .5s ease}
+.gate-title-wrap.gt-visible{opacity:1;transform:translateY(0)}
 </style>
 </head>
 <body>
@@ -886,24 +910,31 @@ a{color:inherit;text-decoration:none}
       <!-- RIGHT: Form -->
       <div class="card gate-form-panel" style="border-radius:0 4px 4px 0">
         <div class="card-body" style="text-align:center;padding:32px 36px 20px">
-          <div class="gate-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
-          <h2 class="gate-title">Ready to Discover Your Score?</h2>
-          <p class="gate-sub">Enter your details to start your personalized AI Skills IQ assessment.</p>
+          <div class="gate-title-wrap">
+            <div class="gate-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+            <h2 class="gate-title">Ready to Discover Your Score?</h2>
+            <p class="gate-sub">Find out your AI Skills IQ in ~5 minutes and see where you rank.</p>
+          </div>
           <div class="gate-benefits">
             <ul class="gate-benefits-list">
-              <li class="gate-benefits-item">See where you rank among 12,000+ professionals</li>
-              <li class="gate-benefits-item">Get personalized AI skill insights</li>
-              <li class="gate-benefits-item">Free — takes ~5 minutes</li>
+              <li class="gate-benefits-item gate-benefit-item-wrap" id="gbi1">See where you rank among 12,000+ professionals</li>
+              <li class="gate-benefits-item gate-benefit-item-wrap" id="gbi2">Get personalized AI skill insights</li>
+              <li class="gate-benefits-item gate-benefit-item-wrap" id="gbi3">Free — takes ~5 minutes</li>
             </ul>
           </div>
+          <div class="gate-form-fields" id="gateFormFields">
           <div class="gate-trust">
             <div class="gate-trust-item"><svg viewBox="0 0 24 24" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Secure</div>
             <div class="gate-trust-item"><svg viewBox="0 0 24 24" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> No spam</div>
-            <div class="gate-trust-item"><svg viewBox="0 0 24 24" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l2 2"/></svg> 3 min</div>
+            <div class="gate-trust-item"><svg viewBox="0 0 24 24" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l2 2"/></svg> ~5 min</div>
           </div>
+          </div><!-- /gate-form-fields -->
         </div>
         <div style="padding:0 36px 28px" id="gateForm">
-        <div class="field"><label for="firstName">First Name</label><input type="text" id="firstName" placeholder="e.g. Sarah" required autocomplete="given-name"/></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+  <div class="field"><label for="firstName">First Name</label><input type="text" id="firstName" placeholder="e.g. Sarah" required autocomplete="given-name"/></div>
+  <div class="field"><label for="lastName" style="display:flex;align-items:center;gap:6px">Last Name <span style="font-size:.68rem;color:var(--text-soft);font-weight:400">(optional)</span></label><input type="text" id="lastName" placeholder="e.g. Chen" autocomplete="family-name"/></div>
+</div>
         <div class="field"><label for="email">Email Address</label><input type="email" id="email" placeholder="you@company.com" required autocomplete="email"/></div>
         <div class="field"><label for="industry">Industry</label>
           <select id="industry" required>
@@ -1182,6 +1213,88 @@ function showSection(id){
   const el=document.getElementById(id);if(el)el.classList.add('active');
   if(id!=='heroSection'){document.getElementById('heroSection').style.display='none'}
   window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='gateSection')runGateEntrance();
+}
+
+function runGateEntrance(){
+  // Hide everything first
+  const left=document.querySelector('.gate-sketch-panel');
+  const right=document.querySelector('.gate-form-panel');
+  const box1=document.querySelectorAll('.gate-sketch-box')[0];
+  const box2=document.querySelectorAll('.gate-sketch-box')[1];
+  const stat1=document.querySelectorAll('.gate-sketch-stat')[0];
+  const stat2=document.querySelectorAll('.gate-sketch-stat')[1];
+  const titleWrap=document.querySelector('.gate-title-wrap');
+  const gbi1=document.getElementById('gbi1');
+  const gbi2=document.getElementById('gbi2');
+  const gbi3=document.getElementById('gbi3');
+  const formFields=document.getElementById('gateFormFields');
+
+  // Reset to hidden
+  [left,right].forEach(el=>{if(el){el.style.opacity='0';el.style.transform=el===left?'translateX(-40px)':'translateX(40px)'}});
+  [box1,box2,gbi1,gbi2,gbi3].forEach(el=>{if(el){el.style.opacity='0';el.style.transform='translateY(24px)'}});
+  if(titleWrap){titleWrap.style.opacity='0';titleWrap.style.transform='translateY(8px)'}
+  if(formFields){formFields.style.opacity='0';formFields.style.transform='translateY(12px)'}
+
+  const ease='cubic-bezier(.22,1,.36,1)';
+
+  // Step 1 (0ms): Left panel slides in
+  setTimeout(()=>{
+    if(left){left.style.transition=`opacity .65s ${ease}, transform .65s ${ease}`;left.style.opacity='1';left.style.transform='translateX(0)'}
+  },80);
+
+  // Step 2 (400ms): BEFORE sketch box appears
+  setTimeout(()=>{
+    if(box1){box1.style.transition=`opacity .55s ${ease}, transform .55s ${ease}`;box1.style.opacity='1';box1.style.transform='translateY(0)'}
+  },420);
+
+  // Step 3 (900ms): AFTER sketch box appears — ~5s dwell so user sees both
+  setTimeout(()=>{
+    if(box2){box2.style.transition=`opacity .55s ${ease}, transform .55s ${ease}`;box2.style.opacity='1';box2.style.transform='translateY(0)'}
+  },900);
+
+  // Step 4 (1.5s): Stats count up with flash
+  setTimeout(()=>{
+    if(stat1){
+      stat1.textContent='0%';
+      animateCounterText(stat1,'56%',800);
+      setTimeout(()=>stat1.classList.add('gate-stat-flash'),820);
+    }
+    if(stat2){
+      stat2.textContent='0%';
+      setTimeout(()=>{animateCounterText(stat2,'77%',800);setTimeout(()=>stat2.classList.add('gate-stat-flash'),820)},300);
+    }
+  },1500);
+
+  // Step 5 (2.2s): Right panel slides in
+  setTimeout(()=>{
+    if(right){right.style.transition=`opacity .65s ${ease}, transform .65s ${ease}`;right.style.opacity='1';right.style.transform='translateX(0)'}
+  },2200);
+
+  // Step 6 (2.7s): Title + sub fade up
+  setTimeout(()=>{
+    if(titleWrap){titleWrap.style.transition=`opacity .5s ease, transform .5s ease`;titleWrap.style.opacity='1';titleWrap.style.transform='translateY(0)'}
+  },2700);
+
+  // Step 7 (3.2s / 3.6s / 4.0s): Benefit checkmarks type in one by one
+  [[gbi1,3200],[gbi2,3650],[gbi3,4100]].forEach(([el,delay])=>{
+    setTimeout(()=>{
+      if(el){el.style.transition=`opacity .45s ease, transform .45s ease`;el.style.opacity='1';el.style.transform='translateY(0)'}
+    },delay);
+  });
+
+  // Step 8 (4.6s): Trust bar + form fields slide up
+  setTimeout(()=>{
+    if(formFields){formFields.style.transition=`opacity .5s ease, transform .5s ease`;formFields.style.opacity='1';formFields.style.transform='translateY(0)'}
+  },4600);
+}
+
+function animateCounterText(el, targetStr, dur){
+  const isPercent=targetStr.includes('%');
+  const target=parseInt(targetStr);
+  const step=target/(dur/16);let cur=0;
+  const tick=()=>{cur+=step;if(cur>=target){el.textContent=target+(isPercent?'%':'');return}el.textContent=Math.floor(cur)+(isPercent?'%':'');requestAnimationFrame(tick)};
+  tick();
 }
 
 function animateCounter(el,target,dur=1500){
@@ -1193,7 +1306,7 @@ function startQuiz(){
   const fn=document.getElementById('firstName').value.trim(),em=document.getElementById('email').value.trim(),ind=document.getElementById('industry').value;
   if(!fn||!em||!ind){alert('Please fill in all fields.');return}
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){alert('Please enter a valid email.');return}
-  userData={firstName:fn,email:em,industry:ind};quizStartTime=Date.now();currentQ=0;answers=[];
+  const ln=document.getElementById('lastName').value.trim();userData={firstName:fn,lastName:ln,fullName:ln?fn+' '+ln:fn,email:em,industry:ind};quizStartTime=Date.now();currentQ=0;answers=[];
   // Fire-and-forget: notify Scott via Netlify Form that someone started the quiz
   fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
     body:new URLSearchParams({'form-name':'quiz-start',site:'Practical AI Skills IQ Quiz (practical-ai-skills-iq.netlify.app)',name:fn,email:em,message:fn+' ('+em+') from '+ind+' just started the Practical AI IQ Quiz'}).toString()

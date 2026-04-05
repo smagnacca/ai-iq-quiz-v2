@@ -119,9 +119,16 @@ a{color:inherit;text-decoration:none}
 .exit-close:hover{border-color:var(--text-soft);color:var(--text)}
 
 /* ═══ TRUST BAR ═══ */
-.trust-bar{background:var(--white);border-bottom:1px solid var(--border);padding:14px 0;overflow:hidden;opacity:0;animation:fadeUp 1.2s ease forwards}
-.trust-track{display:flex;animation:marquee 20s linear infinite;width:max-content}
-.trust-item{color:var(--text-soft);font-size:.78rem;font-weight:600;letter-spacing:.06em;opacity:.45;padding:0 36px;white-space:nowrap}
+.trust-bar-outer{background:var(--white);padding:32px 24px 28px;opacity:0;animation:fadeUp 1.2s ease forwards}
+.trust-bar{background:var(--white);border:1.5px solid rgba(201,168,76,.45);border-radius:12px;padding:28px 0 16px;overflow:hidden;box-shadow:0 2px 24px rgba(201,168,76,.08),inset 0 0 40px rgba(201,168,76,.03)}
+.trust-bar-headline{text-align:center;padding:0 32px 20px;border-bottom:1px solid rgba(201,168,76,.18);margin-bottom:14px}
+.trust-bar-eyebrow{font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--peacock);display:block;margin-bottom:10px}
+.trust-bar-title{font-family:'Merriweather',serif;font-size:1.05rem;color:var(--babson-green);font-weight:700;line-height:1.45;margin-bottom:6px;min-height:1.5em}
+.trust-bar-sub{font-size:.82rem;color:#555;font-weight:500;font-style:italic}
+.trust-track{display:flex;animation:marquee 22s linear infinite;width:max-content}
+.trust-item{color:#444;font-size:.74rem;font-weight:700;letter-spacing:.09em;opacity:.7;padding:0 28px;white-space:nowrap}
+.trust-item::before{content:'·';margin-right:28px;opacity:.4;color:rgba(201,168,76,.8)}
+.trust-item:first-child::before{display:none}
 
 /* ═══ HOW IT WORKS ═══ */
 .how-section{padding:72px 20px;max-width:960px;margin:0 auto}
@@ -529,22 +536,31 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <!-- Trust Bar (Authority) -->
-<div class="trust-bar">
-  <div class="trust-track" id="trustTrack">
-    <span class="trust-item">HARVARD BUSINESS REVIEW</span>
-    <span class="trust-item">FORBES</span>
-    <span class="trust-item">WALL STREET JOURNAL</span>
-    <span class="trust-item">McKINSEY & COMPANY</span>
-    <span class="trust-item">WORLD ECONOMIC FORUM</span>
-    <span class="trust-item">MIT TECHNOLOGY REVIEW</span>
-    <span class="trust-item">BLOOMBERG</span>
-    <span class="trust-item">HARVARD BUSINESS REVIEW</span>
-    <span class="trust-item">FORBES</span>
-    <span class="trust-item">WALL STREET JOURNAL</span>
-    <span class="trust-item">McKINSEY & COMPANY</span>
-    <span class="trust-item">WORLD ECONOMIC FORUM</span>
-    <span class="trust-item">MIT TECHNOLOGY REVIEW</span>
-    <span class="trust-item">BLOOMBERG</span>
+<div class="trust-bar-outer">
+  <div class="trust-bar">
+    <div class="trust-bar-headline">
+      <span class="trust-bar-eyebrow">The AI Skills Gap Is Not a Theory</span>
+      <div class="trust-bar-title" id="trustTitle"></div>
+      <div class="trust-bar-sub" id="trustSub" style="opacity:0;transition:opacity .6s ease">The statistics powering this assessment are drawn from their research — not opinion.</div>
+    </div>
+    <div class="trust-marquee-wrap" style="overflow:hidden">
+      <div class="trust-track" id="trustTrack">
+        <span class="trust-item">HARVARD BUSINESS REVIEW</span>
+        <span class="trust-item">FORBES</span>
+        <span class="trust-item">WALL STREET JOURNAL</span>
+        <span class="trust-item">McKINSEY &amp; COMPANY</span>
+        <span class="trust-item">WORLD ECONOMIC FORUM</span>
+        <span class="trust-item">MIT TECHNOLOGY REVIEW</span>
+        <span class="trust-item">BLOOMBERG</span>
+        <span class="trust-item">HARVARD BUSINESS REVIEW</span>
+        <span class="trust-item">FORBES</span>
+        <span class="trust-item">WALL STREET JOURNAL</span>
+        <span class="trust-item">McKINSEY &amp; COMPANY</span>
+        <span class="trust-item">WORLD ECONOMIC FORUM</span>
+        <span class="trust-item">MIT TECHNOLOGY REVIEW</span>
+        <span class="trust-item">BLOOMBERG</span>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1224,6 +1240,31 @@ document.addEventListener('DOMContentLoaded',()=>{
   popIn(document.getElementById('badge3'), 4600);
   popIn(document.getElementById('badge4'), 4850);
   popIn(document.getElementById('badge5'), 5100);
+})();
+</script>
+<script>
+/* ── Trust Bar Typewriter ── */
+(function(){
+  var el=document.getElementById('trustTitle');
+  var sub=document.getElementById('trustSub');
+  if(!el) return;
+  var text='The world\u2019s most respected research institutions agree: AI fluency is now the defining career divide.';
+  var typed=false;
+  var obs=new IntersectionObserver(function(entries){
+    if(entries[0].isIntersecting&&!typed){
+      typed=true;
+      var i=0;
+      el.textContent='';
+      el.style.borderRight='2px solid var(--babson-green)';
+      function tick(){
+        if(i<text.length){el.textContent+=text[i];i++;setTimeout(tick,38);}
+        else{el.style.borderRight='none';if(sub)sub.style.opacity='1';}
+      }
+      tick();
+      obs.disconnect();
+    }
+  },{threshold:0.4});
+  obs.observe(el);
 })();
 </script>
 </body>

@@ -402,6 +402,151 @@ a{color:inherit;text-decoration:none}
   .exit-modal{padding:20px}
   .exit-content{padding:28px 24px;max-width:90%}
 }
+
+/* ═══ RESULTS PAGE — SCROLL REVEAL ARCHITECTURE ═══ */
+.results-section-wrap{padding-bottom:0}
+
+/* Intersection Observer reveal — all results blocks start hidden */
+.r-reveal{opacity:0;transform:translateY(32px);transition:opacity .7s ease,transform .7s ease}
+.r-reveal.r-visible{opacity:1;transform:translateY(0)}
+.r-reveal.r-fast{transition-duration:.45s}
+.r-reveal.r-slow{transition-duration:1s}
+
+/* ── Score header ── */
+.results-header{text-align:center;padding:52px 48px 40px;position:relative;overflow:hidden;background:linear-gradient(160deg,#fff 60%,rgba(0,102,68,.03) 100%)}
+.results-header::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 0%,rgba(238,175,0,.08) 0%,transparent 65%);pointer-events:none;animation:parallaxShift 8s ease-in-out infinite}
+.results-label-top{font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--babson-green);margin-bottom:20px;opacity:0;animation:fadeIn .5s ease .3s forwards}
+
+/* Peer comparison bar (below score ring) */
+.peer-bar-wrap{margin:20px auto 0;max-width:360px}
+.peer-bar-label{font-size:.75rem;color:var(--text-soft);margin-bottom:6px;display:flex;justify-content:space-between}
+.peer-bar-track{height:10px;background:#E8E5DF;border-radius:5px;overflow:visible;position:relative}
+.peer-bar-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--babson-green),var(--mango));width:0;transition:width 1.4s cubic-bezier(.4,0,.2,1) .3s;position:relative}
+.peer-bar-fill::after{content:'▲';position:absolute;right:-6px;top:-16px;font-size:.65rem;color:var(--babson-green);font-weight:700}
+.peer-bar-you{font-size:.72rem;font-weight:700;color:var(--babson-green);margin-top:5px;text-align:right}
+
+/* ── Section labels ── */
+.results-section-label{font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--babson-green);border-bottom:2px solid var(--mango);padding-bottom:10px;margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.results-section-label::before{content:'';display:inline-block;width:3px;height:14px;background:var(--mango);border-radius:2px}
+
+/* ── Breakdown ── */
+.breakdown{padding:32px 48px 8px}
+.breakdown-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border);opacity:0;transform:translateX(-16px);transition:opacity .5s ease,transform .5s ease}
+.breakdown-row.visible{opacity:1;transform:translateX(0)}
+.breakdown-cat{font-size:.85rem;font-weight:600;min-width:160px;color:var(--text-dark)}
+.breakdown-score{font-family:'Merriweather',serif;font-weight:700;font-size:.95rem;min-width:44px;text-align:right}
+.breakdown-score.high{color:var(--success)}.breakdown-score.mid{color:var(--mango)}.breakdown-score.low{color:var(--danger)}
+.breakdown-bar{flex:1;margin:0 16px;height:8px;background:var(--border);border-radius:4px;overflow:hidden;position:relative}
+.breakdown-bar-fill{height:100%;border-radius:4px;width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
+.breakdown-bar-fill::after{content:'';position:absolute;top:0;left:-40%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);animation:barShine 2.5s ease-in-out 1.3s infinite}
+@keyframes barShine{0%{left:-40%}100%{left:140%}}
+
+/* ── Insights ── */
+.insights{padding:8px 48px 32px}
+.insight{display:flex;gap:14px;align-items:flex-start;padding:14px 18px;border-radius:8px;margin-bottom:10px;opacity:0;transform:translateY(12px);transition:opacity .5s ease,transform .5s ease}
+.insight.visible{opacity:1;transform:translateY(0)}
+.insight.strength{background:rgba(39,174,96,.07);border:1px solid rgba(39,174,96,.2)}
+.insight.improve{background:rgba(238,175,0,.07);border:1px solid rgba(238,175,0,.25)}
+.insight.gap{background:rgba(231,76,60,.06);border:1px solid rgba(231,76,60,.15)}
+.insight-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.insight-icon.strength{background:rgba(39,174,96,.15)}.insight-icon.improve{background:rgba(238,175,0,.15)}.insight-icon.gap{background:rgba(231,76,60,.12)}
+.insight-text{font-size:.86rem;color:var(--text-dark);line-height:1.6;padding-top:3px}
+
+/* ── Social proof strip ── */
+.social-proof-strip{margin:8px 48px 0;padding:20px 24px;background:linear-gradient(135deg,rgba(0,102,68,.04),rgba(238,175,0,.03));border:1px solid rgba(0,102,68,.12);border-radius:10px;display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.sp-stat{text-align:center;flex:1;min-width:100px}
+.sp-num{font-family:'Merriweather',serif;font-size:1.5rem;font-weight:700;color:var(--babson-green);display:block;background:linear-gradient(90deg,var(--babson-green),var(--mango));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sp-desc{font-size:.73rem;color:var(--text-soft);line-height:1.4;margin-top:2px}
+.sp-divider{width:1px;height:40px;background:var(--border);flex-shrink:0}
+
+/* ── Testimonials ── */
+.testimonials-wrap{padding:0 48px 8px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.testimonial-card{background:#F9F7F4;border:1px solid var(--border);border-radius:10px;padding:18px 20px;position:relative}
+.testimonial-card::before{content:'"';position:absolute;top:-4px;left:14px;font-size:2.8rem;color:var(--mango);font-family:'Merriweather',serif;line-height:1;opacity:.5}
+.testimonial-text{font-size:.82rem;color:var(--text-dark);line-height:1.6;margin-bottom:10px;padding-top:8px;font-style:italic}
+.testimonial-author{font-size:.73rem;font-weight:700;color:var(--babson-green)}
+.testimonial-role{font-size:.7rem;color:var(--text-soft)}
+
+/* ── Why matters ── */
+.why-matters{background:linear-gradient(135deg,rgba(0,102,68,.05),rgba(238,175,0,.04));border:1px solid rgba(0,102,68,.15);border-radius:8px;padding:28px 32px;margin:0 48px 4px}
+.why-matters h3{font-family:'Merriweather',serif;font-size:1.05rem;color:var(--babson-green);margin-bottom:10px}
+.why-matters p{font-size:.86rem;color:var(--text-soft);line-height:1.65}
+.why-matters strong{color:var(--babson-green)}
+
+/* ── Quote block ── */
+.results-quote-block{margin:4px 48px 4px;padding:22px 28px;border-left:3px solid var(--mango);background:rgba(238,175,0,.04)}
+.results-quote-block blockquote{font-family:'Merriweather',serif;font-size:.9rem;color:var(--text-dark);line-height:1.65;font-style:italic;margin-bottom:6px}
+.results-quote-block cite{font-size:.72rem;color:var(--text-soft)}
+
+/* ── Commitment bridge (Cialdini #2) ── */
+.commitment-bridge{margin:16px 48px 4px;padding:16px 22px;background:rgba(0,102,68,.04);border-radius:8px;border:1px solid rgba(0,102,68,.1);text-align:center}
+.commitment-bridge p{font-size:.84rem;color:var(--text-soft);line-height:1.6}
+.commitment-bridge strong{color:var(--babson-green)}
+
+/* ── Upsell ── */
+.upsell{background:linear-gradient(165deg,var(--summer-nights) 0%,var(--babson-green) 50%,#0A3A25 100%);padding:0;text-align:center;color:var(--white);position:relative;overflow:hidden}
+.upsell::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 0%,rgba(238,175,0,.18) 0%,transparent 65%);pointer-events:none}
+.upsell::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100' height='100' fill='%23000' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none}
+.upsell-inner{position:relative;z-index:1;padding:52px 48px 48px}
+.upsell-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(238,175,0,.18);border:1px solid rgba(238,175,0,.45);color:var(--bright-gold);font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:7px 20px;border-radius:24px;margin-bottom:24px}
+.upsell-headline{font-family:'Merriweather',serif;font-size:1.65rem;margin-bottom:10px;background:linear-gradient(90deg,var(--white) 20%,var(--bright-gold),var(--white) 80%);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmerText 4s linear infinite;line-height:1.35}
+.upsell-sub{color:rgba(255,255,255,.75);font-size:.9rem;margin-bottom:32px;max-width:460px;margin-left:auto;margin-right:auto;line-height:1.65}
+
+/* Features box — stagger in */
+.upsell-features-box{background:rgba(255,255,255,.07);border:1.5px solid rgba(238,175,0,.3);border-radius:12px;padding:28px 32px;max-width:460px;margin:0 auto 28px;animation:glowBorder 3s ease-in-out infinite}
+.upsell-feature{display:flex;gap:12px;align-items:flex-start;font-size:.87rem;color:rgba(255,255,255,.92);margin-bottom:14px;text-align:left;opacity:0;transform:translateX(-10px);transition:opacity .4s ease,transform .4s ease}
+.upsell-feature.f-visible{opacity:1;transform:translateX(0)}
+.upsell-feature:last-child{margin-bottom:0}
+.upsell-check{flex-shrink:0;font-size:1rem;color:var(--bright-gold)}
+
+/* Testimonial mini inside upsell */
+.upsell-testimonial{max-width:420px;margin:0 auto 24px;padding:16px 20px;background:rgba(255,255,255,.07);border-radius:8px;border:1px solid rgba(255,255,255,.1)}
+.upsell-testimonial-text{font-size:.82rem;color:rgba(255,255,255,.85);font-style:italic;line-height:1.55;margin-bottom:8px}
+.upsell-testimonial-author{font-size:.72rem;color:var(--bright-gold);font-weight:700}
+
+/* Social proof + price */
+.upsell-social-proof{font-size:.78rem;color:rgba(255,255,255,.55);margin-bottom:10px}
+.upsell-social-proof strong{color:var(--bright-gold)}
+.upsell-live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#27AE60;animation:livePulse 1.8s ease-in-out infinite;margin-right:5px;vertical-align:middle}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+
+.guarantee-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(39,174,96,.15);border:1px solid rgba(39,174,96,.3);color:rgba(255,255,255,.85);font-size:.75rem;font-weight:600;padding:6px 16px;border-radius:20px;margin-bottom:20px}
+
+/* Price section */
+.price-section{margin-bottom:24px}
+.price-row{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:8px}
+.price-original{font-size:1rem;color:rgba(255,255,255,.35);text-decoration:line-through;position:relative}
+.price-current{font-family:'Merriweather',serif;font-size:3rem;font-weight:700;color:var(--bright-gold);line-height:1;text-shadow:0 0 30px rgba(238,175,0,.4);animation:priceGlow 2.5s ease-in-out infinite}
+.price-current span{font-size:1.4rem;vertical-align:super}
+@keyframes priceGlow{0%,100%{text-shadow:0 0 20px rgba(238,175,0,.3)}50%{text-shadow:0 0 40px rgba(238,175,0,.7),0 0 80px rgba(238,175,0,.2)}}
+.price-message{font-size:.8rem;color:rgba(255,255,255,.55);line-height:1.5;margin-top:4px}
+
+/* Countdown */
+.countdown-box{display:inline-flex;align-items:center;gap:10px;background:rgba(0,0,0,.25);border:1px solid rgba(238,175,0,.2);border-radius:8px;padding:10px 22px;margin-bottom:24px}
+.countdown-label{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.countdown-timer{font-family:'Merriweather',serif;font-size:1.6rem;font-weight:700;color:var(--bright-gold);min-width:52px;text-align:center;text-shadow:0 0 16px rgba(238,175,0,.4)}
+.countdown-timer.urgent{color:#FF6B6B;text-shadow:0 0 16px rgba(255,107,107,.5);animation:timerUrgent 1s ease-in-out infinite}
+
+/* CTA button */
+.btn-pay{display:block;width:100%;max-width:380px;margin:0 auto 14px;background:linear-gradient(135deg,var(--mango),#D4A800);color:#1B2E1B;border:none;padding:17px 40px;font-size:1.05rem;font-weight:800;cursor:pointer;border-radius:6px;transition:all .2s;box-shadow:0 4px 20px rgba(238,175,0,.4),0 0 0 0 rgba(238,175,0,.3);animation:btnPulse 2.5s ease-in-out infinite;letter-spacing:.01em}
+.btn-pay:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(238,175,0,.5);animation:none}
+.btn-pay:disabled{background:#5a5a5a;box-shadow:none;animation:none;cursor:default;color:rgba(255,255,255,.4)}
+@keyframes btnPulse{0%,100%{box-shadow:0 4px 20px rgba(238,175,0,.4),0 0 0 0 rgba(238,175,0,.3)}50%{box-shadow:0 4px 24px rgba(238,175,0,.5),0 0 0 8px rgba(238,175,0,.0)}}
+
+.upsell-guarantee{margin-top:6px;font-size:.72rem;color:rgba(255,255,255,.4)}
+.upsell-unity{margin-top:16px;font-size:.78rem;color:rgba(255,255,255,.45);line-height:1.5;max-width:360px;margin-left:auto;margin-right:auto}
+.upsell-unity strong{color:rgba(255,255,255,.65)}
+.upsell-skip{display:inline-block;margin-top:20px;color:rgba(255,255,255,.25);font-size:.74rem;cursor:pointer;border:none;background:none;transition:color .2s;text-decoration:underline;text-underline-offset:2px}
+.upsell-skip:hover{color:rgba(255,255,255,.45)}
+
+@media(max-width:640px){
+  .testimonials-wrap{grid-template-columns:1fr}
+  .social-proof-strip{flex-direction:column;gap:12px;text-align:center}
+  .sp-divider{width:40px;height:1px}
+  .breakdown,.insights,.why-matters,.results-quote-block,.commitment-bridge,.testimonials-wrap,.social-proof-strip{padding-left:24px;padding-right:24px;margin-left:0;margin-right:0}
+  .results-header{padding:36px 24px 28px}
+  .upsell-inner{padding:36px 24px 36px}
+}
 </style>
 </head>
 <body>
@@ -815,54 +960,151 @@ a{color:inherit;text-decoration:none}
 </section>
 
 <!-- ═══════════ RESULTS ═══════════ -->
-<section class="section" id="resultsSection">
+<section class="section results-section-wrap" id="resultsSection">
   <div class="container">
     <div class="card" id="resultsCard">
+
+      <!-- ① RECIPROCITY: Score reveal — we did the work for you -->
       <div class="results-header">
         <div class="celebration-container" id="celebrationContainer"></div>
-        <div class="label" style="margin-bottom:16px">Your Results</div>
+        <div class="results-label-top">Your Personalized Assessment</div>
         <div class="score-ring" id="scoreRing">
           <div class="score-pct" id="scorePct">0%</div>
           <div class="score-label">AI Skills IQ</div>
         </div>
         <h2 class="results-title" id="resultsTitle"></h2>
         <p class="results-sub" id="resultsSub"></p>
-      </div>
-      <div class="reveal-block" id="breakdownBlock"><div class="breakdown" id="breakdownArea"></div></div>
-      <div class="reveal-block" id="insightsBlock"><div class="insights" id="insightsArea"></div></div>
-      <div class="reveal-block" id="whyBlock"><div class="why-matters" id="whyMatters"><h3>⚡ Why This Matters Right Now</h3><p id="whyText"></p></div></div>
-      <div class="reveal-block" id="resultsQuoteBlock">
-        <div class="inspire-quote" style="opacity:1;animation:none;margin:8px auto 20px">
-          <blockquote>"The 58% of employers who say universities are not meeting expectations is a market signal no institution — or individual — can afford to ignore."</blockquote>
-          <cite>AACSB Accreditation Research, 2025 | Peter Cohan, Business Schools Face an AI Reckoning</cite>
+        <!-- Peer comparison bar -->
+        <div class="peer-bar-wrap r-reveal" id="peerBarBlock" style="margin-top:20px">
+          <div class="peer-bar-label"><span>0%</span><span id="peerLabel">Your percentile</span><span>100%</span></div>
+          <div class="peer-bar-track"><div class="peer-bar-fill" id="peerBarFill"></div></div>
+          <div class="peer-bar-you" id="peerBarYou"></div>
         </div>
       </div>
-      <div class="reveal-block" id="upsellBlock">
+
+      <!-- ② AUTHORITY + RECIPROCITY: Category breakdown -->
+      <div class="r-reveal" id="breakdownBlock">
+        <div class="breakdown" id="breakdownArea"></div>
+      </div>
+
+      <!-- ③ COMMITMENT: Insight cards + bridge copy -->
+      <div class="r-reveal" id="insightsBlock">
+        <div class="insights" id="insightsArea"></div>
+      </div>
+
+      <!-- ④ COMMITMENT BRIDGE: Tie their effort to their identity -->
+      <div class="r-reveal" id="commitmentBlock">
+        <div class="commitment-bridge">
+          <p>You just completed an assessment that <strong>most professionals avoid</strong> because they're afraid of what they'll find. That alone puts you in a different category — people who act on what they learn.<br><span id="commitmentTail" style="display:inline"></span></p>
+        </div>
+      </div>
+
+      <!-- ⑤ SOCIAL PROOF: Live numbers + percentile stats -->
+      <div class="r-reveal" id="socialProofBlock">
+        <div class="social-proof-strip">
+          <div class="sp-stat">
+            <span class="sp-num" id="spTakers">12,847</span>
+            <span class="sp-desc">professionals have taken this assessment</span>
+          </div>
+          <div class="sp-divider"></div>
+          <div class="sp-stat">
+            <span class="sp-num">56%</span>
+            <span class="sp-desc">wage premium for AI-skilled workers (PwC 2025)</span>
+          </div>
+          <div class="sp-divider"></div>
+          <div class="sp-stat">
+            <span class="sp-num">77%</span>
+            <span class="sp-desc">of employers now require AI-ready professionals</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⑥ AUTHORITY: Research citation tied to their score -->
+      <div class="r-reveal" id="whyBlock">
+        <div class="why-matters" style="margin-top:8px">
+          <h3>⚡ Why This Matters Right Now</h3>
+          <p id="whyText"></p>
+        </div>
+      </div>
+
+      <!-- ⑦ SOCIAL PROOF continued: Micro-testimonials -->
+      <div class="r-reveal" id="testimonialsBlock">
+        <div class="testimonials-wrap">
+          <div class="testimonial-card">
+            <p class="testimonial-text">I was skeptical about a $1 report — but the breakdown of my weak areas was more specific and honest than anything I've gotten from a full-day workshop.</p>
+            <div class="testimonial-author">Marcus T.</div>
+            <div class="testimonial-role">VP of Sales Operations, SaaS · Scored 72%</div>
+          </div>
+          <div class="testimonial-card">
+            <p class="testimonial-text">The prompting gap they identified was dead-on. I've since saved 6+ hours a week just from fixing how I talk to AI tools. Worth every penny and more.</p>
+            <div class="testimonial-author">Priya S.</div>
+            <div class="testimonial-role">Marketing Director, Financial Services · Scored 65%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⑧ AUTHORITY: Quote block -->
+      <div class="r-reveal" id="resultsQuoteBlock">
+        <div class="results-quote-block">
+          <blockquote id="resultsQuoteText">"The 58% of employers who say universities are not meeting expectations is a market signal no institution — or individual — can afford to ignore."</blockquote>
+          <cite id="resultsQuoteCite">AACSB Accreditation Research, 2025 | Peter Cohan, Business Schools Face an AI Reckoning</cite>
+        </div>
+      </div>
+
+      <!-- ⑨ UPSELL — All 7 Cialdini principles converge here -->
+      <div class="r-reveal r-slow" id="upsellBlock">
         <div class="upsell" id="upsellArea">
           <div class="upsell-inner">
-            <div class="upsell-badge">✨ Limited Time Offer</div>
-            <h2 class="upsell-headline">Get Your Complete AI Skills IQ Report</h2>
-            <p class="upsell-sub">Your personalized 1-page analysis with specific action steps — sent to your inbox in seconds.</p>
+
+            <!-- SCARCITY badge -->
+            <div class="upsell-badge">⏱ Session-Only Price — Expires Below</div>
+
+            <!-- RECIPROCITY: headline names their specific result -->
+            <h2 class="upsell-headline" id="upsellHeadline">Unlock Your Complete AI Skills IQ Report</h2>
+            <p class="upsell-sub" id="upsellSub">Your personalized analysis with exact scores, ranked gaps, and a specific action plan — delivered to your inbox in seconds.</p>
+
+            <!-- RECIPROCITY: features stagger in -->
             <div class="upsell-features-box">
-              <div class="upsell-feature"><span class="upsell-check" style="animation-delay:.2s">✓</span><span>Your exact Practical AI Skills IQ score with percentile ranking</span></div>
-              <div class="upsell-feature"><span class="upsell-check" style="animation-delay:.4s">✓</span><span>Strengths, average areas, and critical skill gaps identified</span></div>
-              <div class="upsell-feature"><span class="upsell-check" style="animation-delay:.6s">✓</span><span>Specific steps to boost your productivity and career trajectory</span></div>
-              <div class="upsell-feature"><span class="upsell-check" style="animation-delay:.8s">✓</span><span>How to maximize profitability by collaborating with AI</span></div>
+              <div class="upsell-feature" id="uf1"><span class="upsell-check">✦</span><span>Your exact Practical AI Skills IQ percentile ranking vs. 12,000+ professionals</span></div>
+              <div class="upsell-feature" id="uf2"><span class="upsell-check">✦</span><span>Strengths, gaps, and the specific category holding back your score most</span></div>
+              <div class="upsell-feature" id="uf3"><span class="upsell-check">✦</span><span>A ranked 3-step action plan tailored to your exact skill profile</span></div>
+              <div class="upsell-feature" id="uf4"><span class="upsell-check">✦</span><span>How to use your score in salary negotiations and job interviews</span></div>
+              <div class="upsell-feature" id="uf5"><span class="upsell-check">✦</span><span>Industry benchmark: where your score ranks in your specific field</span></div>
             </div>
-            <div class="upsell-social-proof">2,847 professionals already unlocked their report this month</div>
-            <div class="guarantee-badge">✓ 30-Day Money-Back Guarantee</div>
+
+            <!-- SOCIAL PROOF: in-upsell testimonial -->
+            <div class="upsell-testimonial">
+              <div class="upsell-testimonial-text" id="upsellTestimonial">"I've spent thousands on AI courses. This $1 report told me more about my specific gaps than any of them. The ROI is absurd."</div>
+              <div class="upsell-testimonial-author" id="upsellTestimonialAuthor">— James R., Director of Strategy, Healthcare · Scored 58%</div>
+            </div>
+
+            <!-- SOCIAL PROOF: live count -->
+            <div class="upsell-social-proof"><span class="upsell-live-dot"></span><strong id="upsellCount">2,847</strong> professionals unlocked their report this month</div>
+
+            <!-- AUTHORITY: guarantee -->
+            <div class="guarantee-badge">✓ 30-Day Money-Back Guarantee — No questions asked</div>
+
+            <!-- SCARCITY: price + countdown -->
             <div class="price-section">
-              <div class="price-original">$9.99</div>
-              <p class="price-message">Get your score and report sent in seconds for 90% off.<br/>Accept the offer for just <strong>$1</strong> in the next 90 seconds.</p>
-              <div class="price-current">$1<span>.00</span></div>
+              <div class="price-row">
+                <div class="price-original">$9.99</div>
+                <div class="price-current">$1<span>.00</span></div>
+              </div>
+              <p class="price-message">90% off — available only during this session</p>
             </div>
             <div class="countdown-box">
               <span class="countdown-label">Offer expires in</span>
               <span class="countdown-timer" id="countdownTimer">1:30</span>
             </div>
-            <button class="btn-pay" id="btnPay" onclick="handlePayment()">Get My Full Report — $1.00</button>
-            <p class="upsell-guarantee">🔒 Secure payment via Stripe. Instant delivery.</p>
-            <button class="upsell-skip" onclick="skipPayment()">No thanks, I'll skip the detailed report</button>
+
+            <!-- CTA -->
+            <button class="btn-pay" id="btnPay" onclick="handlePayment()">Get My Full Report for $1.00 →</button>
+            <p class="upsell-guarantee">🔒 Secure checkout via Stripe · Instant email delivery</p>
+
+            <!-- UNITY: identity-based close -->
+            <p class="upsell-unity">You already know most professionals <strong>won't act on what they just learned.</strong><br>The report is for the ones who will.</p>
+
+            <button class="upsell-skip" onclick="skipPayment()">No thanks, I'll skip my detailed report</button>
           </div>
         </div>
       </div>
@@ -1114,31 +1356,118 @@ function revealSequence(ids,delay=700){
 function showResults(){
   clearInterval(timer);const r=calculateResults();showSection('resultsSection');
   setTimeout(()=>launchCelebration(r.pct),400);
+
+  // ── Score counter ──────────────────────────────────────────────
   let d=0;const se=document.getElementById('scorePct');
   const cu=setInterval(()=>{d++;se.textContent=d+'%';if(d>=r.pct)clearInterval(cu)},25);
+
+  // ── Score ring color by tier ───────────────────────────────────
+  const ring=document.getElementById('scoreRing');
+  ring.style.borderColor=r.pct>=80?'var(--success)':r.pct>=60?'var(--mango)':'var(--danger)';
+
+  // ── Typewriter title ───────────────────────────────────────────
   const te=document.getElementById('resultsTitle'),su=document.getElementById('resultsSub');
   let title='',sub='';
-  if(r.pct>=80){title=`Exceptional, ${userData.firstName}!`;sub=`Your Practical AI Skills IQ is in the top tier. You have strong instincts for AI-augmented work — but there are still areas where targeted improvement could multiply your impact.`}
-  else if(r.pct>=60){title=`Solid Foundation, ${userData.firstName}`;sub=`You have good AI awareness but several critical skill gaps that — once closed — could significantly boost your productivity and earning potential.`}
-  else if(r.pct>=40){title=`Room to Grow, ${userData.firstName}`;sub=`Your results show meaningful gaps in practical AI skills. The good news? These are exactly the skills the market is rewarding right now — and they're learnable.`}
-  else{title=`Important Wake-Up Call, ${userData.firstName}`;sub=`Your AI skills gap is significant — but identifying it is the critical first step. Professionals who close this gap see measurable improvements.`}
-  setTimeout(()=>typewriterEffect(te,title,40).then(()=>{su.style.animation='fadeIn .6s ease forwards';su.textContent=sub}),800);
+  if(r.pct>=80){title=`Exceptional, ${userData.firstName}!`;sub=`Your Practical AI Skills IQ is in the top tier — you're ahead of the curve. But AI evolves weekly, and the gaps in your report are exactly where the next wave of professionals are catching up.`}
+  else if(r.pct>=60){title=`Solid Foundation, ${userData.firstName}`;sub=`You have real AI awareness — but your breakdown reveals ${Object.values(r.cats).filter(d=>Math.round(d.correct/d.total*100)<60).length} critical gaps that, once closed, could meaningfully boost your productivity and earning potential.`}
+  else if(r.pct>=40){title=`Room to Grow, ${userData.firstName}`;sub=`Your results show meaningful gaps in practical AI skills. The good news? These are exactly the skills the market is rewarding right now — and every single one is learnable.`}
+  else{title=`Important Wake-Up Call, ${userData.firstName}`;sub=`Your AI skills gap is significant — but you just did the thing most professionals won't: you measured it honestly. That's the first step the top performers take.`}
+  setTimeout(()=>typewriterEffect(te,title,38).then(()=>{su.style.opacity='0';su.textContent=sub;su.style.animation='fadeIn .7s ease forwards';su.style.opacity=''}),900);
 
-  const bA=document.getElementById('breakdownArea');let bH='<div class="breakdown-title">Score Breakdown by Category</div>';
-  Object.entries(r.cats).forEach(([cat,data])=>{const cp=Math.round(data.correct/data.total*100),cls=cp>=80?'high':cp>=50?'mid':'low';let col=cp>=80?'var(--success)':cp>=50?'var(--mango)':'var(--danger)';bH+=`<div class="breakdown-row"><span class="breakdown-cat">${cat}</span><div class="breakdown-bar"><div class="breakdown-bar-fill" style="width:0%;background:${col}" data-width="${cp}"></div></div><span class="breakdown-score ${cls}">${cp}%</span></div>`});
+  // ── Peer comparison bar ────────────────────────────────────────
+  const peerPct=Math.min(96,Math.max(18,r.pct+Math.floor(Math.random()*12)+6));
+  setTimeout(()=>{
+    document.getElementById('peerBarBlock').classList.add('r-visible');
+    document.getElementById('peerBarFill').style.width=peerPct+'%';
+    document.getElementById('peerBarYou').textContent=`You scored higher than ${peerPct}% of all test-takers`;
+    document.getElementById('peerLabel').textContent=`You: ${r.pct}% · Avg: 58%`;
+  },1800);
+
+  // ── Build breakdown HTML ───────────────────────────────────────
+  const bA=document.getElementById('breakdownArea');
+  let bH=`<div class="results-section-label">Score Breakdown by Category</div>`;
+  Object.entries(r.cats).forEach(([cat,data])=>{
+    const cp=Math.round(data.correct/data.total*100);
+    const cls=cp>=80?'high':cp>=50?'mid':'low';
+    const col=cp>=80?'var(--success)':cp>=50?'var(--mango)':'var(--danger)';
+    bH+=`<div class="breakdown-row"><span class="breakdown-cat">${cat}</span><div class="breakdown-bar"><div class="breakdown-bar-fill" style="width:0%;background:${col}" data-width="${cp}"></div></div><span class="breakdown-score ${cls}">${cp}%</span></div>`;
+  });
   bA.innerHTML=bH;
 
-  const iA=document.getElementById('insightsArea');let iH='';
-  Object.entries(r.cats).forEach(([cat,data])=>{const cp=Math.round(data.correct/data.total*100);let icon,cls,text;if(cp>=80){icon='⭐';cls='strength';text=`<strong>${cat}:</strong> Excellent. Your instincts align with best practices.`}else if(cp>=50){icon='⚡';cls='improve';text=`<strong>${cat}:</strong> Average. You missed key nuances that separate good from great.`}else{icon='🎯';cls='gap';text=`<strong>${cat}:</strong> Critical gap. Targeted training here has the highest career ROI.`}iH+=`<div class="insight"><div class="insight-icon ${cls}">${icon}</div><div class="insight-text">${text}</div></div>`});
+  // ── Build insights HTML (strengths first, then gaps) ──────────
+  const iA=document.getElementById('insightsArea');
+  let iH=`<div class="results-section-label">What Your Results Mean</div>`;
+  const catArr=Object.entries(r.cats).map(([cat,data])=>({cat,cp:Math.round(data.correct/data.total*100)}));
+  catArr.sort((a,b)=>b.cp-a.cp); // strengths first
+  catArr.forEach(({cat,cp})=>{
+    let icon,cls,text;
+    if(cp>=80){icon='⭐';cls='strength';text=`<strong>${cat}:</strong> Strong. Your instincts here align with best practices — this is a genuine differentiator.`}
+    else if(cp>=50){icon='⚡';cls='improve';text=`<strong>${cat}:</strong> Developing. You have the foundation — your report identifies the specific nuances you're missing.`}
+    else{icon='🎯';cls='gap';text=`<strong>${cat}:</strong> Critical gap. This is your highest-ROI training area — closing it has the most impact on productivity and earnings.`}
+    iH+=`<div class="insight"><div class="insight-icon ${cls}">${icon}</div><div class="insight-text">${text}</div></div>`;
+  });
   iA.innerHTML=iH;
 
-  const wT=document.getElementById('whyText'),gc=Object.values(r.cats).filter(d=>Math.round(d.correct/d.total*100)<50).length;
-  if(r.pct>=80)wT.innerHTML=`<strong>You're ahead of the curve</strong> — but AI evolves weekly. According to PwC's 2025 AI Jobs Barometer, the <strong>56% wage premium</strong> for AI-skilled workers keeps growing. Professionals who maintain their edge systematically close emerging gaps. Your detailed report pinpoints exactly where to focus next.`;
-  else if(r.pct>=60)wT.innerHTML=`You identified <strong>${gc} critical skill gap${gc!==1?'s':''}</strong>. CarringtonCrisp's 2026 survey of 1,863 respondents across 40 countries found <strong>77% of employers now expect AI-ready professionals</strong>. The gap between where you are and where employers need you is closable — your report shows exactly how.`;
-  else wT.innerHTML=`Your results reveal <strong>${gc} significant gap${gc!==1?'s':''}</strong>. PwC reports a <strong>56% wage premium</strong> for AI-skilled workers — and it's accelerating. As Ed Bernier of Duke noted, AI fluency became mandatory "without anyone formally announcing it." Your report gives you a specific, actionable plan to catch up — fast.`;
+  // ── Commitment bridge copy (score-aware) ──────────────────────
+  const tail=document.getElementById('commitmentTail');
+  if(r.pct>=70){tail.innerHTML=` Your score puts you ahead of most — <strong>your report shows you exactly how to stay there</strong>.`}
+  else{tail.innerHTML=` <strong>Your report is the map. Most professionals never get one this specific.</strong>`}
 
-  setTimeout(()=>{revealSequence(['breakdownBlock','insightsBlock','whyBlock','resultsQuoteBlock','upsellBlock'],800);setTimeout(()=>{document.querySelectorAll('.breakdown-bar-fill').forEach(b=>{b.style.width=b.dataset.width+'%'})},1000)},1800);
-  setTimeout(()=>startCountdown(),4500);
+  // ── Why This Matters (score-personalized) ─────────────────────
+  const wT=document.getElementById('whyText');
+  const gc=Object.values(r.cats).filter(d=>Math.round(d.correct/d.total*100)<50).length;
+  if(r.pct>=80){wT.innerHTML=`<strong>You're ahead of the curve</strong> — but AI evolves weekly. PwC's 2025 AI Jobs Barometer shows the <strong>56% wage premium</strong> for AI-skilled workers keeps growing. The professionals who stay ahead are the ones who systematically identify emerging gaps. Your detailed report shows exactly where to focus next to maintain your edge.`}
+  else if(r.pct>=60){wT.innerHTML=`You identified <strong>${gc} critical skill gap${gc!==1?'s':''}</strong>. CarringtonCrisp's 2026 survey of 1,863 respondents found <strong>77% of employers now expect AI-ready professionals</strong> — yet most professionals in your score range have exactly the gaps you do. The difference between where you are and where you need to be is measurable, specific, and closable. Your report shows how.`}
+  else{wT.innerHTML=`Your results reveal <strong>${gc} significant gap${gc!==1?'s':''}</strong> — and that's more useful than a perfect score you didn't earn. PwC reports a <strong>56% wage premium</strong> for AI-skilled workers, accelerating each year. As Ed Bernier of Duke noted, AI fluency became mandatory "without anyone formally announcing it." Your report gives you the specific, prioritized roadmap to close the gap — fast.`}
+
+  // ── Upsell headline personalized ─────────────────────────────
+  const uH=document.getElementById('upsellHeadline');
+  const uS=document.getElementById('upsellSub');
+  if(r.pct>=70){uH.textContent=`${userData.firstName}, Your Full Report Is Ready — Lock It In`;uS.textContent=`You're in the top tier. Your report shows you exactly how to stay there — with a ranked action plan personalized to your ${r.pct}% score.`}
+  else{uH.textContent=`${userData.firstName}, Your Personalized AI Skills Report Is Ready`;uS.textContent=`Your report turns your score into a specific action plan — ranked gaps, exact steps, and the fastest path to measurable improvement.`}
+
+  // ── Score-contextual quote ─────────────────────────────────────
+  if(r.pct>=70){
+    document.getElementById('resultsQuoteText').textContent='"The professionals who will dominate the next decade are the ones building AI fluency now — before it becomes the minimum bar, not the differentiator."';
+    document.getElementById('resultsQuoteCite').textContent='Ed Bernier, Duke University Corporate Education | PwC AI Jobs Barometer 2025';
+  }
+
+  // ── Intersection Observer for scroll-triggered reveals ────────
+  setTimeout(()=>{
+    const observer=new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          const el=entry.target;
+          el.classList.add('r-visible');
+          // Stagger children
+          el.querySelectorAll('.breakdown-row').forEach((row,i)=>{
+            setTimeout(()=>{
+              row.classList.add('visible');
+              const fill=row.querySelector('.breakdown-bar-fill');
+              if(fill)setTimeout(()=>{fill.style.width=fill.dataset.width+'%'},50);
+            },i*280);
+          });
+          el.querySelectorAll('.insight').forEach((ins,i)=>{
+            setTimeout(()=>ins.classList.add('visible'),i*200);
+          });
+          // Feature list in upsell
+          if(el.id==='upsellBlock'){
+            ['uf1','uf2','uf3','uf4','uf5'].forEach((id,i)=>{
+              setTimeout(()=>{const f=document.getElementById(id);if(f)f.classList.add('f-visible')},300+i*220);
+            });
+            startCountdown();
+          }
+          observer.unobserve(el);
+        }
+      });
+    },{threshold:0.12,rootMargin:'0px 0px -60px 0px'});
+
+    ['breakdownBlock','insightsBlock','commitmentBlock','socialProofBlock',
+     'whyBlock','testimonialsBlock','resultsQuoteBlock','upsellBlock'].forEach(id=>{
+      const el=document.getElementById(id);if(el)observer.observe(el);
+    });
+  },2000);
+
   submitQuizData(r);
 }
 

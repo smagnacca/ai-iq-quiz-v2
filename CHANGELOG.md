@@ -1,5 +1,44 @@
 # Changelog — Practical AI Skills IQ Quiz
 
+## v17.6 — Mobile Button Fix, CSS Conflict Resolution, Quote Restore, Audio +15% (2026-04-05)
+
+### Summary
+Full audit triggered by mobile "Take Quiz / Start Quiz buttons not working" report. Root cause: CSS class conflicts from results-ultimate integration were overriding landing page styles globally. 8 issues fixed across CSS scoping, mobile touch handling, quote typewriter, and audio volume.
+
+### Bugs Fixed
+
+**1. CRITICAL — Landing page .hero CSS overridden by results integration**
+- The results-ultimate CSS block defined `.hero { min-height:100vh; display:flex; background:#0A1F15 }` without scoping
+- This overrode the landing hero's gradient background, padding layout, and overflow behavior
+- Fixed: scoped all conflicting rules to `.results-ultimate-wrap .hero`, `.results-ultimate-wrap .hero-title`, `.results-ultimate-wrap .hero-sub` etc.
+
+**2. CRITICAL — :root variable override changed landing page colors**
+- Results-ultimate added a second `:root` block redefining `--green`, `--gold`, `--gold-light` to different values
+- Removed duplicate `:root` from results CSS; merged `--green-deep:#0A1F15` into original `:root`
+
+**3. CRITICAL — Duplicate global CSS resets**
+- Results-ultimate added second `*, *::before, *::after` reset and duplicate `html { scroll-behavior }` and `body { font-family }` rules
+- All removed from the results CSS block (already defined in original)
+
+**4. Mobile touch: all CTA buttons missing touch-action**
+- Added `touch-action:manipulation` and `-webkit-tap-highlight-color:transparent` to `.hero-cta`, `.nav-cta`, `.btn-start`, `.floating-cta-btn`
+- This eliminates 300ms tap delay on iOS Safari and prevents ghost-click issues on Android
+
+**5. Kerry quote typewriter not showing (landing page)**
+- IntersectionObserver threshold was 0.3 (30% visible required) — too high for short elements on mobile
+- Lowered to 0.1 with `rootMargin:'0px 0px -20px 0px'`
+- Added 3-second fallback: if observer hasn't fired, typing starts automatically
+
+**6. scrollTo behavior:'instant' incompatible with iOS Safari**
+- Changed to `behavior:'smooth'` for cross-browser compatibility
+
+**7. Quiz click audio volume +15%**
+- User request: increase click sound volume by 15%
+- `g.gain.setValueAtTime(0.18, ...)` → `g.gain.setValueAtTime(0.207, ...)` across all questions
+
+**8. Duplicate @keyframes fadeUp and body/html rules removed**
+- Cleaned up redundant definitions from results-ultimate CSS injection
+
 ## v17.5.1 — Post-Audit Bug Fixes + Visitor Counter (2026-04-05)
 
 ### Summary

@@ -1,5 +1,33 @@
 # Changelog — Practical AI Skills IQ Quiz
 
+## v17.8 — Add followup4 + followup5 email handlers (2026-04-05)
+
+### Summary
+Fixed silent failure of follow-up emails 4 and 5. The `check-followups.js` cron was calling `sendFollowUp(email, 'followup4', data)` and `sendFollowUp(email, 'followup5', data)` but had no handlers for these types — causing `subject` and `html` to remain `undefined`, making the Resend API call fail silently. Both handlers now ported and all 5 follow-up emails link directly to the user's personalized results page with the $1 upsell CTA.
+
+### Bugs Fixed
+1. **followup4 handler missing** — Added "Your answer to question #X was fascinating" rarity/curiosity email with `${checkoutUrl}` CTA
+2. **followup5 handler missing** — Added final urgency/FOMO last-chance email (midnight deadline) with `${checkoutUrl}` CTA
+3. All 5 follow-up emails now consistently use `checkoutUrl` which includes `action=pay`, personalized score, category data (base64), name, email, and industry — landing page decodes these and renders the full results + upsell without requiring a re-take
+
+### Files Changed
+- `netlify/functions/check-followups.js` — +139 lines, two new `else if` branches in `sendFollowUp()`
+
+---
+
+## v17.7 — Email Retarget Fix: All Follow-ups Link to Pay Screen (2026-04-05)
+
+### Summary
+Fixed follow-up emails linking to "Start your assessment" instead of payment screen. Rebuilt `checkoutUrl` in `check-followups.js` to encode full personalized data (score, category scores as base64, name, email, industry, `action=pay`). Completely rewrote the retarget handler in `index.html` to reconstruct results from URL params and scroll directly to upsell block.
+
+### Bugs Fixed
+1. **checkoutUrl missing action=pay** — Follow-up emails sent users to gate form instead of results+upsell
+2. **No cats/score data in URL** — Landing page couldn't reconstruct results; now encodes all 6 category scores as base64
+3. **Retarget handler was shallow** — Only pre-filled name/email on gate form; now calls `_renderResults()` directly and scrolls to upsell
+4. **Industry pluralization bug** — `other ${industry}s in your industry` → `other professionals in your field`
+
+---
+
 ## v17.6 — Mobile Button Fix, CSS Conflict Resolution, Quote Restore, Audio +15% (2026-04-05)
 
 ### Summary

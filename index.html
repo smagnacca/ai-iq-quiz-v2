@@ -234,10 +234,12 @@ a{color:inherit;text-decoration:none}
 /* ═══ QUIZ ═══ */
 .q-category{margin-bottom:12px}
 .q-text{font-family:'Merriweather',serif;font-size:1.35rem;color:var(--babson-green);line-height:1.5;margin-bottom:24px;font-weight:700}
-.q-text-visual{margin-bottom:20px}
+.q-text-visual{margin-bottom:16px}
 /* ── Visual Question Blocks ─────────────────────────────────────── */
-.visual-q{font-family:'Inter',sans-serif;font-size:1rem;font-weight:400;color:var(--text);line-height:1.5;margin-bottom:8px}
-.vq-label{font-family:'Merriweather',serif;font-size:1.15rem;font-weight:700;color:var(--babson-green);line-height:1.45;margin-bottom:18px}
+/* Hard reset — override any inherited h2/q-text serif styles */
+.visual-q,.visual-q *{font-family:'Inter',sans-serif!important;font-size:inherit;font-weight:400;color:var(--text);line-height:1.5}
+.visual-q{font-size:.9rem!important;margin-bottom:0}
+.vq-label{font-size:.95rem!important;font-weight:700!important;color:var(--babson-green)!important;line-height:1.4;margin-bottom:14px;display:block}
 /* Output comparison cards (side by side) */
 .vq-outputs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:4px}
 .vq-output{background:var(--white);border:1.5px solid var(--border);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 2px 12px rgba(0,0,0,.06);transition:box-shadow .2s}
@@ -254,7 +256,20 @@ a{color:inherit;text-decoration:none}
 .vq-node-name{font-size:.8rem;font-weight:700;color:var(--text-dark);margin-bottom:5px}
 .vq-node-desc{font-size:.72rem;color:var(--text-soft);line-height:1.55}
 .vq-arrow{font-size:1.2rem;color:var(--border);font-weight:700;text-align:center;padding:0 2px}
-@media(max-width:640px){.vq-outputs{grid-template-columns:1fr}.vq-diagram{grid-template-columns:1fr;grid-template-rows:auto}.vq-arrow{transform:rotate(90deg)}}
+/* Prompt bubble cards (A/B/C/D prompt comparison) */
+.vq-prompts{display:flex;flex-direction:column;gap:10px;margin-bottom:4px}
+.vq-prompt{display:flex;align-items:flex-start;gap:12px}
+.vq-badge{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--babson-green);color:var(--gold-light);font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:6px}
+.vq-bubble{background:var(--white);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;font-size:.88rem;color:var(--text);line-height:1.65;flex:1;box-shadow:0 1px 6px rgba(0,0,0,.05)}
+/* Comparison table (Tool A vs Tool B) */
+.vq-table{width:100%;border-collapse:collapse;font-size:.85rem;margin-bottom:4px;background:var(--white);border-radius:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.vq-table thead th{background:var(--babson-green);color:var(--gold-light);padding:10px 14px;text-align:left;font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.vq-table thead th:first-child{background:var(--courtyard)}
+.vq-table tbody tr:nth-child(odd){background:var(--cream)}
+.vq-table tbody tr:nth-child(even){background:var(--white)}
+.vq-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle}
+.vq-table td:first-child{font-weight:600;color:var(--text-soft);font-size:.8rem}
+@media(max-width:640px){.vq-outputs{grid-template-columns:1fr}.vq-diagram{grid-template-columns:1fr;grid-template-rows:auto}.vq-arrow{transform:rotate(90deg)}.vq-table{font-size:.78rem}}
 .q-scenario{background:linear-gradient(135deg,rgba(0,102,68,.05),rgba(238,175,0,.04));border-left:4px solid var(--peacock);padding:16px 20px;font-size:1rem;color:var(--text);line-height:1.65;margin-bottom:22px;border-radius:0 4px 4px 0;position:relative}
 .q-scenario::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--peacock);border-radius:2px}
 .options{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
@@ -262,10 +277,13 @@ a{color:inherit;text-decoration:none}
 .opt:hover{border-color:var(--peacock);background:#E8F5F7;transform:translateX(4px);box-shadow:0 2px 8px rgba(54,127,128,.1)}
 .opt.selected{border-color:var(--babson-green);background:#EAF7F0;transform:translateX(4px)}
 .opt.correct{border-color:var(--success);background:#E8F8F0;transform:translateX(4px)}
+.opt.selected-revisit{border-color:var(--babson-green);background:linear-gradient(135deg,#EAF7F0,#f0faf5);transform:translateX(6px);box-shadow:0 3px 14px rgba(0,102,68,.18);animation:optPop .25s cubic-bezier(.34,1.56,.64,1) forwards}
+@keyframes optPop{0%{transform:translateX(0) scale(1)}60%{transform:translateX(7px) scale(1.01)}100%{transform:translateX(6px) scale(1)}}
 
 .opt-letter{width:30px;height:30px;border-radius:50%;border:1.5px solid #C8C4BC;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.82rem;font-weight:600;transition:all .2s}
 .opt:hover .opt-letter{background:rgba(0,102,68,.05);border-color:var(--peacock)}
 .opt.selected .opt-letter{background:var(--babson-green);border-color:var(--babson-green);color:var(--white)}
+.opt.selected-revisit .opt-letter{background:var(--babson-green);border-color:var(--babson-green);color:var(--white)}
 .opt.correct .opt-letter{background:var(--success);border-color:var(--success);color:var(--white)}
 
 .opt-text{font-size:1rem;line-height:1.55;padding-top:2px}
@@ -1434,10 +1452,29 @@ function showTimeoutFeedback(){
   if(currentQ<QUESTIONS.length-1){setTimeout(()=>nextQuestion(),1500);}
 }
 
+function playClickSound(){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    o.type='sine';o.frequency.setValueAtTime(880,ctx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(440,ctx.currentTime+0.08);
+    g.gain.setValueAtTime(0.18,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.12);
+    o.start(ctx.currentTime);o.stop(ctx.currentTime+0.13);
+  }catch(e){}
+}
+function showAnswerFlash(){
+  let f=document.getElementById('answerFlash');
+  if(!f){f=document.createElement('div');f.id='answerFlash';f.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--babson-green);color:#fff;padding:10px 24px;border-radius:24px;font-size:.82rem;font-weight:700;letter-spacing:.06em;z-index:999;pointer-events:none;opacity:0;transition:opacity .2s';f.textContent='✓ Answer recorded';document.body.appendChild(f);}
+  f.style.opacity='1';setTimeout(()=>{f.style.opacity='0';},900);
+}
 function selectOption(el,idx){
   // Block selection only if the question timed out (auto-answered)
   if(answers[currentQ]!==undefined&&answers[currentQ].timedOut)return;
   clearInterval(timer);
+  playClickSound();
+  showAnswerFlash();
   const q=QUESTIONS[currentQ],isCorrect=idx===q.correct,elapsed=60-timeLeft;
   answers[currentQ]={selected:idx,correct:q.correct,isCorrect,timeTaken:elapsed,timedOut:false};
   // Clear any previous visual selection, then mark new choice

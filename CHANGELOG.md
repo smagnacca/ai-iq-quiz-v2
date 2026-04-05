@@ -1,5 +1,24 @@
 # Changelog — Practical AI Skills IQ Quiz
 
+## v15.6 — How It Works: Scroll-Triggered Stagger Animation + Animated Arrows (2026-04-05)
+
+### Summary
+Replaced CSS-delay-based card entrance (fired on page load) with IntersectionObserver scroll-triggered stagger. Step 1 → Arrow → Step 2 → Arrow → Step 3 builds in sequence only when the section scrolls into view. Arrows hidden on mobile.
+
+### Files Changed
+| File | Change |
+|------|--------|
+| `index.html` | `.how-card` CSS updated, arrow CSS added, HTML updated with IDs + arrow SVGs, stagger JS injected |
+
+### Changes
+- **Cards start hidden** — `opacity:0; transform:translateY(28px)` by default; `.card-visible` class reveals them
+- **IntersectionObserver trigger** — fires when Step 1 card reaches 20% viewport; `howAnimated` flag prevents re-firing
+- **Stagger sequence** — Step 1 (0ms) → Arrow 1 (1800ms) → Step 2 (2200ms) → Arrow 2 (3800ms) → Step 3 (4200ms); each card transitions over 2s
+- **Animated arrows** — green circle SVG with right-pointing chevron; positioned absolutely between cards; `arrow-visible` class fades them in; `display:none` on mobile breakpoint
+- **Removed** — CSS `animation-delay` approach that fired immediately on page load regardless of scroll position
+
+---
+
 ## v15.5 — Trust Bar Redesign: Gold-Bordered Card + Typewriter Headline (2026-04-05)
 
 ### Summary

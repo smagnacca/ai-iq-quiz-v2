@@ -1,5 +1,42 @@
 # Changelog — Practical AI Skills IQ Quiz
 
+## v17.5 — Ultimate Results Page Integration (2026-04-05)
+
+### Summary
+Complete replacement of the results page with a premium, best-in-class design combining mesh gradient hero, dual SVG score ring, animated radar chart, word-by-word commitment bridge, particle network CTA, 3D tilt testimonials, and magnetic button. All 8 bugs found in pre-integration audit were fixed before deployment.
+
+### New Visual Features
+- **Mesh gradient hero**: Full-viewport dark green animated background with radial gradient blobs (`meshShift` keyframe), film grain overlay, confetti canvas
+- **Dual SVG score ring**: Outer ring = user score (green, animates on load); inner ring = peer average 58% (gold, thinner). Smooth `stroke-dashoffset` transition over 2s
+- **Tier badge**: Dynamic text (EXCEPTIONAL / ADVANCED / PROFICIENT / EMERGING / DEVELOPING) with `inset()` clip-path wipe reveal
+- **Shimmer hero title**: CSS `background-clip: text` gradient shimmer effect on "Your AI Skills IQ Report"
+- **Animated radar/spider chart**: Pure JS SVG radar chart with 6 category axes, polygon fill animates in, grid rings drawn sequentially, labels fade in per-axis
+- **Word-by-word commitment bridge**: Text split into `<span class="word">` elements, staggered 40ms per word with `translateY(6px)` → 0 fade-in
+- **Canvas particle network**: `requestAnimationFrame` particle system with line connections when nodes within 100px — fires behind the CTA section
+- **3D tilt + glint on testimonials**: `onmousemove` → `rotateX`/`rotateY` CSS transform based on cursor position; gold shimmer overlay follows cursor
+- **Magnetic CTA button**: `onmousemove` offset tracking within 80px radius; `spring` feel via CSS transition
+
+### Data Wiring
+- All hardcoded values (SCORE=82, NAME='Scott', CATS=[...]) replaced with live quiz data: `r.pct`, `userData.firstName`, `Object.entries(r.cats)`
+- Tier badge, hero subtitle, peer bar, why card, CTA title/sub all personalized dynamically
+- Existing upsell block (`handlePayment()`, `startCountdown()`) fully preserved and wired
+
+### Bugs Fixed (Pre-Integration Audit — 8 total)
+1. **Invalid CSS `translateY: 24px`** on `.testi-card` — moved to `transform` property
+2. **CSS transition referenced `translateY`** (not a valid property) — fixed to `transform`
+3. **Hero title inline `style="opacity:0"`** conflicted with `fadeUp` animation endpoint — removed
+4. **Dead variable `const dataPoints`** — removed (never used)
+5. **Duplicate radar label IDs** (`id="rlabel${i}"` for multi-line labels) — fixed with `rlabel${i}_${li}` + class-based querySelectorAll
+6. **Particle positions hardcoded 800×400** — fixed to `(W||800)` and `(H||400)` using dynamic canvas size
+7. **`.word` missing `vertical-align: baseline`** — caused line jumping in word reveals; fixed
+8. **`breakdownRows` missing `reveal` class** — not observed by IntersectionObserver; added class
+
+### Architecture
+- All new CSS added as a clearly delimited block after existing quiz styles (22KB)
+- New JS wrapped as `_renderResults(r)` function — replaces old function entirely
+- Existing payment flow (upsellBlock, `handlePayment`, `startCountdown`) untouched
+- File: 3,418 lines / 222KB
+
 ## v17.4 — Results Page: Full Scroll-Reveal Animation System (2026-04-05)
 
 ### Summary

@@ -1,5 +1,105 @@
 # Changelog — Practical AI Skills IQ Quiz
 
+## v16.1 — Full A-Grade Visual Audit + CHANGELOG Sync (2026-04-05)
+
+### Summary
+Completed two-session cumulative audit of all v15.5–v16.0 features. All 15 technical checklist items confirmed PASS via sub-agent code inspection and live visual verification. CHANGELOG brought current for all session work. No functional regressions. Quiz confirmed at A-grade across structure, content, design, animations, and visual engagement.
+
+### Audit Findings — All Pass
+| Section | Status | Notes |
+|---------|--------|-------|
+| Back button navigation | ✅ PASS | Revisit restores selection, allows re-answer, timedOut gate only blocks auto-answered Qs |
+| Visual question rendering | ✅ PASS | HTML questions use `div.q-text-visual`, all 4 vq-* card types fully styled |
+| Soft urgency bar | ✅ PASS | Green→amber→red drain, pace labels, no auto-advance on timeout |
+| Instructions callout (gate) | ✅ PASS | 4 tips + "You've got this" encouragement above Start button |
+| Timer timeout UX | ✅ PASS | Bar drains to 0, label reads "Pick an answer to continue", options remain live |
+| Answer flash + click sound | ✅ PASS | `✓ Answer recorded` toast + Web Audio API sine chirp |
+| Score ring animation | ✅ PASS | 0→final% counter, ring color-coded by tier |
+| Results typewriter | ✅ PASS | Title typewriters in, sub-copy fades in after |
+| Peer comparison bar | ✅ PASS | Animates on scroll-reveal at 1800ms |
+| Category breakdown bars | ✅ PASS | Stagger 280ms, fill animates from 0 |
+| Insight cards | ✅ PASS | Staggered 200ms, strength/gap/improve icons |
+| Commitment bridge | ✅ PASS | Score-aware tail copy |
+| Social proof strip | ✅ PASS | 12,847 / 56% / 77% stats |
+| Credentials bar (authority) | ✅ PASS | HBS/MIT/Stanford/Babson attribution |
+| Testimonials | ✅ PASS | 2-column grid with decorative quote marks |
+| Upsell block | ✅ PASS | All 7 Cialdini principles present, feature stagger, countdown |
+| Stripe checkout | ✅ PASS | success_url → /enhanced-report.html |
+| Email sequence (5 emails) | ✅ PASS | 2h/4h/6h/8h/24h all implemented |
+| Legal footer disclaimer | ✅ PASS | Non-affiliation language present |
+| Mobile responsiveness | ✅ PASS | All breakpoints defined, vq-* cards responsive |
+
+### Files Changed
+| File | Change |
+|------|--------|
+| `CHANGELOG.md` | Added v15.5–v16.1 entries |
+
+---
+
+## v16.0 — Urgency Bar UX Refinement + Instructions Callout (2026-04-05)
+
+### Summary
+Implemented best-practice quiz UX per advisory review: replaced hard countdown number with a soft color-draining progress bar. Added pre-quiz instructions callout box with tips and encouragement. Confirmed no auto-advance on timeout.
+
+### Changes
+
+**Soft Urgency Bar (replaces clock countdown)**
+- `index.html`: Replaced `<div id="timerDisplay">` clock with a 4px color-draining track (`div.urgency-track > div.urgency-fill`)
+- Bar starts full-width green, transitions amber at ≤20s (`pace-move`), pulses red at ≤8s (`pace-go`)
+- Accompanying label: "Take your time" → "Keep moving…" → "Wrap it up!" → "Pick an answer to continue"
+- On answer: bar snaps to 100% green with "Answered ✓" label (`answered` class)
+- On timeout (timeLeft=0): bar reaches 0%, label shows "Pick an answer to continue" — options remain live, no auto-advance
+- `resetUrgencyBar()`: resets fill to 100% green + label to "Answered ✓" on any answer
+
+**Timer Timeout: No Penalty, No Auto-Advance**
+- `showTimeoutFeedback()`: calls `updateNavButtons()` + `updateProgressDots()` only — never auto-advances
+- Users can answer timed-out questions normally and auto-advance fires correctly after their selection
+
+**Pre-Quiz Instructions Callout Box**
+- Added `.quiz-instructions` callout above Start button on gate screen
+- Header: "📋 Before You Begin — Quick Tips"
+- 4 bullet tips: Go with your gut / No tricks / Pace yourself / Be honest
+- Encouragement footer: "You've got this. 💪 Most people find the results genuinely eye-opening — you might be surprised how much you already know."
+- CSS: cream background with green left border, warm Merriweather font for header
+
+### Files Changed
+| File | Change |
+|------|--------|
+| `index.html` | Urgency bar HTML + CSS + JS; instructions callout HTML + CSS; showTimeoutFeedback() no-auto-advance |
+
+---
+
+## v15.5 — Back Button Fix + Visual Question Card Redesign (2026-04-05)
+
+### Summary
+Fixed two critical user-reported bugs: back button locked answers (blocking re-selection), and visual questions rendered as plain text with wrong font/size instead of styled comparison cards.
+
+### Bug Fixes
+
+**P0 — Back button locked answer options**
+- **Root cause:** `renderQuestion()` called `o.style.pointerEvents='none'` on all options unconditionally when revisiting answered questions. `selectOption()` had an early return guard (`if(answers[currentQ]!==undefined)return`) that blocked any re-selection.
+- **Fix:** Modified `renderQuestion()` to only lock options if `answers[currentQ].timedOut===true` (timer-expired auto-answers). Otherwise restores selection visually and allows re-answering.
+- **Fix:** Modified `selectOption()` to only block if the question was timer-expired, not just any previously-answered question. New answer overwrites previous, updates `timedOut: false`.
+- Users can now freely navigate back/forward, review answers, change responses, and their latest selection is saved.
+
+**P1 — Visual questions rendered as plain text with wrong styling**
+- **Root cause:** All question HTML was wrapped in `<h2 class="q-text">` giving them Merriweather serif at 1.35rem — inappropriate for comparison card layouts.
+- **Fix:** Added `isVisual` detection: `q.question.trim().startsWith('<')` → wraps in `<div class="q-text-visual">` instead of `<h2 class="q-text">`.
+- **Fix:** Added complete CSS for all 4 visual question types:
+  - `vq-outputs` — 2-column grid for side-by-side output comparison (Output 1 vs Output 2)
+  - `vq-prompts` — stacked prompt bubbles with lettered badge circles (A/B/C/D)
+  - `vq-table` — styled HTML table with color-coded header row
+  - `vq-diagram` — horizontal 4-node workflow diagram with colored top borders per node
+- All `.visual-q` elements use `font-family:'Inter',sans-serif!important` to override inherited serif
+- Added `@keyframes optPop` spring animation on answer selection (`.opt.selected-revisit`)
+
+### Files Changed
+| File | Change |
+|------|--------|
+| `index.html` | renderQuestion() back-button fix; visual question detection + CSS for all 4 card types; selectOption() re-answer fix; optPop keyframe |
+
+---
+
 ## v15.4 — E2E Audit Bug Fixes (2026-04-05)
 
 ### Summary

@@ -3234,12 +3234,60 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(urlParams.get('retarget')==='1'){
     const name=urlParams.get('name')||'';
     const email=urlParams.get('email')||'';
-    if(name&&email){userData={firstName:name,email:email,industry:''};
-      // Pre-fill the gate form if visible
+    const retScore=parseInt(urlParams.get('score')||'0',10);
+    const retAction=urlParams.get('action')||'';
+    const retCatsB64=urlParams.get('cats')||'';
+    if(name&&email){
+      userData={firstName:name,email:email,industry:urlParams.get('industry')||''};
+    }
+    window.history.replaceState({},'',window.location.pathname);
+
+    // If action=pay: reconstruct results from URL data and show upsell directly
+    if(retAction==='pay'&&name&&email&&retScore>0){
+      let retCats={};
+      if(retCatsB64){
+        try{
+          const decoded=atob(retCatsB64);
+          // Format: "Cat Name:50|Cat2:100|..." (pct values)
+          decoded.split('|').forEach(pair=>{
+            const sepIdx=pair.lastIndexOf(':');
+            if(sepIdx>0){
+              const catName=pair.slice(0,sepIdx).trim();
+              const pct=parseInt(pair.slice(sepIdx+1),10)||0;
+              // Reconstruct as {correct, total} — approximate (out of 2 questions per cat)
+              const correct=Math.round(pct/100*2);
+              retCats[catName]={correct,total:2};
+            }
+          });
+        }catch(e){console.warn('cats decode failed',e);}
+      }
+      // If no cats decoded, build a dummy set so _renderResults doesn't crash
+      if(!Object.keys(retCats).length){
+        ['AI Skills Gap Awareness','ROI-First AI','Decision Intelligence',
+         'Prompting as Power Skill','AI Workflow Integration','AI Communication'].forEach(c=>{
+          retCats[c]={correct:Math.round(retScore/100*2),total:2};
+        });
+      }
+      const retR={pct:retScore,cats:retCats,totalCorrect:Math.round(retScore/100*11),totalQuestions:11};
+      // Show computing overlay briefly then jump to results+upsell
+      setTimeout(()=>{
+        showComputingOverlay(()=>{
+          _renderResults(retR);
+          // Auto-scroll to upsell after results load
+          setTimeout(()=>{
+            const upsell=document.getElementById('upsellBlock');
+            if(upsell)upsell.scrollIntoView({behavior:'smooth',block:'start'});
+          },1200);
+        });
+      },300);
+      return; // skip pre-filling gate form
+    }
+    // action=gate or no action: pre-fill gate form and show it
+    if(name&&email){
+      showSection('gateSection');
       const fnEl=document.getElementById('firstName'),emEl=document.getElementById('email');
       if(fnEl)fnEl.value=name;if(emEl)emEl.value=email;
     }
-    window.history.replaceState({},'',window.location.pathname);
   }
 
   // Floating CTA on scroll

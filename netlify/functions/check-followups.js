@@ -75,7 +75,19 @@ async function sendViaResend(to, subject, html) {
 async function sendFollowUp(email, type, data) {
   const { firstName, score, industry, cats } = data;
   const siteUrl = process.env.URL || 'https://practical-ai-skills-iq.netlify.app';
-  const checkoutUrl = `${siteUrl}/?retarget=1&name=${encodeURIComponent(firstName)}&email=${encodeURIComponent(email)}`;
+  // Build cats compact string: "Cat Name:pct|Cat2:pct|..."
+  let catsCompact = '';
+  if (cats && typeof cats === 'object') {
+    catsCompact = Object.entries(cats).map(([cat, d]) => {
+      const pct = Math.round(d.correct / d.total * 100);
+      return `${cat}:${pct}`;
+    }).join('|');
+  }
+  // Base64 encode cats so special chars don't break URL
+  const catsB64 = Buffer.from(catsCompact).toString('base64');
+  const industry = data.industry || '';
+  // action=pay sends user directly to results+upsell, bypassing gate form
+  const checkoutUrl = `${siteUrl}/?retarget=1&action=pay&name=${encodeURIComponent(firstName)}&email=${encodeURIComponent(email)}&score=${score}&industry=${encodeURIComponent(industry)}&cats=${encodeURIComponent(catsB64)}`;
 
   // Helper: find best and worst categories
   let topCat = '', topPct = 0, lowCat = '', lowPct = 100;

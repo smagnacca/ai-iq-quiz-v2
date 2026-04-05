@@ -772,3 +772,14 @@ function initScrollRevealAnimations() {
 **Quiz start email notification**
 - Fire-and-forget POST via Netlify Forms when user enters name/email and clicks Start
 - Scott gets instant email alert with visitor details
+
+## v17.7 — Fix Email Retarget URL → Direct to Payment Upsell (2026-04-05)
+
+### Summary
+Email CTA buttons ("Unlock My AI Skills Report", "Get My Full Report — $1") were sending users back to the Start Assessment page instead of the payment upsell. Root cause: `checkoutUrl` in `check-followups.js` only passed `?retarget=1&name&email`, which triggered gate form pre-fill but never showed results or upsell. Fixed with encoded score+cats data in URL and new `action=pay` handler.
+
+### Changes
+- **check-followups.js**: `checkoutUrl` now includes `action=pay`, `score`, `industry`, and Base64-encoded `cats` (category scores) — all data needed to reconstruct the results page without re-taking the quiz
+- **index.html retarget handler**: New `action=pay` branch — decodes cats from Base64, builds `r` object, calls `showComputingOverlay()` then `_renderResults(r)` directly, then auto-scrolls to upsell block. User lands on their full results page with the $1 payment prompt visible.
+- **Fallback**: If cats can't be decoded, approximates category scores from overall score so page never crashes
+- **send-email.js**: Fixed `other ${industry}s` pluralization bug (was showing "other Insurances" for users who selected Insurance as their industry) → changed to "other professionals in your field"

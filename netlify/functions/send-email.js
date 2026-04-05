@@ -101,7 +101,7 @@ function followUp1Email(data) {
     </p>
     <ul style="font-size:14px;color:#4A5568;line-height:2;padding-left:20px;margin-bottom:20px;font-family:Arial,sans-serif">
       <li>Exactly which of your 6 skill categories are <strong style="color:#27AE60">strengths</strong> vs. <strong style="color:#C0392B">critical gaps</strong></li>
-      <li><strong style="color:#005172">How you compare</strong> to other ${industry || 'professional'}s in your industry</li>
+      <li><strong style="color:#005172">How you compare</strong> to other professionals in your field</li>
       <li>A <strong style="color:#006644">week-by-week action plan</strong> tailored to your specific results</li>
       <li>The categories with the <strong style="color:#C9A84C">highest career ROI</strong> for you personally</li>
     </ul>

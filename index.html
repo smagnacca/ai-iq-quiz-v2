@@ -229,49 +229,13 @@ a{color:inherit;text-decoration:none}
 
 
 @keyframes shimmerText{0%{background-position:200% 0}100%{background-position:-200% 0}}
-/* ╔═══════════════════════════════════════╗ */
-/* ║ QUICK TIPS — FRESH REBUILD (v2)       ║ */
-/* ╚═══════════════════════════════════════╝ */
-@keyframes typewriterIn{0%{width:0;opacity:0}99%{opacity:1}100%{width:100%;opacity:1}}
-@keyframes fadeInUp{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:translateY(0)}}
-
-.qi-header{
-  font-size:0.82rem;font-weight:700;color:var(--babson-green);letter-spacing:0.04em;
-  text-transform:uppercase;margin-bottom:12px;
-  opacity:0;transform:translateY(6px);transition:opacity 0.7s ease,transform 0.7s ease;
-}
-.qi-header.qi-visible{opacity:1;transform:translateY(0)}
-
-.qi-list{
-  list-style:none;padding:0;margin:0 0 12px;
-  display:flex;flex-direction:column;gap:8px;
-}
-
-.qi-list li{
-  font-size:0.85rem;color:var(--text);line-height:1.55;
-  padding-left:20px;position:relative;
-  opacity:0;transform:translateY(8px);
-  transition:opacity 0.7s ease,transform 0.7s ease;
-}
-
-.qi-list li strong{
-  color:#0A1F15;font-weight:700;display:inline-block;position:relative;
-  background:linear-gradient(90deg,transparent 0%,rgba(201,168,76,0.15) 50%,transparent 100%);
-  background-size:200% 100%;background-position:200% 0;
-  transition:background-position 0.8s ease;
-}
-
-.qi-list li.qi-visible{opacity:1;transform:translateY(0)}
-.qi-list li.qi-visible strong{animation:typewriterIn 1.2s ease-out forwards,shimmerText 0.8s ease-out 0.1s}
-
+/* Quick Tips — static, always visible, no animations */
+.qi-header{font-size:.82rem;font-weight:700;color:var(--babson-green);letter-spacing:.04em;text-transform:uppercase;margin-bottom:12px}
+.qi-list{list-style:none;padding:0;margin:0 0 12px}
+.qi-list li{font-size:.85rem;color:var(--text);line-height:1.55;padding:4px 0 4px 20px;position:relative}
+.qi-list li strong{color:#0A1F15;font-weight:700}
 .qi-list li::before{content:'→';position:absolute;left:0;color:var(--babson-green);font-weight:700}
-
-.qi-encouragement{
-  font-size:0.85rem;font-style:italic;color:var(--babson-green);font-weight:600;
-  border-top:1px solid rgba(201,168,76,0.25);padding-top:10px;margin-top:4px;line-height:1.5;
-  opacity:0;transform:translateY(6px);transition:opacity 0.8s ease,transform 0.8s ease;
-}
-.qi-encouragement.qi-visible{opacity:1;transform:translateY(0)}
+.qi-encouragement{font-size:.85rem;font-style:italic;color:var(--babson-green);font-weight:600;border-top:1px solid rgba(201,168,76,.25);padding-top:10px;margin-top:4px;line-height:1.5}
 .btn-start{display:block;width:100%;background:var(--mango);-webkit-tap-highlight-color:transparent;touch-action:manipulation;color:var(--white);border:none;padding:15px;font-size:1rem;font-weight:700;cursor:pointer;border-radius:3px;transition:all .2s;margin-top:6px;box-shadow:0 2px 8px rgba(238,175,0,.2);animation:ctaFlash 3s ease-in-out infinite}
 .btn-start:hover{background:var(--bright-gold);box-shadow:0 4px 12px rgba(238,175,0,.3);transform:translateY(-1px)}
 .btn-start:disabled{background:#C8C4BC;cursor:default;box-shadow:none}
@@ -2130,8 +2094,6 @@ function runGateEntrance(){
     if(formFields){formFields.style.transition=`opacity .5s ease, transform .5s ease`;formFields.style.opacity='1';formFields.style.transform='translateY(0)'}
   },4600);
 
-  // Step 9 (5.2s): Re-trigger Quick Tips observer now that gate is visible
-  setTimeout(()=>{if(window._qiObsRestart) window._qiObsRestart();},5200);
 }
 
 function animateCounterText(el, targetStr, dur){
@@ -3522,45 +3484,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   <div class="computing-dots"><span></span><span></span><span></span></div>
 </div>
 
-<script>
-/* Quick Tips Animation v3 — works inside display:none gate */
-(function() {
-  var triggered = false;
-  var ids = ['qiHeader', 'qiTip1', 'qiTip2', 'qiTip3', 'qiTip4', 'qiEncouragement'];
-  var delays = [0, 1400, 2800, 4200, 5600, 7400];
-  var anchor = document.getElementById('qiHeader');
-  if (!anchor) return;
-
-  function revealTips() {
-    if (triggered) return;
-    triggered = true;
-    ids.forEach(function(id, i) {
-      setTimeout(function() {
-        var el = document.getElementById(id);
-        if (el) el.classList.add('qi-visible');
-      }, delays[i]);
-    });
-  }
-
-  var observer = new IntersectionObserver(function(entries) {
-    if (entries[0].isIntersecting && !triggered) {
-      revealTips();
-      observer.disconnect();
-    }
-  }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
-
-  observer.observe(anchor);
-
-  // Expose restart so runGateEntrance can re-observe after display:none is removed
-  window._qiObsRestart = function() {
-    if (triggered) return;
-    observer.disconnect();
-    observer.observe(anchor);
-  };
-
-  // Fallback: force-show after 12s no matter what
-  setTimeout(function() { revealTips(); }, 12000);
-})();
+<!-- Quick Tips: no animation, always visible -->
 </script>
 
 </body>

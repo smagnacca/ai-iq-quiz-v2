@@ -559,7 +559,7 @@ a{color:inherit;text-decoration:none}
 }
 
 /* ═══ RESULTS PAGE — SCROLL REVEAL ARCHITECTURE ═══ */
-.results-section-wrap{padding-bottom:0}
+.results-section-wrap{padding-bottom:0;background:var(--green-deep,#004D30)}
 
 /* Intersection Observer reveal — all results blocks start hidden */
 .r-reveal{opacity:0;transform:translateY(32px);transition:opacity .7s ease,transform .7s ease}
@@ -936,13 +936,14 @@ a{color:inherit;text-decoration:none}
 
 /* ── BREAKDOWN ROWS ───────────────────────────────────────── */
 .breakdown-wrap { margin-top: 8px; }
-.breakdown-row {
+.results-ultimate-wrap .breakdown-row {
   display: flex; align-items: center; gap: 14px;
   padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.1);
   clip-path: inset(0 100% 0 0);
-  transition: clip-path .55s cubic-bezier(.4,0,.2,1);
+  opacity: 0; transform: none;
+  transition: clip-path .55s cubic-bezier(.4,0,.2,1), opacity .5s ease;
 }
-.breakdown-row.revealed { clip-path: inset(0 0% 0 0); }
+.results-ultimate-wrap .breakdown-row.revealed { clip-path: inset(0 0% 0 0); opacity: 1; }
 .breakdown-row:last-child { border-bottom: none; }
 .bd-cat { font-size: .85rem; font-weight: 600; color: rgba(255,255,255,.9); min-width: 180px; }
 .bd-bar-wrap { flex: 1; height: 10px; background: rgba(255,255,255,.15); border-radius: 5px; overflow: hidden; position: relative; }

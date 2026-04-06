@@ -2,8 +2,8 @@
 // Runs every 30 minutes. Reads Google Sheets for leads that need follow-up emails.
 // Columns expected in AI_IQ_Quiz_Leads tab:
 //   A: Timestamp, B: FirstName, C: Email, D: Industry, E: Score%, F: Correct/Total,
-//   G: Time, H-S: Per-question, T: Categories, U: Paid (TRUE/FALSE), V: FollowUp1Sent, W: FollowUp2Sent, X: FollowUp3Sent, Y: FollowUp4Sent, Z: FollowUp5Sent
-// Email schedule: #1 after 2h, #2 after 4h, #3 after 6h, #4 after 8h, #5 after 24h (all to non-payers only)
+//   G: Time, H-S: Per-question, T: Categories, U: Paid (TRUE/FALSE), V: FollowUp1Sent, W: FollowUp2Sent, X: FollowUp3Sent, Y: FollowUp4Sent, Z: FollowUp5Sent, AA: FollowUp6Sent
+// Email schedule: #1 after 2h, #2 after 4h, #3 after 6h, #4 after 8h, #5 after 24h, #6 after 60h (all to non-payers only)
 // Env vars: GOOGLE_SERVICE_ACCOUNT_JSON, RESEND_API_KEY
 
 const { createSign } = require('crypto');
@@ -35,7 +35,7 @@ async function getAccessToken(sa) {
 }
 
 async function getSheetData(token) {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(SHEET_TAB)}!A2:X?majorDimension=ROWS`;
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(SHEET_TAB)}!A2:AA?majorDimension=ROWS`;
   const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
   if (!res.ok) throw new Error('Sheet read failed: ' + await res.text());
   const data = await res.json();
@@ -85,7 +85,6 @@ async function sendFollowUp(email, type, data) {
   }
   // Base64 encode cats so special chars don't break URL
   const catsB64 = Buffer.from(catsCompact).toString('base64');
-  const industry = data.industry || '';
   // action=pay sends user directly to results+upsell, bypassing gate form
   const checkoutUrl = `${siteUrl}/?retarget=1&action=pay&name=${encodeURIComponent(firstName)}&email=${encodeURIComponent(email)}&score=${score}&industry=${encodeURIComponent(industry)}&cats=${encodeURIComponent(catsB64)}`;
 
@@ -412,6 +411,149 @@ async function sendFollowUp(email, type, data) {
   </div>
 </div>
 </body></html>`;
+  } else if (type === 'followup6') {
+    // ── EMAIL 6: "I Almost Didn't Send This" — Final last chance, hesitation reframe ──
+    const tier6 = score >= 75 ? 'high' : score >= 50 ? 'mid' : 'low';
+    const tierMsg6 = tier6 === 'high'
+      ? `You may be further ahead than you think. Your responses showed strong pattern recognition across multiple AI scenarios — but without seeing your full breakdown, you cannot know which specific skills to leverage right now.`
+      : tier6 === 'mid'
+      ? `You scored above average for your field. But "above average" will not be enough in 18 months — not when AI fluency becomes table stakes. Your report shows which skills to develop now, before the window closes.`
+      : `You already know AI is reshaping ${industry}. Your score pinpoints exactly which skills are holding you back — and the order to develop them. That clarity is worth more than another week of guessing.`;
+
+    subject = `I almost didn't send this (about your AI IQ results)`;
+    html = `
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/></head>
+<body style="font-family:Arial,sans-serif;background:#eef2f7;margin:0;padding:0">
+<div style="max-width:600px;margin:0 auto;background:#FFFFFF;border-radius:10px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.12)">
+
+  <!-- HEADER -->
+  <div style="background:linear-gradient(135deg,#071810 0%,#0A2E1A 40%,#0D3D22 100%);padding:0;position:relative;overflow:hidden">
+    <div style="position:absolute;top:-30px;right:-30px;width:160px;height:160px;background:radial-gradient(circle,rgba(201,168,76,0.18) 0%,transparent 70%);border-radius:50%"></div>
+    <div style="position:absolute;bottom:-20px;left:-20px;width:120px;height:120px;background:radial-gradient(circle,rgba(238,175,0,0.12) 0%,transparent 70%);border-radius:50%"></div>
+    <div style="background:rgba(201,168,76,0.15);border-bottom:1px solid rgba(201,168,76,0.25);padding:10px 24px;text-align:center">
+      <span style="font-size:11px;color:#C9A84C;letter-spacing:2px;text-transform:uppercase;font-weight:700;font-family:Arial,sans-serif">✦ Final Message ✦</span>
+    </div>
+    <div style="padding:32px 28px 36px;text-align:center;position:relative">
+      <div style="margin-bottom:16px">
+        <span style="font-size:42px;display:block;line-height:1">🧠</span>
+        <span style="font-size:13px;color:rgba(201,168,76,0.7);letter-spacing:1.5px;text-transform:uppercase;display:block;margin-top:6px;font-family:Arial,sans-serif">Practical AI Skills IQ</span>
+      </div>
+      <h1 style="color:#EEAF00;font-size:22px;font-weight:700;margin:0 0 10px;line-height:1.35;font-family:Georgia,'Times New Roman',serif">
+        I almost didn't send this email.
+      </h1>
+      <p style="color:rgba(255,255,255,0.72);font-size:14px;margin:0;line-height:1.6;font-family:Arial,sans-serif">
+        But after reviewing your responses, I realized something important.
+      </p>
+      <div style="width:60px;height:2px;background:linear-gradient(90deg,transparent,#C9A84C,transparent);margin:20px auto 0"></div>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div style="padding:36px 32px">
+    <p style="font-size:16px;color:#2D3748;margin:0 0 20px;font-family:Arial,sans-serif">Hi ${firstName},</p>
+    <p style="font-size:14px;color:#4A5568;line-height:1.75;margin:0 0 20px;font-family:Arial,sans-serif">
+      You took the Practical AI Skills IQ Assessment a few days ago — and you haven't claimed your full results yet.
+    </p>
+    <p style="font-size:14px;color:#4A5568;line-height:1.75;margin:0 0 24px;font-family:Arial,sans-serif">
+      I've been thinking about why. And I want to share something that might surprise you.
+    </p>
+
+    <!-- Insight callout box -->
+    <div style="background:linear-gradient(135deg,#071810,#0D3D22);border-radius:10px;padding:24px 28px;margin-bottom:28px;border-left:4px solid #C9A84C">
+      <p style="color:#C9A84C;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;margin:0 0 10px;font-weight:700;font-family:Arial,sans-serif">What the data shows</p>
+      <p style="color:#FFFFFF;font-size:15px;line-height:1.7;margin:0;font-weight:500;font-family:Arial,sans-serif">
+        People who score in the <strong style="color:#EEAF00">top 25% for practical AI skills</strong> are often the <em>most hesitant</em> to claim their results.
+      </p>
+      <p style="color:rgba(255,255,255,0.65);font-size:13px;line-height:1.6;margin:12px 0 0;font-family:Arial,sans-serif">
+        High performers tend to focus on what they don't know — not on the real, measurable strengths they already have.
+      </p>
+    </div>
+
+    <p style="font-size:14px;color:#4A5568;line-height:1.75;margin:0 0 20px;font-family:Arial,sans-serif">${tierMsg6}</p>
+    <p style="font-size:14px;color:#4A5568;line-height:1.75;margin:0 0 24px;font-family:Arial,sans-serif">
+      Two things I want you to know — regardless of where you scored:
+    </p>
+
+    <!-- Two points -->
+    <div style="margin-bottom:28px">
+      <table style="width:100%;border-collapse:collapse;margin-bottom:16px">
+        <tr>
+          <td style="width:36px;vertical-align:top;padding-top:3px">
+            <div style="width:28px;height:28px;background:#C9A84C;border-radius:50%;text-align:center;line-height:28px;font-size:13px;font-weight:700;color:#FFFFFF;font-family:Arial,sans-serif">1</div>
+          </td>
+          <td style="padding-left:12px;font-size:14px;color:#2D3748;line-height:1.65;font-family:Arial,sans-serif">
+            <strong>Knowing your unique strengths is the first step to using them.</strong> Your personalized report shows exactly where you stand — a category-by-category breakdown with peer comparisons across ${industry}.
+          </td>
+        </tr>
+      </table>
+      <table style="width:100%;border-collapse:collapse">
+        <tr>
+          <td style="width:36px;vertical-align:top;padding-top:3px">
+            <div style="width:28px;height:28px;background:#C9A84C;border-radius:50%;text-align:center;line-height:28px;font-size:13px;font-weight:700;color:#FFFFFF;font-family:Arial,sans-serif">2</div>
+          </td>
+          <td style="padding-left:12px;font-size:14px;color:#2D3748;line-height:1.65;font-family:Arial,sans-serif">
+            <strong>AI readiness can always be improved</strong> — but only when you know what to work on first. Without your report, you're guessing.
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Testimonials -->
+    <div style="background:#F9F5EE;border-radius:10px;padding:20px 24px;margin-bottom:28px;border:1px solid #E8DFC8">
+      <p style="font-size:12px;color:#8B7355;letter-spacing:1px;text-transform:uppercase;font-weight:700;margin:0 0 16px;font-family:Arial,sans-serif">What others said after claiming their results</p>
+      <div style="border-left:3px solid #C9A84C;padding-left:14px;margin-bottom:16px">
+        <p style="font-size:13px;color:#4A5568;line-height:1.65;margin:0 0 6px;font-style:italic;font-family:Arial,sans-serif">
+          "I was hesitant because I thought the results might be discouraging. Instead, the breakdown showed me where I was already strong — I just hadn't recognized it. Worth every penny."
+        </p>
+        <p style="font-size:12px;color:#4A5568;margin:0;font-weight:600;font-family:Arial,sans-serif">— Marcus T., Operations Director</p>
+      </div>
+      <div style="border-left:3px solid #C9A84C;padding-left:14px">
+        <p style="font-size:13px;color:#4A5568;line-height:1.65;margin:0 0 6px;font-style:italic;font-family:Arial,sans-serif">
+          "The category breakdown and peer comparison were eye-opening. I knew AI was important — I didn't know I was already ahead of most people in my field. That confidence alone was worth it."
+        </p>
+        <p style="font-size:12px;color:#4A5568;margin:0;font-weight:600;font-family:Arial,sans-serif">— Priya S., Marketing Lead</p>
+      </div>
+    </div>
+
+    <!-- Offer box -->
+    <div style="background:linear-gradient(135deg,rgba(10,31,21,0.04),rgba(238,175,0,0.06));border:2px solid #C9A84C;border-radius:10px;padding:22px 26px;margin-bottom:28px;text-align:center">
+      <p style="font-size:13px;color:#718096;text-decoration:line-through;margin:0 0 4px;font-family:Arial,sans-serif">Regular price: $9.99</p>
+      <p style="font-size:30px;color:#006644;font-weight:700;margin:0 0 4px;font-family:Arial,sans-serif">$1.00</p>
+      <p style="font-size:13px;color:#4A5568;margin:0 0 8px;font-family:Arial,sans-serif">Complete personalized AI Skills report · Instant access · PDF download</p>
+      <p style="font-size:12px;color:#C0392B;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:0;font-family:Arial,sans-serif">⏰ Final offer — we won't email you again after today</p>
+    </div>
+
+    <!-- CTA -->
+    <div style="text-align:center;margin-bottom:28px">
+      <a href="${checkoutUrl}" style="display:inline-block;background:linear-gradient(135deg,#EEAF00,#D4A017);color:#071810;font-weight:700;font-size:17px;padding:18px 56px;border-radius:8px;text-decoration:none;letter-spacing:0.3px;font-family:Arial,sans-serif">
+        See My Full AI IQ Results →
+      </a>
+      <p style="font-size:12px;color:#718096;margin:10px 0 0;font-family:Arial,sans-serif">Secure checkout · 30-day money-back guarantee</p>
+    </div>
+
+    <p style="font-size:14px;color:#4A5568;line-height:1.75;margin:0 0 20px;font-family:Arial,sans-serif">
+      You already invested the time to take the assessment. Don't let uncertainty about the results be the thing that stops you from understanding your own strengths.
+    </p>
+    <p style="font-size:14px;color:#4A5568;line-height:1.75;margin:0 0 24px;font-family:Arial,sans-serif">
+      This is the last email I'll send. Whatever you decide — keep building your AI skills. The window for advantage is still open, but it won't be forever.
+    </p>
+    <p style="font-size:14px;color:#2D3748;margin:0;font-family:Arial,sans-serif">
+      Scott Magnacca<br/>
+      <span style="color:#718096;font-size:13px">Practical AI Skills IQ | salesforlife.ai</span>
+    </p>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="background:#F7FAFC;padding:16px 24px;text-align:center;border-top:1px solid #E2E8F0">
+    <p style="font-size:11px;color:#4A5568;margin:0;line-height:1.6;font-family:Arial,sans-serif">
+      © 2026 Practical AI Skills IQ. All rights reserved.<br/>
+      <a href="#" style="color:#4A5568;text-decoration:underline">Unsubscribe</a> · salesforlife.ai
+    </p>
+  </div>
+
+</div>
+</body></html>`;
   }
 
   await sendViaResend(email, subject, html);
@@ -445,6 +587,7 @@ exports.handler = async () => {
       const fu3Sent = (row[23] || '').toUpperCase() === 'TRUE';
       const fu4Sent = (row[24] || '').toUpperCase() === 'TRUE';
       const fu5Sent = (row[25] || '').toUpperCase() === 'TRUE';
+      const fu6Sent = (row[26] || '').toUpperCase() === 'TRUE';
 
       if (!email || paid) continue;
 
@@ -510,7 +653,7 @@ exports.handler = async () => {
         } catch (e) { console.error(`FU4 failed for ${email}:`, e.message); }
       }
 
-      // Follow-up 5: Send after 24 hours (final urgency/FOMO — last email)
+      // Follow-up 5: Send after 24 hours (final urgency/FOMO)
       if (hoursSince >= 24 && !fu5Sent) {
         try {
           await sendFollowUp(email, 'followup5', data);
@@ -518,6 +661,16 @@ exports.handler = async () => {
           sent++;
           console.log(`Follow-up 5 sent to ${email}`);
         } catch (e) { console.error(`FU5 failed for ${email}:`, e.message); }
+      }
+
+      // Follow-up 6: Send after 60 hours (~2.5 days) — "Almost didn't send this" — true final email
+      if (hoursSince >= 60 && !fu6Sent) {
+        try {
+          await sendFollowUp(email, 'followup6', data);
+          await updateCell(token, `AA${rowNum}`, 'TRUE');
+          sent++;
+          console.log(`Follow-up 6 sent to ${email}`);
+        } catch (e) { console.error(`FU6 failed for ${email}:`, e.message); }
       }
     }
 

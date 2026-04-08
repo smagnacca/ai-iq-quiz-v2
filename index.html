@@ -1033,6 +1033,8 @@ a{color:inherit;text-decoration:none}
   padding: 28px 32px; margin-top: 8px;
   font-size: .95rem; line-height: 1.85; color: rgba(255,255,255,.85);
 }
+.bridge-para { margin: 0; }
+.bridge-para + .bridge-para { margin-top: 12px; }
 .word { display: inline-block; vertical-align: baseline; opacity: 0; transform: translateY(6px); transition: opacity .4s ease, transform .4s ease; }
 .word.shown { opacity: 1; transform: translateY(0); }
 .word.gold {
@@ -1068,16 +1070,20 @@ a{color:inherit;text-decoration:none}
 .stat-desc { font-size: .72rem; color: rgba(255,255,255,.6); margin-top: 6px; line-height: 1.4; }
 
 /* ── WHY THIS MATTERS ─────────────────────────────────────── */
+/* Why This Matters — slow graceful fade-in on scroll */
+@keyframes whyCardFadeIn { 0%{opacity:0;transform:translateX(-16px) translateY(10px)} 100%{opacity:1;transform:translateX(0) translateY(0)} }
 .why-card {
   background: linear-gradient(135deg, rgba(39,174,96,.1), rgba(238,175,0,.06));
   border: 1px solid rgba(255,255,255,.12); border-left: 4px solid var(--bright-gold, #EEAF00);
   border-radius: 0 12px 12px 0; padding: 28px 28px 28px 24px;
   opacity: 0; transform: translateX(-20px);
-  transition: opacity .7s ease, transform .7s ease;
+  transition: opacity 2.2s ease, transform 2.2s cubic-bezier(.25,.46,.45,.94);
 }
 .why-card.visible { opacity: 1; transform: translateX(0); }
-.why-card h3 { font-size: 1rem; font-weight: 700; color: var(--bright-gold, #EEAF00); margin-bottom: 12px; }
-.why-card p  { font-size: .88rem; line-height: 1.75; color: rgba(255,255,255,.85); }
+.why-card h3 { font-size: 1rem; font-weight: 700; color: var(--bright-gold, #EEAF00); margin-bottom: 12px; opacity:0; transform:translateY(8px); transition:opacity 1.2s ease .5s, transform 1.2s ease .5s; }
+.why-card.visible h3 { opacity:1; transform:translateY(0); }
+.why-card p  { font-size: .88rem; line-height: 1.75; color: rgba(255,255,255,.85); opacity:0; transform:translateY(8px); transition:opacity 1.6s ease .9s, transform 1.6s ease .9s; }
+.why-card.visible p { opacity:1; transform:translateY(0); }
 .why-card strong { color: #fff; }
 .flash-stat {
   display: inline; padding: 1px 3px; border-radius: 3px;
@@ -1111,6 +1117,8 @@ a{color:inherit;text-decoration:none}
   color: #fff;
 }
 .testi-card.visible { opacity: 1; transform: perspective(800px) rotateX(0) rotateY(0) translateY(0); }
+@keyframes testiPulse { 0%,100%{box-shadow:0 2px 12px rgba(0,0,0,.15)} 50%{box-shadow:0 0 0 4px rgba(238,175,0,.35), 0 4px 24px rgba(238,175,0,.20)} }
+.testi-card.testi-pulse { animation: testiPulse 1.2s ease-in-out 2; }
 .testi-card::before {
   content: '"'; position: absolute; top: -6px; left: 12px;
   font-size: 3.5rem; color: var(--gold); font-family: 'Merriweather', serif;
@@ -1171,17 +1179,49 @@ a{color:inherit;text-decoration:none}
 .quote-underline.drawn { width: 200px; }
 
 /* ── CTA SECTION with PARTICLES ──────────────────────────── */
+@keyframes ctaGoldBorderPulse {
+  0%,100%{ box-shadow: 0 0 0 0 rgba(238,175,0,0), inset 0 0 0 0 rgba(238,175,0,0); }
+  50%{ box-shadow: 0 0 32px 8px rgba(238,175,0,.22), inset 0 0 24px 0 rgba(238,175,0,.06); }
+}
+@keyframes ctaGoldSweep {
+  0%{ background-position: -200% center; }
+  100%{ background-position: 200% center; }
+}
 .cta-section {
   background: linear-gradient(160deg, var(--green-deep), var(--green-dark));
   padding: 70px 24px; margin: 0 -24px;
   text-align: center; position: relative; overflow: hidden;
+  border-top: 3px solid rgba(238,175,0,.55);
+  border-bottom: 3px solid rgba(238,175,0,.55);
+  animation: ctaGoldBorderPulse 3s ease-in-out infinite;
+}
+.cta-section::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(238,175,0,.10), transparent 70%);
+  z-index: 0;
 }
 #particleCanvas { position: absolute; inset: 0; z-index: 0; }
-.cta-inner { position: relative; z-index: 1; max-width: 520px; margin: 0 auto; }
-.cta-eyebrow { font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(238,175,0,.7); margin-bottom: 16px; }
+.cta-inner {
+  position: relative; z-index: 1; max-width: 520px; margin: 0 auto;
+  background: rgba(255,255,255,.04);
+  border: 1.5px solid rgba(238,175,0,.35);
+  border-radius: 16px;
+  padding: 40px 36px;
+  box-shadow: 0 0 0 4px rgba(238,175,0,.08), 0 8px 40px rgba(0,0,0,.25);
+}
+.cta-eyebrow {
+  font-size: .72rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--bright-gold); margin-bottom: 16px;
+  /* Gold shimmer sweep on the eyebrow */
+  background: linear-gradient(90deg, #EEAF00 0%, #FFE566 40%, #EEAF00 60%, #C9A84C 100%);
+  background-size: 300% auto;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: ctaGoldSweep 3s linear infinite;
+}
 .cta-title {
   font-family: 'Merriweather', serif; font-size: clamp(1.4rem,4vw,2rem);
   font-weight: 900; color: #fff; line-height: 1.25; margin-bottom: 12px;
+  text-shadow: 0 2px 16px rgba(0,0,0,.4);
 }
 .cta-sub { font-size: .9rem; color: rgba(255,255,255,.65); line-height: 1.6; margin-bottom: 32px; }
 .cta-price-wrap { margin-bottom: 24px; }
@@ -1200,13 +1240,14 @@ a{color:inherit;text-decoration:none}
 /* Magnetic button */
 .cta-btn {
   display: inline-block; position: relative;
-  background: linear-gradient(135deg, var(--success), #1a8a4a);
-  color: #fff; font-size: 1rem; font-weight: 700; letter-spacing: .03em;
-  padding: 18px 44px; border: none; border-radius: 6px; cursor: pointer;
+  background: linear-gradient(135deg, #0a8659, #1db884);
+  color: #fff; font-size: 1.08rem; font-weight: 800; letter-spacing: .04em;
+  padding: 20px 52px; border: 2px solid rgba(238,175,0,.55); border-radius: 8px; cursor: pointer;
   box-shadow: 0 0 0 0 rgba(39,174,96,.5);
   animation: btnPulse 2.5s ease-in-out infinite;
   transition: transform .15s ease, box-shadow .15s ease;
   overflow: hidden;
+  text-shadow: 0 1px 4px rgba(0,0,0,.25);
 }
 .cta-btn::before {
   content: ''; position: absolute; bottom: -100%; left: 0; right: 0; height: 100%;
@@ -1829,19 +1870,19 @@ a{color:inherit;text-decoration:none}
     <h2 class="section-heading" id="testiHeading">From Others Who've Been Here</h2>
   </div>
   <div class="testimonials-grid" id="testiGrid">
-    <div class="testi-card" id="testi1">
+    <div class="testi-card" id="testi1" data-quote="I was skeptical about a $1 report — but the breakdown of my weak areas was more specific and honest than anything I've gotten from a full-day workshop.">
       <span class="testi-score">72%</span>
       <div class="testi-glint"></div>
-      <p class="testi-text">I was skeptical about a $1 report — but the breakdown of my weak areas was more specific and honest than anything I've gotten from a full-day workshop.</p>
-      <div class="testi-author">Marcus T.</div>
-      <div class="testi-role">VP of Sales Operations, SaaS</div>
+      <p class="testi-text" id="testi1Text"></p>
+      <div class="testi-author" id="testi1Author" style="opacity:0;transition:opacity .5s ease">Marcus T.</div>
+      <div class="testi-role" style="opacity:0;transition:opacity .5s ease .2s" id="testi1Role">VP of Sales Operations, SaaS</div>
     </div>
-    <div class="testi-card" id="testi2">
+    <div class="testi-card" id="testi2" data-quote="The prompting gap they identified was dead-on. I've since saved 6+ hours a week just from fixing how I talk to AI tools. Worth every penny and more.">
       <span class="testi-score">65%</span>
       <div class="testi-glint"></div>
-      <p class="testi-text">The prompting gap they identified was dead-on. I've since saved 6+ hours a week just from fixing how I talk to AI tools. Worth every penny and more.</p>
-      <div class="testi-author">Priya S.</div>
-      <div class="testi-role">Marketing Director, Financial Services</div>
+      <p class="testi-text" id="testi2Text"></p>
+      <div class="testi-author" id="testi2Author" style="opacity:0;transition:opacity .5s ease">Priya S.</div>
+      <div class="testi-role" style="opacity:0;transition:opacity .5s ease .2s" id="testi2Role">Marketing Director, Financial Services</div>
     </div>
   </div>
 
@@ -2860,23 +2901,42 @@ function _renderResults(r){
 /* ─── BUILD COMMITMENT BRIDGE (word-by-word) ────────────────── */
 (function buildBridge(){
   const el = document.getElementById('bridgeBlock');
-  // Tier-personalized bridge text
-  let text, goldWords;
+  // Tier-personalized bridge text — split into paragraphs for readability
+  let paragraphs, goldWords;
   if(SCORE >= 80){
-    text = `You just completed an assessment that most professionals avoid because they're afraid of what they'll find. That alone puts you in a different category — people who measure themselves honestly and act on what they learn. Your score puts you in the top tier. The professionals who stay there are the ones who keep identifying their next edge before it becomes obvious to everyone else. Your report shows you exactly where that edge is.`;
+    paragraphs = [
+      `You just completed an assessment that most professionals avoid because they're afraid of what they'll find. That alone puts you in a different category — people who measure themselves honestly and act on what they learn.`,
+      `Your score puts you in the top tier.`,
+      `The professionals who stay there are the ones who keep identifying their next edge before it becomes obvious to everyone else.`,
+      `Your report shows you exactly where that edge is.`
+    ];
     goldWords = new Set(['most','professionals','avoid','different','category','top','tier']);
   } else if(SCORE >= 60){
-    text = `You just completed an assessment that most professionals avoid because they're afraid of what they'll find. That alone puts you in a different category — people who measure themselves honestly and act on what they learn. You have a strong foundation. The gap between where you are and where you need to be is specific and closable. Your report gives you the exact roadmap.`;
+    paragraphs = [
+      `You just completed an assessment that most professionals avoid because they're afraid of what they'll find. That alone puts you in a different category — people who measure themselves honestly and act on what they learn.`,
+      `You have a strong foundation.`,
+      `The gap between where you are and where you need to be is specific and closable.`,
+      `Your report gives you the exact roadmap.`
+    ];
     goldWords = new Set(['most','professionals','avoid','different','category','strong','foundation']);
   } else {
-    text = `You just completed an assessment that most professionals avoid because they're afraid of what they'll find. That takes honesty and courage. What your score reveals is an opportunity — a specific, high-ROI set of skills that, once developed, compound quickly. The professionals who close this gap fastest are the ones who know exactly where to focus. Your report shows you that.`;
+    paragraphs = [
+      `You just completed an assessment that most professionals avoid because they're afraid of what they'll find. That takes honesty and courage.`,
+      `What your score reveals is an opportunity — a specific, high-ROI set of skills that, once developed, compound quickly.`,
+      `The professionals who close this gap fastest are the ones who know exactly where to focus.`,
+      `Your report shows you that.`
+    ];
     goldWords = new Set(['most','professionals','avoid','honesty','courage','opportunity','high-ROI']);
   }
-  const words = text.split(' ');
-  el.innerHTML = words.map((w,i) => {
-    const clean = w.replace(/[^a-zA-Z-]/g,'').toLowerCase();
-    const g = goldWords.has(clean) ? ' gold' : '';
-    return `<span class="word${g}" id="bw${i}">${w} </span>`;
+  // Build paragraphs with word spans for the word-by-word reveal
+  el.innerHTML = paragraphs.map((para, pi) => {
+    const words = para.split(' ');
+    const spans = words.map(w => {
+      const clean = w.replace(/[^a-zA-Z-]/g,'').toLowerCase();
+      const g = goldWords.has(clean) ? ' gold' : '';
+      return `<span class="word${g}">${w} </span>`;
+    }).join('');
+    return `<p class="bridge-para" id="bp${pi}" style="margin-bottom:${pi<paragraphs.length-1?'12px':'0'};opacity:0;transform:translateY(6px);transition:opacity .5s ease,transform .5s ease">${spans}</p>`;
   }).join('');
 })();
 
@@ -3156,17 +3216,45 @@ const obs = new IntersectionObserver((entries)=>{
       revealInsight(0);
     }
 
-    /* Bridge word-by-word */
+    /* Bridge — reveal paragraphs one at a time, words fade within each para */
     if(id==='bridgeBlock'){
-      const words = el.querySelectorAll('.word');
-      words.forEach((w,i)=>{ setTimeout(()=>w.classList.add('shown'), i*60); });
+      const paras = el.querySelectorAll('.bridge-para');
+      paras.forEach((p,pi)=>{
+        setTimeout(()=>{
+          p.style.opacity='1'; p.style.transform='translateY(0)';
+          // Stagger words within each paragraph
+          const words = p.querySelectorAll('.word');
+          words.forEach((w,wi)=>{ setTimeout(()=>w.classList.add('shown'), wi*45); });
+        }, pi * 600);
+      });
     }
 
-    /* Stats count up */
+    /* Stats count up — sequential: complete block 1 before starting block 2, then block 3 */
     if(id==='statsStrip'){
-      setTimeout(()=>{ document.getElementById('stat1').classList.add('visible'); countUp(document.getElementById('sn1'),12847,1600,'',n=>n.toLocaleString()); },0);
-      setTimeout(()=>{ document.getElementById('stat2').classList.add('visible'); countUp(document.getElementById('sn2'),56,900,'%'); },220);
-      setTimeout(()=>{ document.getElementById('stat3').classList.add('visible'); countUp(document.getElementById('sn3'),77,900,'%'); },440);
+      const s1=document.getElementById('stat1'), sn1=document.getElementById('sn1');
+      const s2=document.getElementById('stat2'), sn2=document.getElementById('sn2');
+      const s3=document.getElementById('stat3'), sn3=document.getElementById('sn3');
+      // Block 1: count up 0 → 12,847 over 2.2s
+      if(s1){ s1.classList.add('visible'); }
+      countUp(sn1, 12847, 2200, '', n=>n.toLocaleString());
+      // Block 2: starts when block 1 finishes (~2.2s) + 400ms pause
+      setTimeout(()=>{
+        if(s2){ s2.classList.add('visible'); }
+        countUp(sn2, 56, 2000, '%');
+        // Block 3: starts when block 2 finishes (~2s) + 400ms pause
+        setTimeout(()=>{
+          if(s3){ s3.classList.add('visible'); }
+          countUp(sn3, 77, 2000, '%');
+          // Pulse each stat number once after it settles
+          setTimeout(()=>{
+            [sn1,sn2,sn3].forEach((n,i)=>{
+              setTimeout(()=>{
+                if(n){ n.style.animation='none'; void n.offsetWidth; n.style.animation='scorePopPulse .65s ease 1 forwards'; }
+              }, i*300);
+            });
+          }, 2100);
+        }, 2400);
+      }, 2600);
     }
 
     /* Why card flash stats */
@@ -3184,13 +3272,36 @@ const obs = new IntersectionObserver((entries)=>{
     /* Credentials card */
     if(id==='credCard') el.classList.add('visible');
 
-    /* Testimonials */
+    /* Testimonials — sequential typewriter: card1 fades in → types quote → author fades → pause 1.5s → card2 same → both pulse */
     if(id==='testiGrid'){
-      ['testi1','testi2'].forEach((tid,i)=>{
+      function animateTesti(tid, textId, authorId, roleId, onDone){
+        const card=document.getElementById(tid);
+        const textEl=document.getElementById(textId);
+        const authorEl=document.getElementById(authorId);
+        const roleEl=document.getElementById(roleId);
+        const quote=card?card.dataset.quote:'';
+        if(!card){if(onDone)onDone();return;}
+        // Step 1: card slides in
+        card.classList.add('visible');
         setTimeout(()=>{
-          const c=document.getElementById(tid);
-          if(c) c.classList.add('visible');
-        }, i*280);
+          // Step 2: typewriter the quote at comfortable reading speed (~22ms/char)
+          if(textEl) typewriter(textEl, quote, 22).then(()=>{
+            // Step 3: author + role fade in
+            if(authorEl) authorEl.style.opacity='1';
+            if(roleEl)   roleEl.style.opacity='1';
+            // Step 4: pulse card to emphasise
+            setTimeout(()=>{
+              card.classList.add('testi-pulse');
+              setTimeout(()=>{ card.classList.remove('testi-pulse'); if(onDone) onDone(); }, 2500);
+            }, 600);
+          });
+        }, 500);
+      }
+      // Run card 1, then after it's done (+ 1.5s gap) run card 2
+      animateTesti('testi1','testi1Text','testi1Author','testi1Role', ()=>{
+        setTimeout(()=>{
+          animateTesti('testi2','testi2Text','testi2Author','testi2Role', null);
+        }, 1500);
       });
     }
 

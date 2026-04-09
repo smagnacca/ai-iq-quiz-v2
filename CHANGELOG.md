@@ -1,5 +1,29 @@
 # Changelog — Practical AI Skills IQ Quiz
 
+## v22 — Fix canvas sizing: confetti and particle effects now full-viewport (2026-04-09)
+
+### Summary
+End-to-end QA audit (v21 codebase, persona: Diana Chen, Marketing Director) revealed two canvas elements constrained to the browser's default 300×150px instead of filling their containers. The confetti burst on the results hero and the particle network behind the $1 CTA were both invisible outside a 300×150px box in the top-left corner. Root cause: `<canvas>` elements have intrinsic dimensions of 300×150 that CSS `position:absolute; inset:0` alone does not override — explicit `width:100%; height:100%` is required.
+
+### Bugs Fixed
+1. **Confetti canvas clipped to 300×150px** — `#confettiCanvas` in results hero: added `width: 100%; height: 100%` to CSS. Canvas now fills the full 1278×790px hero section.
+2. **Particle canvas clipped to 300×150px** — `#particleCanvas` in CTA section: added `width: 100%; height: 100%` to CSS. Canvas now fills the full CTA section.
+
+### QA Audit Findings (full run)
+- Home page, animations, social proof: ✅ all passing
+- Gate/registration form: ✅ all passing
+- Quiz flow (12 questions, sequential banners, nudge timer): ✅ all passing
+- Computing overlay (5s animated): ✅ all passing
+- Results page personalization (name, tier, CTA copy): ✅ all passing
+- Skip/free path CTA: ✅ present and functional
+- Email drip: ✅ by design — first email sends after 2h via check-followups cron
+- Lead capture (submit-lead): ✅ functional (one transient 500 on cold start, resolved on retry)
+
+### Files Changed
+- `index.html` — 2 lines, CSS `width: 100%; height: 100%` added to `#confettiCanvas` and `#particleCanvas`
+
+---
+
 ## v17.8 — Add followup4 + followup5 email handlers (2026-04-05)
 
 ### Summary

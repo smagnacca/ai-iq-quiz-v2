@@ -1,5 +1,18 @@
 # Changelog — Practical AI Skills IQ Quiz
 
+## SEO Optimization — Full Meta Tag Suite (2026-04-13)
+**What changed:** Added complete SEO infrastructure to `index.html` head section. Zero changes to body, JS, CSS, or functionality.
+- `<link rel="canonical">` — authoritative URL declaration
+- Full Open Graph block — controls LinkedIn/Facebook/Slack share previews
+- Full Twitter Card block — controls X/Twitter share appearance
+- JSON-LD WebApplication schema — structured data identifying this as a free AI assessment tool by Scott Magnacca (Babson)
+**Why:** Site had title and description but no OG tags, Twitter cards, canonical URL, or structured data.
+**Files changed:** `index.html`, `CHANGELOG.md`
+**Git commit:** `SEO: add OG tags, canonical, and JSON-LD schema to head` | hash: `2b1ec1b`
+**Status:** ✅ Deployed to https://practical-ai-skills-iq.netlify.app
+
+---
+
 ## v23 — 5 UX improvements: immediate email, 0% ring fix, retry logic, mobile canvas, timer cleanup (2026-04-09)
 
 ### Summary

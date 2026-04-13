@@ -1,5 +1,15 @@
 # Changelog — Practical AI Skills IQ Quiz
 
+## OG Social Sharing Card — Branded 1200×630 Image (2026-04-13)
+**What changed:** Created and deployed a branded Open Graph image (`og-image.png`). Added `og:image` and `twitter:image` (both were missing). No other changes.
+**Design:** Scott's headshot (circular), SalesForLife.ai logo, "How AI-Ready Are You?" tagline, Babson green/gold accent, "Adjunct Lecturer & Adjunct Professor, Babson College" credential line.
+**Why:** Site previously had no OG image at all — social shares were blank. Now fully branded.
+**Files changed:** `og-image.png` (new), `headshot-formal-2.png` (new), `index.html`
+**Git commit:** `feat: add branded OG image + update og:image/twitter:image URLs` | hash: `7994746`
+**Status:** ✅ Deployed to https://practical-ai-skills-iq.netlify.app
+
+---
+
 ## SEO Optimization — Full Meta Tag Suite (2026-04-13)
 **What changed:** Added complete SEO infrastructure to `index.html` head section. Zero changes to body, JS, CSS, or functionality.
 - `<link rel="canonical">` — authoritative URL declaration

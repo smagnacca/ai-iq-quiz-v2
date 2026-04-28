@@ -1,0 +1,54 @@
+{
+  "manifest_version": "1.0",
+  "project": "practical-ai-iq-quiz",
+  "session_date": "2026-04-09T16:00:00Z",
+  "deployment_status": "ready",
+  "version": "v23",
+  "changes_summary": "5 improvements—confirmation email, 0% ring, cold-start retry, mobile orientation, timer cleanup",
+  "files_changed": [
+    {
+      "path": "index.html",
+      "status": "modified",
+      "lines_added": 387,
+      "lines_deleted": 126,
+      "description": "Added: retry logic, 0% ring fix, timer hide, canvas orientation, email call"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "status": "modified",
+      "lines_added": 80,
+      "lines_deleted": 0,
+      "description": "Added v23 entry with full documentation"
+    },
+    {
+      "path": "netlify/functions/send-immediate-email.js",
+      "status": "created",
+      "lines_added": 122,
+      "lines_deleted": 0,
+      "description": "New function: zero-delay confirmation email on quiz completion"
+    }
+  ],
+  "commit_message": "v23: 5 improvements—confirmation email, 0% ring, cold-start retry, mobile orientation, timer cleanup\n\n- Add send-immediate-email.js: zero-delay personalized welcome email\n- Enforce 5% minimum display for zero-score ring\n- Implement automatic retry for submit-lead on cold-start\n- Enhance canvas resize: orientationchange + debounce\n- Hide quiz countdown timer when results render\n\nCo-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>",
+  "github_actions_will": [
+    "Read this manifest on push",
+    "Run .github/workflows/deploy.yml",
+    "Deploy to Netlify using NETLIFY_SITE_ID + NETLIFY_AUTH_TOKEN",
+    "Create GitHub commit comment with deployment status"
+  ],
+  "deployment_ready_checklist": {
+    "files_synced_to_local_repo": false,
+    "git_commit_created": false,
+    "git_push_to_main": false,
+    "github_actions_triggered": false,
+    "netlify_deployment_started": false,
+    "site_live": false
+  },
+  "next_step": "Push to main branch → GitHub Actions auto-deploys → Netlify live in 2-3 minutes",
+  "estimated_deployment_time": "90 seconds",
+  "rollback_procedure": "Revert commit on GitHub → GitHub Actions runs again → previous version deployed",
+  "post_deploy_verification": [
+    "Check Netlify deploy log",
+    "Verify site loads at https://practical-ai-skills-iq.netlify.app",
+    "Test critical user flows (e.g., quiz completion, email sending)"
+  ]
+}

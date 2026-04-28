@@ -1,0 +1,67 @@
+{
+  "timestamp": "2026-04-11T18:45:00Z",
+  "version": "v23",
+  "status": "ready_for_deployment",
+  "description": "v23: Immediate email, 0% score ring, cold-start retry, mobile orientation, timer cleanup",
+
+  "changes_summary": {
+    "new_files": [
+      "netlify/functions/send-immediate-email.js"
+    ],
+    "modified_files": [
+      "CHANGELOG.md",
+      "index.html"
+    ],
+    "deleted_files": []
+  },
+
+  "features_in_v23": [
+    "Immediate confirmation email sent after quiz completion (no 2-hour delay)",
+    "Zero-score ring fix: enforces 5% minimum display to avoid 'broken' appearance",
+    "Submit-lead cold-start retry: 1 automatic retry after 3s for HTTP 500 errors",
+    "Timer cleanup: countdown timer now hidden when results section appears",
+    "Mobile orientation support: confetti & particle canvases listen to orientationchange event"
+  ],
+
+  "deployment_steps": {
+    "step_1_description": "Open Mac Terminal and paste the one-liner below",
+    "step_1_command": "cd ~/Projects/practical-ai-iq-quiz && rm -f .git/index.lock && git add -A && git commit -m \"v23: Immediate email, 0% score ring, cold-start retry, mobile orientation, timer cleanup\" && git push origin main",
+    "step_2_description": "Wait 90 seconds for Netlify auto-deploy to complete",
+    "step_2_verification": "Check https://practical-ai-skills-iq.netlify.app — should show new version in browser console or via page inspection",
+    "step_3_description": "Verify email function: submit a test response and check inbox for immediate confirmation email"
+  },
+
+  "git_commit_message": "v23: Immediate email, 0% score ring, cold-start retry, mobile orientation, timer cleanup",
+
+  "files_committed": [
+    "CHANGELOG.md — Updated with v23 feature list and verification summary",
+    "index.html — Added timer cleanup logic, canvas resize handlers for mobile, score ring minimum display",
+    "netlify/functions/send-immediate-email.js — NEW function for immediate lead confirmation email"
+  ],
+
+  "testing_checklist": {
+    "email_function": "✅ Tested with sample payload; HTML renders correctly",
+    "retry_logic": "✅ Simulated HTTP 500 and network errors; retry fires correctly",
+    "score_ring": "✅ Verified 0%, 5%, 50%, 100% rendering; no broken appearance",
+    "timer_cleanup": "✅ Countdown timer hidden on results page display",
+    "canvas_resize": "✅ Mobile orientation change event listeners attached; debounce working",
+    "javascript_syntax": "✅ Validated all JS modifications with `node --check`"
+  },
+
+  "deployment_timeline": {
+    "mac_terminal_paste": "30 seconds (git push)",
+    "netlify_auto_deploy": "90 seconds (function build + CDN propagation)",
+    "total_time_to_live": "~2 minutes"
+  },
+
+  "rollback_plan": "If deployment fails, revert to commit 49ee427 (latest stable v22). No database migrations required.",
+
+  "sandbox_limitation_note": "This manifest was generated from Cowork sandbox, which cannot execute `git push` due to `.git/index.lock` file deletion restrictions. The one-liner above must be executed on Mac Terminal where full file permissions are available. Scott should paste the command and let Netlify auto-deploy handle the rest.",
+
+  "next_steps": [
+    "Scott pastes one-liner in Mac Terminal",
+    "Monitor Netlify deploy notification (should complete ~90s)",
+    "Test email delivery: submit quiz response, check email inbox",
+    "Update project status in memory to 'v23 LIVE (deployed YYYY-MM-DD)'"
+  ]
+}

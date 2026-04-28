@@ -1,0 +1,388 @@
+================================================================================
+CLAUDE CODE DEPLOYMENT SETUP - COPY & PASTE INSTRUCTIONS
+================================================================================
+
+STEP 1: Create New Claude Code Project
+================================================================================
+In Claude Code, create a new project folder called: DEPLOYMENT-SYSTEM
+
+Command to create folder:
+mkdir -p ~/Projects/DEPLOYMENT-SYSTEM
+cd ~/Projects/DEPLOYMENT-SYSTEM
+
+
+STEP 2: Create New Claude Code Chat Session
+================================================================================
+Open Claude Code
+→ New Chat
+→ Paste the entire prompt from STEP 4 (below) into the first message
+→ Let it execute end-to-end
+
+
+STEP 3: Confirm Execution (Monitor Progress)
+================================================================================
+Claude Code will:
+1. Deploy v23 to GitHub and Netlify
+2. Verify GitHub Actions workflow
+3. Set up automated deployment system for all 10 projects
+
+Expected outputs:
+- v23 commit pushed to GitHub
+- GitHub Actions triggered automatically
+- Netlify deployment live within 2 minutes
+- All 10 projects mapped in DEPLOYMENT-SYSTEM.json
+- Workflow files ready for remaining repos
+
+
+STEP 4: COMPLETE PICKUP PROMPT (COPY ALL TEXT BELOW)
+================================================================================
+
+---BEGIN COPY HERE---
+
+# PICKUP PROMPT: Complete v23 Deployment + Automated System Setup
+**For: Claude Code Agent | Project: practical-ai-iq-quiz**
+**Date: 2026-04-09 | Status: v23 code complete, commit staged, ready to push**
+
+## OBJECTIVE
+Deploy v23 of the Practical AI IQ Quiz (already code-complete in Cowork) to GitHub and Netlify, then set up automated deployment system across all 10 Scott projects.
+
+## CRITICAL CONTEXT
+
+### Current State
+- **v23 code location:** `/Users/scottmagnacca/Projects/practical-ai-iq-quiz/` (local Mac repo)
+- **Cowork location:** Synced to local repo
+- **Git status:**
+  - `index.html` = staged with v23 changes ✅
+  - `CHANGELOG.md` = modified, NOT staged ❌
+  - `netlify/functions/send-immediate-email.js` = untracked ❌
+  - Last remote commit: `49ee427` (follow-up emails fix)
+- **GitHub Actions:** Workflow file `.github/workflows/deploy.yml` exists and triggers on push
+- **Netlify:** Site ID = `practical-ai-skills-iq`, auth token stored in env
+
+### v23 Improvements (Already Implemented)
+1. **Immediate confirmation email** — `send-immediate-email.js` (new function)
+2. **0% score ring fix** — Minimum 5% display + "Keep Learning" message
+3. **Cold-start retry** — Automatic retry on submit-lead HTTP 500
+4. **Mobile orientation handling** — Canvas resize on orientationchange
+5. **Timer hidden on results** — Quiz countdown timer hidden when results render
+
+### All 10 Projects (Deployment System Scope)
+```
+1. practical-ai-iq-quiz          → ~/Projects/practical-ai-iq-quiz
+2. ai-advantage-summit           → ~/Projects/ai-advantage-summit
+3. email-outreach-machine        → ~/Projects/email-outreach-machine
+4. video-editing                 → ~/Projects/video-editing
+5. website-design-funnel         → ~/Projects/website-design-funnel
+6. cowork-4daycourse             → (Cowork-only, no local repo)
+7. ceo-sales-quiz                → (Cowork-only, no local repo)
+8. salesforlife                  → (Cowork-only, no local repo)
+9. babson-exec-quiz              → (Cowork-only, no local repo)
+10. scottmagnacca-site           → ~/Projects/scottmagnacca-site
+```
+
+### Token Access
+- **GitHub token:** `[REDACTED_GITHUB_TOKEN]`
+- **Netlify token:** Available in env or stored at `~/.claude/tokens/.netlify_token`
+
+## TASK BREAKDOWN
+
+### PHASE 1: Deploy v23 (Immediate)
+**Goal:** Push v23 to GitHub → GitHub Actions triggers → Netlify deploys
+
+**Execute these commands in sequence:**
+
+```bash
+cd /Users/scottmagnacca/Projects/practical-ai-iq-quiz
+git add CHANGELOG.md netlify/functions/send-immediate-email.js
+git commit -m "v23: 5 improvements—confirmation email, 0% ring, cold-start retry, mobile orientation, timer cleanup
+
+- Add send-immediate-email.js: zero-delay personalized welcome email
+- Enforce 5% minimum display for zero-score ring
+- Implement automatic retry for submit-lead on cold-start
+- Enhance canvas resize: orientationchange + debounce
+- Hide quiz countdown timer when results render
+
+Co-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>"
+git push origin main
+```
+
+**Verify success:**
+- Check GitHub commit: https://github.com/smagnacca/practical-ai-iq-quiz/commits/main
+- Check GitHub Actions: https://github.com/smagnacca/practical-ai-iq-quiz/actions
+- Wait 2 minutes, then verify Netlify: https://practical-ai-skills-iq.netlify.app
+- Site should be live with v23 changes visible
+
+---
+
+### PHASE 2: Verify GitHub Actions Workflow (5 min)
+**Goal:** Confirm `.github/workflows/deploy.yml` exists and workflow ran successfully
+
+**Execute:**
+
+```bash
+ls -l /Users/scottmagnacca/Projects/practical-ai-iq-quiz/.github/workflows/deploy.yml
+```
+
+**Expected result:** File exists and is readable
+
+**If workflow ran:** GitHub commit will show "Deployed to Netlify" comment (added by GitHub Actions)
+
+**If workflow didn't run:** Add GitHub Secrets manually:
+- Navigate to: https://github.com/smagnacca/practical-ai-iq-quiz/settings/secrets/actions
+- Add `NETLIFY_AUTH_TOKEN` = (your Netlify personal access token)
+- Add `NETLIFY_SITE_ID` = `practical-ai-skills-iq`
+- Re-push a small change to trigger workflow
+
+---
+
+### PHASE 3: Create Deployment System Config (10 min)
+**Goal:** Map all 10 projects and create master deployment configuration
+
+**Create file:** `~/.claude/tokens/DEPLOYMENT-SYSTEM.json`
+
+**Content:**
+
+```json
+{
+  "system_version": "1.0",
+  "created": "2026-04-09T16:00:00Z",
+  "system_status": "production",
+  "projects": [
+    {
+      "id": "practical-ai-iq-quiz",
+      "name": "Practical AI IQ Quiz",
+      "description": "Lead capture + scoring + Resend email integration",
+      "cowork_folder": "cowork-Practical AI IQ Quiz",
+      "local_repo": "~/Projects/practical-ai-iq-quiz",
+      "github_repo": "smagnacca/practical-ai-iq-quiz",
+      "netlify_site_id": "practical-ai-skills-iq",
+      "has_github_actions_workflow": true,
+      "status": "deployed",
+      "last_version": "v23",
+      "last_deployed": "2026-04-09"
+    },
+    {
+      "id": "ai-advantage-summit",
+      "name": "AI Advantage Summit",
+      "description": "Summit landing page + registration",
+      "cowork_folder": "cowork-ai-advantage-summit",
+      "local_repo": "~/Projects/ai-advantage-summit",
+      "github_repo": "smagnacca/ai-advantage-summit",
+      "netlify_site_id": "ai-advantage-summit",
+      "has_github_actions_workflow": false,
+      "status": "needs_workflow_setup",
+      "last_version": null,
+      "last_deployed": null
+    },
+    {
+      "id": "email-outreach-machine",
+      "name": "Email Outreach Machine",
+      "description": "Email sequence builder + automation",
+      "cowork_folder": "cowork-email-outreach-machine",
+      "local_repo": "~/Projects/email-outreach-machine",
+      "github_repo": "smagnacca/email-outreach-machine",
+      "netlify_site_id": "email-outreach-machine",
+      "has_github_actions_workflow": false,
+      "status": "needs_workflow_setup",
+      "last_version": null,
+      "last_deployed": null
+    },
+    {
+      "id": "video-editing",
+      "name": "Video Editing",
+      "description": "Video editing tool + export",
+      "cowork_folder": "cowork-video-editing",
+      "local_repo": "~/Projects/video-editing",
+      "github_repo": "smagnacca/video-editing",
+      "netlify_site_id": "video-editing",
+      "has_github_actions_workflow": false,
+      "status": "needs_workflow_setup",
+      "last_version": null,
+      "last_deployed": null
+    },
+    {
+      "id": "website-design-funnel",
+      "name": "Website Design Funnel",
+      "description": "Web design showcase + case studies",
+      "cowork_folder": "cowork-website-design-funnel",
+      "local_repo": "~/Projects/website-design-funnel",
+      "github_repo": "smagnacca/website-design-funnel",
+      "netlify_site_id": "website-design-funnel",
+      "has_github_actions_workflow": false,
+      "status": "needs_workflow_setup",
+      "last_version": null,
+      "last_deployed": null
+    },
+    {
+      "id": "cowork-4daycourse",
+      "name": "4-Day AI Course",
+      "description": "Course landing page + enrollment",
+      "cowork_folder": "cowork-4daycourse",
+      "local_repo": null,
+      "github_repo": null,
+      "netlify_site_id": null,
+      "has_github_actions_workflow": false,
+      "status": "cowork_only_no_deployment",
+      "last_version": null,
+      "last_deployed": null
+    },
+    {
+      "id": "ceo-sales-quiz",
+      "name": "CEO Sales Quiz",
+      "description": "Sales leadership assessment quiz",
+      "cowork_folder": "cowork-ceo-sales-quiz",
+      "local_repo": null,
+      "github_repo": null,
+      "netlify_site_id": null,
+      "has_github_actions_workflow": false,
+      "status": "cowork_only_no_deployment",
+      "last_version": null,
+      "last_deployed": null
+    },
+    {
+      "id": "salesforlife",
+      "name": "Sales for Life",
+      "description": "Sales training program site",
+      "cowork_folder": "cowork-salesforlife",
+      "local_repo": null,
+      "github_repo": null,
+      "netlify_site_id": null,
+      "has_github_actions_workflow": false,
+      "status": "cowork_only_no_deployment",
+      "last_version": null,
+      "last_deployed": null
+    },
+    {
+      "id": "babson-exec-quiz",
+      "name": "Babson Exec Quiz",
+      "description": "Executive leadership assessment",
+      "cowork_folder": "cowork-babson-exec-quiz",
+      "local_repo": null,
+      "github_repo": null,
+      "netlify_site_id": null,
+      "has_github_actions_workflow": false,
+      "status": "cowork_only_no_deployment",
+      "last_version": null,
+      "last_deployed": null
+    },
+    {
+      "id": "scottmagnacca-site",
+      "name": "Scott Magnacca Site",
+      "description": "Personal portfolio + bio site",
+      "cowork_folder": null,
+      "local_repo": "~/Projects/scottmagnacca-site",
+      "github_repo": "smagnacca/scottmagnacca-site",
+      "netlify_site_id": "scottmagnacca-site",
+      "has_github_actions_workflow": false,
+      "status": "needs_workflow_setup",
+      "last_version": null,
+      "last_deployed": null
+    }
+  ],
+  "deployment_tokens": {
+    "github_token": "[REDACTED_GITHUB_TOKEN]",
+    "netlify_token_path": "~/.claude/tokens/.netlify_token"
+  },
+  "workflow_template": {
+    "location": "~/.claude/templates/deploy.yml",
+    "description": "GitHub Actions workflow — triggers on push to main, deploys to Netlify"
+  },
+  "next_steps": [
+    "Deploy v23 (Phase 1) ✓",
+    "Verify GitHub Actions (Phase 2) ✓",
+    "Add workflow to remaining 5 repos (ai-advantage-summit, email-outreach-machine, video-editing, website-design-funnel, scottmagnacca-site)",
+    "Add GitHub Secrets to each repo (NETLIFY_AUTH_TOKEN, NETLIFY_SITE_ID)",
+    "Test deployment on each repo by pushing a small change"
+  ]
+}
+```
+
+**Verify file created:**
+```bash
+cat ~/.claude/tokens/DEPLOYMENT-SYSTEM.json
+```
+
+---
+
+### PHASE 4: Add Workflow to Remaining Repos (Optional - for Future Sessions)
+**Goal:** Copy GitHub Actions workflow to the 5 remaining repos that need it
+
+**Workflow file to copy:** `.github/workflows/deploy.yml` (same template as practical-ai-iq-quiz)
+
+**Repos that need workflow setup:**
+1. ai-advantage-summit
+2. email-outreach-machine
+3. video-editing
+4. website-design-funnel
+5. scottmagnacca-site
+
+**For each repo, execute:**
+
+```bash
+cd ~/Projects/[REPO_NAME]
+mkdir -p .github/workflows
+cat > .github/workflows/deploy.yml << 'EOF'
+name: Deploy to Netlify
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v2.0
+        with:
+          publish-dir: '.'
+          production-branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy from GitHub Actions"
+          enable-pull-request-comment: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+EOF
+git add .github/workflows/deploy.yml
+git commit -m "Add GitHub Actions deployment workflow"
+git push origin main
+```
+
+**Then add GitHub Secrets to each repo** (via web UI):
+- https://github.com/smagnacca/[REPO_NAME]/settings/secrets/actions
+- Add: `NETLIFY_AUTH_TOKEN`
+- Add: `NETLIFY_SITE_ID` (from DEPLOYMENT-SYSTEM.json)
+
+---
+
+## SUCCESS CRITERIA (Check These)
+
+- [ ] v23 deployed to practical-ai-skills-iq.netlify.app
+- [ ] GitHub commit visible with v23 message
+- [ ] GitHub Actions workflow ran successfully
+- [ ] Netlify "Deployed to Netlify" comment appears on commit
+- [ ] DEPLOYMENT-SYSTEM.json created at ~/.claude/tokens/DEPLOYMENT-SYSTEM.json
+- [ ] All 10 projects mapped in config
+- [ ] File is valid JSON (no syntax errors)
+
+---
+
+## EXPECTED OUTPUT
+
+When complete, you should see:
+1. v23 live at https://practical-ai-skills-iq.netlify.app
+2. GitHub commit at https://github.com/smagnacca/practical-ai-iq-quiz/commits/main with deployment status comment
+3. DEPLOYMENT-SYSTEM.json file ready for future deployments
+4. System fully automated — next deployments require zero manual steps
+
+---
+
+END OF PICKUP PROMPT
+
+---END COPY HERE---
+
+
+DONE
+================================================================================
+All 4 steps and the complete prompt are ready to copy and paste into Claude Code.
+

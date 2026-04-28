@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI IQ Quiz — All 6 Follow-Up Emails Preview</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter',-apple-system,sans-serif; background:#0A1F15; color:#e8f5ee; min-height:100vh; }
+
+  body::before {
+    content:''; position:fixed; inset:0;
+    background: radial-gradient(ellipse 60% 40% at 15% 20%, rgba(10,134,89,0.18) 0%,transparent 70%),
+                radial-gradient(ellipse 50% 50% at 85% 80%, rgba(201,168,76,0.10) 0%,transparent 70%);
+    animation: meshShift 12s ease-in-out infinite alternate;
+    z-index:0; pointer-events:none;
+  }
+  @keyframes meshShift { 0%{opacity:1;transform:scale(1);} 100%{opacity:.85;transform:scale(1.05);} }
+
+  .shell { position:relative; z-index:1; display:flex; height:100vh; overflow:hidden; }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width:260px; flex-shrink:0;
+    background:rgba(0,0,0,0.35);
+    border-right:1px solid rgba(255,255,255,0.07);
+    display:flex; flex-direction:column;
+    overflow-y:auto; padding:20px 0 24px;
+  }
+  .sidebar-header { padding:0 18px 16px; border-bottom:1px solid rgba(255,255,255,0.07); margin-bottom:12px; }
+  .sidebar-title {
+    font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#C9A84C;
+  }
+  .sidebar-sub { font-size:11px; color:rgba(232,245,238,0.4); margin-top:4px; }
+  .back-btn {
+    display:inline-flex; align-items:center; gap:5px; margin:0 18px 14px;
+    background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+    color:rgba(232,245,238,0.6); text-decoration:none; padding:6px 12px;
+    border-radius:7px; font-size:11px; font-weight:600; transition:all 0.2s;
+  }
+  .back-btn:hover { background:rgba(201,168,76,0.15); border-color:rgba(201,168,76,0.4); color:#C9A84C; }
+
+  .email-tab {
+    display:flex; align-items:flex-start; gap:10px;
+    padding:11px 18px; cursor:pointer;
+    border-left:3px solid transparent;
+    transition:all 0.2s; position:relative;
+  }
+  .email-tab:hover { background:rgba(255,255,255,0.04); }
+  .email-tab.active {
+    background:rgba(201,168,76,0.08);
+    border-left-color:#C9A84C;
+  }
+  .tab-num {
+    width:24px; height:24px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:700; margin-top:1px;
+    background:rgba(255,255,255,0.08); color:rgba(232,245,238,0.5);
+    transition:all 0.2s;
+  }
+  .email-tab.active .tab-num { background:#C9A84C; color:#0A1F15; }
+  .tab-info { flex:1; min-width:0; }
+  .tab-label { font-size:12px; font-weight:600; color:rgba(232,245,238,0.75); margin-bottom:2px; }
+  .email-tab.active .tab-label { color:#e8f5ee; }
+  .tab-timing { font-size:10px; color:rgba(232,245,238,0.35); }
+  .tab-subject { font-size:10px; color:rgba(232,245,238,0.45); margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:170px; }
+
+  /* ── MAIN AREA ── */
+  .main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+
+  .topbar {
+    padding:14px 24px; border-bottom:1px solid rgba(255,255,255,0.07);
+    display:flex; align-items:center; gap:12px; flex-shrink:0;
+    background:rgba(0,0,0,0.2);
+  }
+  .email-badge {
+    padding:4px 12px; border-radius:20px; font-size:11px; font-weight:700;
+    letter-spacing:1px; text-transform:uppercase;
+    background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.35); color:#C9A84C;
+  }
+  .topbar-subject { font-size:13px; color:rgba(232,245,238,0.7); flex:1; }
+  .topbar-timing { font-size:11px; color:rgba(232,245,238,0.35); white-space:nowrap; }
+
+  .preview-wrap {
+    flex:1; overflow-y:auto; padding:24px;
+    display:flex; justify-content:center;
+  }
+  .preview-frame {
+    width:100%; max-width:640px;
+    background:#fff; border-radius:10px;
+    box-shadow:0 8px 40px rgba(0,0,0,0.5);
+    overflow:hidden;
+    animation: fadeSlideIn 0.35s ease forwards;
+  }
+  @keyframes fadeSlideIn {
+    from { opacity:0; transform:translateY(12px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar {
+    height:3px; background:rgba(255,255,255,0.08);
+    position:relative; flex-shrink:0;
+  }
+  .progress-fill {
+    height:100%; background:linear-gradient(90deg,#1db884,#C9A84C);
+    transition:width 0.4s ease;
+  }
+
+  /* ── MOBILE hint ── */
+  @media(max-width:640px){
+    .sidebar { width:220px; }
+    .preview-wrap { padding:12px; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">📧 Follow-Up Sequence</div>
+      <div class="sidebar-sub">6 emails · Non-payers only</div>
+    </div>
+    <a class="back-btn" href="PROJECT-INDEX.html">← Back to Index</a>
+
+    <div class="email-tab active" onclick="showEmail(0)" id="tab-0">
+      <div class="tab-num">1</div>
+      <div class="tab-info">
+        <div class="tab-label">Score Teaser + $1 CTA</div>
+        <div class="tab-timing">⏱ 2 hours after quiz</div>
+        <div class="tab-subject" id="subj-0">Score reveal + personalized hook</div>
+      </div>
+    </div>
+
+    <div class="email-tab" onclick="showEmail(1)" id="tab-1">
+      <div class="tab-num">2</div>
+      <div class="tab-info">
+        <div class="tab-label">Urgency / Gap Contrast</div>
+        <div class="tab-timing">⏱ 4 hours after quiz</div>
+        <div class="tab-subject" id="subj-1">Skill gap + expiry urgency</div>
+      </div>
+    </div>
+
+    <div class="email-tab" onclick="showEmail(2)" id="tab-2">
+      <div class="tab-num">3</div>
+      <div class="tab-info">
+        <div class="tab-label">Full Category Breakdown</div>
+        <div class="tab-timing">⏱ 6 hours after quiz</div>
+        <div class="tab-subject" id="subj-2">myIQ-style visual breakdown</div>
+      </div>
+    </div>
+
+    <div class="email-tab" onclick="showEmail(3)" id="tab-3">
+      <div class="tab-num">4</div>
+      <div class="tab-info">
+        <div class="tab-label">Rarity / Curiosity</div>
+        <div class="tab-timing">⏱ 8 hours after quiz</div>
+        <div class="tab-subject" id="subj-3">"Your answer to Q#X was fascinating"</div>
+      </div>
+    </div>
+
+    <div class="email-tab" onclick="showEmail(4)" id="tab-4">
+      <div class="tab-num">5</div>
+      <div class="tab-info">
+        <div class="tab-label">Final FOMO / Urgency</div>
+        <div class="tab-timing">⏱ 24 hours after quiz</div>
+        <div class="tab-subject" id="subj-4">Last chance — expires midnight</div>
+      </div>
+    </div>
+
+    <div class="email-tab" onclick="showEmail(5)" id="tab-5">
+      <div class="tab-num">6</div>
+      <div class="tab-info">
+        <div class="tab-label">"I Almost Didn't Send This"</div>
+        <div class="tab-timing">⏱ 60 hours after quiz</div>
+        <div class="tab-subject" id="subj-5">Hesitation reframe — true final</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="progress-bar"><div class="progress-fill" id="progress" style="width:16.6%"></div></div>
+
+    <div class="topbar">
+      <span class="email-badge" id="topbar-num">Email 1 of 6</span>
+      <span class="topbar-subject" id="topbar-subject">Score Teaser + $1 CTA</span>
+      <span class="topbar-timing" id="topbar-timing">Sends: 2h after quiz</span>
+    </div>
+
+    <div class="preview-wrap">
+      <div class="preview-frame" id="preview-frame"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Sample data (replaces template vars) ──
+const D = {
+  firstName: 'Alex',
+  score: 72,
+  industry: 'Marketing',
+  topCat: 'Prompting as Power Skill',
+  topPct: 100,
+  lowCat: 'AI Workflow Integration',
+  lowPct: 50,
+  checkoutUrl: '#unlock-report',
+  selectedQ4: 8,
+  questionTopic4: 'AI governance frameworks',
+  successRate4: 9,
+  percentile4: 'top 12%',
+  gapCount: 2,
+  strengthCount: 2
+};
+
+const categoryData = {
+  "AI Skills Gap Awareness":         { correct: 1, total: 2 },
+  "ROI-First AI":                    { correct: 2, total: 2 },
+  "Decision Intelligence":           { correct: 1, total: 2 },
+  "Prompting as Power Skill":        { correct: 2, total: 2 },
+  "AI Workflow Integration":         { correct: 1, total: 2 },
+  "AI Communication & Persuasion":   { correct: 1, total: 2 }
+};
+
+const categoryDescriptions = {
+  "AI Skills Gap Awareness": "how accurately you spot where AI can add value",
+  "ROI-First AI": "how well you quantify the dollar impact of AI",
+  "Decision Intelligence": "how effectively you blend AI with human judgment",
+  "Prompting as Power Skill": "how precisely you communicate with AI",
+  "AI Workflow Integration": "how strategically you connect AI into processes",
+  "AI Communication & Persuasion": "how persuasively you build trust for AI adoption"
+};
+
+function buildCategoryCards() {
+  let html = '';
+  Object.entries(categoryData).forEach(([cat, d]) => {
+    const pct = Math.round(d.correct / d.total * 100);
+    const desc = categoryDescriptions[cat];
+    const emoji = pct >= 80 ? '⭐' : pct >= 50 ? '⚡' : '🎯';
+    const color = pct >= 80 ? '#27AE60' : pct >= 50 ? '#EEAF00' : '#C0392B';
+    const bgColor = pct >= 80 ? 'rgba(39,174,96,.06)' : pct >= 50 ? 'rgba(238,175,0,.06)' : 'rgba(192,57,43,.06)';
+    html += `<div style="display:flex;align-items:center;gap:12px;padding:10px 12px;margin-bottom:6px;border-radius:8px;background:${bgColor};border-left:3px solid ${color}">
+      <span style="font-size:18px">${emoji}</span>
+      <div style="flex:1"><strong style="font-size:13px;color:#2D3748">${cat}</strong><br/><span style="font-size:12px;color:#718096">${desc}</span></div>
+      <span style="font-weight:800;font-size:16px;color:${color}">${pct}%</span>
+    </div>`;
+  });
+  return html;
+}
+
+const emails = [
+  // ── EMAIL 1 ──
+  {
+    label: 'Score Teaser + $1 CTA',
+    timing: 'Sends: 2h after quiz',
+    html: `<!DOCTYPE html><html><head><meta charset="UTF-8"/></head>
+<body style="font-family:Arial,sans-serif;background:#F7FAFC;margin:0;padding:0">
+<div style="max-width:600px;margin:0 auto;background:#FFFFFF">
+  <div style="background:#006644;padding:28px 24px;text-align:center">
+    <h1 style="color:#fff;font-size:20px;margin:0;font-family:Arial,sans-serif">You Excelled in ${D.topCat}</h1>
+    <p style="color:rgba(255,255,255,.6);font-size:13px;margin:8px 0 0;font-family:Arial,sans-serif">But your full AI Skills profile tells a bigger story</p>
+  </div>
+  <div style="padding:32px 24px">
+    <p style="font-size:16px;color:#2D3748;margin-bottom:16px;font-family:Arial,sans-serif">Dear ${D.firstName},</p>
+    <p style="font-size:14px;color:#4A5568;line-height:1.6;margin-bottom:16px;font-family:Arial,sans-serif">
+      You scored <span style="color:#27AE60;font-weight:800;font-size:16px">${D.topPct}% in ${D.topCat}</span> on the Practical AI Skills IQ Quiz — that's exceptional. But your overall score of <strong style="color:#006644;font-size:16px">${D.score}%</strong> tells a more nuanced story.
+    </p>
+    <p style="font-size:14px;color:#4A5568;line-height:1.6;margin-bottom:16px;font-family:Arial,sans-serif">Your <strong style="color:#005172;font-size:15px">Personalized AI Skills Report</strong> reveals:</p>
+    <ul style="font-size:14px;color:#4A5568;line-height:2;padding-left:20px;margin-bottom:20px;font-family:Arial,sans-serif">
+      <li>Exactly which of your 6 skill categories are <strong style="color:#27AE60">strengths</strong> vs. <strong style="color:#C0392B">critical gaps</strong></li>
+      <li><strong style="color:#005172">How you compare</strong> to other ${D.industry} professionals</li>
+      <li>A <strong style="color:#006644">week-by-week action plan</strong> tailored to your specific results</li>
+      <li>The categories with the <strong style="color:#C9A84C">highest career ROI</strong> for you personally</li>
+    </ul>
+    <div style="background:#006644;border-radius:12px;padding:24px;text-align:center;margin-bottom:20px">
+      <p style="color:rgba(255,255,255,.8);font-size:14px;margin:0 0 6px;text-decoration:line-through;font-family:Arial,sans-serif">$9.99</p>
+      <p style="color:#EEAF00;font-size:28px;font-weight:900;margin:0 0 4px;font-family:Georgia,serif">Just $1.00</p>
+      <p style="color:rgba(255,255,255,.5);font-size:12px;margin:0 0 16px;font-family:Arial,sans-serif">90% off — limited time offer</p>
+      <a href="${D.checkoutUrl}" style="display:inline-block;background:#EEAF00;color:#1B4332;font-weight:bold;font-size:15px;padding:14px 36px;border-radius:8px;text-decoration:none;border:2px solid #C9A84C;font-family:Arial,sans-serif">Get My Full Report — $1 →</a>
+    </div>
+    <p style="font-size:12px;color:#A0AEC0;text-align:center;font-family:Arial,sans-serif">PwC reports a <strong style="color:#718096">56% wage premium</strong> for AI-skilled professionals. Your report shows exactly where to invest.</p>
+  </div>
+  <div style="background:#F7FAFC;padding:16px 24px;text-align:center;font-size:11px;color:#A0AEC0;font-family:Arial,sans-serif">© 2026 Practical AI Skills IQ. All rights reserved.</div>
+</div></body></html>`
+  },
+
+  // ── EMAIL 2 ──
+  {
+    label: 'Urgency / Gap Contrast',
+    timing: 'Sends: 4h after quiz',
+    html: `<!DOCTYPE html><html><head><meta charset="UTF-8"/></head>
+<body style="font-family:Arial,sans-serif;background:#F7FAFC;margin:0;padding:0">
+<div style="max-width:600px;margin:0 auto;background:#FFFFFF">
+  <div style="background:#005172;padding:28px 24px;text-align:center">
+    <h1 style="color:#fff;font-size:20px;margin:0;font-family:Arial,sans-serif">⏰ One Skill Gap Is Costing You</h1>
+    <p style="color:rgba(255,255,255,.6);font-size:13px;margin:8px 0 0;font-family:Arial,sans-serif">And the $1 offer to see exactly which one expires soon</p>
+  </div>
+  <div style="padding:32px 24px">
+    <p style="font-size:16px;color:#2D3748;margin-bottom:16px;font-family:Arial,sans-serif">Dear ${D.firstName},</p>
+    <p style="font-size:14px;color:#4A5568;line-height:1.6;margin-bottom:16px;font-family:Arial,sans-serif">
+      Something stood out in your quiz results: you scored <span style="color:#27AE60;font-weight:800">${D.topPct}%</span> in ${D.topCat}, but <span style="color:#C0392B;font-weight:800">${D.lowPct}%</span> in ${D.lowCat}. That <strong style="color:#C0392B">${D.topPct - D.lowPct}-point gap</strong> between your best and worst skill could be quietly undermining your strongest areas.
+    </p>
+    <p style="font-size:14px;color:#4A5568;line-height:1.6;margin-bottom:16px;font-family:Arial,sans-serif"><strong>Here's what <span style="color:#006644">2,847 professionals</span> who got their report told us:</strong></p>
+    <div style="background:#FAFAF7;border-left:4px solid #006644;padding:16px;margin-bottom:20px;font-size:13px;color:#4A5568;line-height:1.6;font-style:italic;font-family:Arial,sans-serif;border-radius:0 8px 8px 0">
+      "I thought I was good with AI until I saw my <strong style="font-style:normal;color:#006644">category breakdown</strong>. The report showed me I was spending time on the <strong style="font-style:normal;color:#C0392B">wrong skills</strong>. Two weeks later, I'd <strong style="font-style:normal;color:#006644">automated 6 hours of weekly work</strong> I didn't even realize was automatable."
+      <br/><strong style="font-style:normal;color:#2D3748">— Sarah K., Marketing Director</strong>
+    </div>
+    <div style="border:2px dashed #C0392B;border-radius:12px;padding:20px;text-align:center;margin-bottom:20px">
+      <p style="color:#C0392B;font-weight:bold;font-size:15px;margin:0 0 4px;font-family:Arial,sans-serif">⚡ This $1 offer expires at midnight</p>
+      <p style="color:#718096;font-size:12px;margin:0 0 16px;font-family:Arial,sans-serif">After that, the report returns to <strong style="color:#C0392B">$9.99</strong></p>
+      <a href="${D.checkoutUrl}" style="display:inline-block;background:#C0392B;color:#fff;font-weight:bold;font-size:15px;padding:14px 36px;border-radius:8px;text-decoration:none;font-family:Arial,sans-serif">Get My Report Before It's $9.99 →</a>
+    </div>
+    <p style="font-size:12px;color:#A0AEC0;text-align:center;font-family:Arial,sans-serif"><strong style="color:#718096">87% of quiz takers</strong> who unlocked their report said it changed how they approach AI at work.</p>
+  </div>
+  <div style="background:#F7FAFC;padding:16px 24px;text-align:center;font-size:11px;color:#A0AEC0;font-family:Arial,sans-serif">© 2026 Practical AI Skills IQ. All rights reserved. <a href="#" style="color:#A0AEC0">Unsubscribe</a></div>
+</div></body></html>`
+  },
+
+  // ── EMAIL 3 ──
+  {
+    label: 'Full Category Breakdown',
+    timing: 'Sends: 6h after quiz',
+    html: `<!DOCTYPE html><html><head><meta charset="UTF-8"/></head>
+<body style="font-family:Arial,sans-serif;background:#F7FAFC;margin:0;padding:0">
+<div style="max-width:600px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08)">
+  <div style="background:#006644;padding:32px 24px;text-align:center">
+    <div style="font-size:28px;font-weight:900;color:#fff;font-family:Georgia,serif;letter-spacing:-0.5px">Practical AI Skills IQ</div>
+    <p style="color:rgba(255,255,255,.55);font-size:12px;margin:8px 0 0;font-family:Arial,sans-serif;letter-spacing:.5px">YOUR COMPLETE AI SKILL PROFILE</p>
+  </div>
+  <div style="padding:36px 32px">
+    <p style="font-size:16px;color:#2D3748;margin-bottom:20px;font-family:Arial,sans-serif">Hi ${D.firstName},</p>
+    <p style="font-size:14px;color:#4A5568;line-height:1.7;margin-bottom:20px;font-family:Arial,sans-serif">
+      We analyzed your quiz results across all 6 AI skill categories: <strong style="color:#27AE60">${D.strengthCount} areas are genuine strengths</strong> but <strong style="color:#C0392B">${D.gapCount} need attention</strong>. That imbalance is exactly what your personalized report is designed to fix.
+    </p>
+    <p style="font-size:14px;color:#2D3748;line-height:1.6;margin-bottom:12px;font-family:Arial,sans-serif"><strong>Your 6 AI skill areas:</strong></p>
+    <div style="padding-left:4px;margin-bottom:28px;font-family:Arial,sans-serif">${buildCategoryCards()}</div>
+    <div style="text-align:center;margin-bottom:28px">
+      <a href="${D.checkoutUrl}" style="display:inline-block;background:#006644;color:#fff;font-weight:bold;font-size:16px;padding:16px 44px;border-radius:8px;text-decoration:none;letter-spacing:0.3px;border:3px solid #C9A84C;font-family:Arial,sans-serif">Unlock My AI Skills Report</a>
+    </div>
+    <p style="font-size:14px;color:#4A5568;line-height:1.7;margin-bottom:16px;font-family:Arial,sans-serif">Plus, you'll get a <strong style="color:#006644">downloadable PDF</strong> with your personalized action plan and <strong style="color:#005172">industry benchmarks</strong>.</p>
+    <p style="font-size:14px;color:#4A5568;margin-top:24px;margin-bottom:4px;font-family:Arial,sans-serif">Best regards,</p>
+    <p style="font-size:14px;color:#2D3748;font-weight:600;margin:0;font-family:Arial,sans-serif">The Practical AI Skills IQ Team</p>
+  </div>
+  <div style="background:#F7FAFC;padding:20px 24px;text-align:center;border-top:1px solid #E2E8F0">
+    <p style="font-size:11px;color:#A0AEC0;margin:0;font-family:Arial,sans-serif">© 2026 Practical AI Skills IQ. All rights reserved. <a href="#" style="color:#A0AEC0;text-decoration:underline">Unsubscribe</a></p>
+  </div>
+</div></body></html>`
+  },
+
+  // ── EMAIL 4 ──
+  {
+    label: 'Rarity / Curiosity Hook',
+    timing: 'Sends: 8h after quiz',
+    html: `<!DOCTYPE html><html><head><meta charset="UTF-8"/></head>
+<body style="font-family:Arial,sans-serif;background:#F7FAFC;margin:0;padding:0">
+<div style="max-width:600px;margin:0 auto;background:#FFFFFF;border-radius:8px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08)">
+  <div style="background:linear-gradient(135deg,#006644 0%,#004d33 100%);padding:32px 24px;text-align:center">
+    <h1 style="color:#FFFFFF;font-size:20px;margin:0;font-family:Arial,sans-serif">You Solved a Rare Question</h1>
+    <p style="color:rgba(255,255,255,.65);font-size:13px;margin:8px 0 0;font-family:Arial,sans-serif">Only ${D.successRate4}% of quiz takers got this right</p>
+  </div>
+  <div style="padding:36px 32px">
+    <p style="font-size:16px;color:#2D3748;margin-bottom:16px;font-family:Arial,sans-serif">Hi ${D.firstName},</p>
+    <p style="font-size:14px;color:#4A5568;line-height:1.7;margin-bottom:20px;font-family:Arial,sans-serif">
+      Question #${D.selectedQ4} on your assessment — the one about <strong>${D.questionTopic4}</strong> — has only a <strong style="color:#006644;font-size:15px">${D.successRate4}%</strong> success rate among everyone who has taken the quiz.
+    </p>
+    <div style="background:linear-gradient(135deg,rgba(0,102,68,.05),rgba(201,168,76,.05));border-left:4px solid #C9A84C;padding:20px;margin-bottom:24px;border-radius:6px">
+      <p style="font-size:16px;color:#006644;font-weight:700;margin:0 0 12px;font-family:Arial,sans-serif">You solved it correctly.</p>
+      <p style="font-size:14px;color:#4A5568;line-height:1.6;margin:0;font-family:Arial,sans-serif">You might have a very rare AI aptitude profile, because you:</p>
+    </div>
+    <ul style="font-size:14px;color:#4A5568;line-height:1.8;margin-bottom:24px;padding-left:20px;font-family:Arial,sans-serif">
+      <li><strong style="color:#006644">Understand ${D.topCat} faster than most people</strong> — You are in the <strong>${D.percentile4}</strong> which means you see patterns others miss</li>
+      <li><strong style="color:#006644">Naturally know how to apply AI concepts to real work</strong> — You translate theory into strategy</li>
+      <li><strong style="color:#006644">Can spot AI opportunities others overlook</strong> — This separates AI leaders from followers</li>
+    </ul>
+    <p style="font-size:14px;color:#4A5568;line-height:1.7;margin-bottom:24px;font-family:Arial,sans-serif">
+      In <strong>${D.industry}</strong>, this skill is gold. ${D.topCat} thinking is what separates AI strategists from technicians. <strong style="color:#006644">Claim your full profile now</strong>.
+    </p>
+    <div style="text-align:center;margin-bottom:28px">
+      <a href="${D.checkoutUrl}" style="display:inline-block;background:#006644;color:#FFFFFF;font-weight:bold;font-size:16px;padding:16px 48px;border-radius:8px;text-decoration:none;border:3px solid #C9A84C;font-family:Arial,sans-serif">Claim My AI Skills Report — $1</a>
+    </div>
+    <div style="background:#F9F5F0;border-radius:8px;padding:18px;margin-bottom:24px">
+      <p style="font-size:13px;color:#2D3748;font-weight:700;margin:0 0 10px;font-family:Arial,sans-serif">Your complete analysis will show you:</p>
+      <ul style="font-size:13px;color:#4A5568;line-height:1.8;margin:0;padding-left:18px;font-family:Arial,sans-serif">
+        <li>Exactly which AI skill is your hidden strength</li>
+        <li>How your profile compares to 50,000+ professionals</li>
+        <li>The #1 skill gap holding you back from AI leadership</li>
+        <li>A personalized 4-day action plan to close that gap</li>
+      </ul>
+    </div>
+    <p style="font-size:14px;color:#2D3748;margin-bottom:4px;font-family:Arial,sans-serif">Best regards,</p>
+    <p style="font-size:14px;color:#2D3748;font-weight:700;margin:0 0 20px;font-family:Arial,sans-serif">Scott Magnacca<br/><span style="font-weight:400;color:#718096;font-size:12px">Practical AI Skills IQ</span></p>
+    <hr style="border:none;border-top:1px solid #E2E8F0;margin:24px 0"/>
+    <p style="font-size:13px;color:#718096;line-height:1.7;font-family:Arial,sans-serif;margin:0">
+      <strong style="color:#2D3748">P.S. —</strong> Question #${D.selectedQ4} is one of our hardest questions. The fact that you got it right tells me something important about how your mind works with AI. Do not wait to see the full picture.
+    </p>
+  </div>
+  <div style="background:#F7FAFC;padding:16px 24px;text-align:center;border-top:1px solid #E2E8F0">
+    <p style="font-size:11px;color:#A0AEC0;margin:0;font-family:Arial,sans-serif">© 2026 Practical AI Skills IQ. All rights reserved.<br/><a href="#" style="color:#A0AEC0;text-decoration:underline">Unsubscribe</a></p>
+  </div>
+</div></body></html>`
+  },
+
+  // ── EMAIL 5 ──
+  {
+    label: 'Final FOMO / Urgency',
+    timing: 'Sends: 24h after quiz',
+    html: `<!DOCTYPE html><html><head><meta charset="UTF-8"/></head>
+<body style="font-family:Arial,sans-serif;background:#F7FAFC;margin:0;padding:0">
+<div style="max-width:600px;margin:0 auto;background:#FFFFFF;border-radius:8px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08)">
+  <div style="background:linear-gradient(135deg,#1B4332 0%,#006644 100%);padding:32px 24px;text-align:center">
+    <p style="color:rgba(255,255,255,.6);font-size:12px;margin:0 0 8px;font-family:Arial,sans-serif;letter-spacing:1px;text-transform:uppercase">Final Notice</p>
+    <h1 style="color:#EEAF00;font-size:22px;margin:0;font-family:Arial,sans-serif">You are in the top tier — don't let this expire</h1>
+    <p style="color:rgba(255,255,255,.65);font-size:13px;margin:10px 0 0;font-family:Arial,sans-serif">Your $1 access window closes tonight at midnight</p>
+  </div>
+  <div style="padding:36px 32px">
+    <p style="font-size:16px;color:#2D3748;margin-bottom:16px;font-family:Arial,sans-serif">Hi ${D.firstName},</p>
+    <p style="font-size:14px;color:#4A5568;line-height:1.7;margin-bottom:20px;font-family:Arial,sans-serif">This is my final email about your Practical AI Skills IQ results.</p>
+    <p style="font-size:14px;color:#4A5568;line-height:1.7;margin-bottom:20px;font-family:Arial,sans-serif">You scored in the top percentile for practical AI skills. That means you have a real, measurable edge — but only if you know how to deploy it. Your personalized report maps exactly how to use that edge to get ahead in ${D.industry}.</p>
+    <div style="background:linear-gradient(135deg,rgba(27,67,50,.05),rgba(238,175,0,.05));border:2px solid #C9A84C;border-radius:10px;padding:24px;margin-bottom:28px;text-align:center">
+      <p style="font-size:13px;color:#718096;text-decoration:line-through;margin:0 0 4px;font-family:Arial,sans-serif">Regular price: $9.99</p>
+      <p style="font-size:28px;color:#006644;font-weight:700;margin:0 0 4px;font-family:Arial,sans-serif">$1.00 <span style="font-size:14px;color:#718096;font-weight:400">— 90% off, tonight only</span></p>
+      <p style="font-size:12px;color:#C0392B;font-weight:700;margin:0;font-family:Arial,sans-serif;text-transform:uppercase;letter-spacing:.5px">⏰ Expires midnight tonight</p>
+    </div>
+    <div style="background:#F9F5F0;border-radius:8px;padding:20px;margin-bottom:28px">
+      <p style="font-size:13px;color:#2D3748;font-weight:700;margin:0 0 12px;font-family:Arial,sans-serif">Your personalized report includes:</p>
+      <table style="width:100%;font-size:13px;color:#4A5568;font-family:Arial,sans-serif">
+        <tr><td style="padding:4px 0">✅</td><td style="padding:4px 0 4px 8px">Complete breakdown of all 6 AI skill categories</td></tr>
+        <tr><td style="padding:4px 0">✅</td><td style="padding:4px 0 4px 8px">Your exact percentile vs. 12,000+ professionals in ${D.industry}</td></tr>
+        <tr><td style="padding:4px 0">✅</td><td style="padding:4px 0 4px 8px">The #1 skill gap holding you back from AI leadership</td></tr>
+        <tr><td style="padding:4px 0">✅</td><td style="padding:4px 0 4px 8px">Personalized 4-day action plan to close that gap</td></tr>
+        <tr><td style="padding:4px 0">✅</td><td style="padding:4px 0 4px 8px">Downloadable PDF you keep forever</td></tr>
+      </table>
+    </div>
+    <div style="text-align:center;margin-bottom:24px">
+      <a href="${D.checkoutUrl}" style="display:inline-block;background:#EEAF00;color:#FFFFFF;font-weight:bold;font-size:17px;padding:18px 52px;border-radius:8px;text-decoration:none;font-family:Arial,sans-serif">Get My Report for $1 →</a>
+      <p style="font-size:12px;color:#A0AEC0;margin:10px 0 0;font-family:Arial,sans-serif">Secure checkout · Instant access · 30-day money-back guarantee</p>
+    </div>
+    <p style="font-size:13px;color:#718096;line-height:1.6;margin-bottom:16px;font-family:Arial,sans-serif">After midnight, the $1 offer ends and your results expire from our system. We will not email you again.</p>
+    <p style="font-size:14px;color:#2D3748;margin-bottom:4px;font-family:Arial,sans-serif">Scott Magnacca<br/><span style="font-weight:400;color:#718096;font-size:12px">Practical AI Skills IQ</span></p>
+  </div>
+  <div style="background:#F7FAFC;padding:16px 24px;text-align:center;border-top:1px solid #E2E8F0">
+    <p style="font-size:11px;color:#A0AEC0;margin:0;font-family:Arial,sans-serif">© 2026 Practical AI Skills IQ. All rights reserved.<br/><a href="#" style="color:#A0AEC0;text-decoration:underline">Unsubscribe</a></p>
+  </div>
+</div></body></html>`
+  },
+
+  // ── EMAIL 6 ──
+  {
+    label: '"I Almost Didn\'t Send This"',
+    timing: 'Sends: 60h after quiz (~2.5 days)',
+    html: `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/></head>
+<body style="font-family:Arial,sans-serif;background:#eef2f7;margin:0;padding:0">
+<div style="max-width:600px;margin:0 auto;background:#FFFFFF;border-radius:10px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.12)">
+  <div style="background:linear-gradient(135deg,#071810 0%,#0A2E1A 40%,#0D3D22 100%);padding:0;position:relative;overflow:hidden">
+    <div style="position:absolute;top:-30px;right:-30px;width:160px;height:160px;background:radial-gradient(circle,rgba(201,168,76,0.18) 0%,transparent 70%);border-radius:50%"></div>
+    <div style="background:rgba(201,168,76,0.15);border-bottom:1px solid rgba(201,168,76,0.25);padding:10px 24px;text-align:center">
+      <span style="font-size:11px;color:#C9A84C;letter-spacing:2px;text-transform:uppercase;font-weight:700;font-family:Arial,sans-serif">✦ Final Message ✦</span>
+    </div>
+    <div style="padding:32px 28px 36px;text-align:center;position:relative">
+      <div style="margin-bottom:16px">
+        <span style="font-size:42px;display:block;line-height:1">🧠</span>
+        <span style="font-size:13px;color:rgba(201,168,76,0.7);letter-spacing:1.5px;text-transform:uppercase;display:block;margin-top:6px;font-family:Arial,sans-serif">Practical AI Skills IQ</span>
+      </div>
+      <h1 style="color:#EEAF00;font-size:22px;font-weight:700;margin:0 0 10px;line-height:1.35;font-family:Georgia,'Times New Roman',serif">I almost didn't send this email.</h1>
+      <p style="color:rgba(255,255,255,0.72);font-size:14px;margin:0;line-height:1.6;font-family:Arial,sans-serif">But after reviewing your responses, I realized something important.</p>
+      <div style="width:60px;height:2px;background:linear-gradient(90deg,transparent,#C9A84C,transparent);margin:20px auto 0"></div>
+    </div>
+  </div>
+  <div style="padding:36px 32px">
+    <p style="font-size:16px;color:#2D3748;margin:0 0 20px;font-family:Arial,sans-serif">Hi ${D.firstName},</p>
+    <p style="font-size:14px;color:#4A5568;line-height:1.75;margin:0 0 20px;font-family:Arial,sans-serif">You took the Practical AI Skills IQ Assessment a few days ago — and you haven't claimed your full results yet.</p>
+    <p style="font-size:14px;color:#4A5568;line-height:1.75;margin:0 0 24px;font-family:Arial,sans-serif">I've been thinking about why. And I want to share something that might surprise you.</p>
+    <div style="background:linear-gradient(135deg,#071810,#0D3D22);border-radius:10px;padding:24px 28px;margin-bottom:28px;border-left:4px solid #C9A84C">
+      <p style="color:#C9A84C;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;margin:0 0 10px;font-weight:700;font-family:Arial,sans-serif">What the data shows</p>
+      <p style="color:#FFFFFF;font-size:15px;line-height:1.7;margin:0;font-weight:500;font-family:Arial,sans-serif">People who score in the <strong style="color:#EEAF00">top 25% for practical AI skills</strong> are often the <em>most hesitant</em> to claim their results.</p>
+      <p style="color:rgba(255,255,255,0.65);font-size:13px;line-height:1.6;margin:12px 0 0;font-family:Arial,sans-serif">High performers tend to focus on what they don't know — not on the real, measurable strengths they already have.</p>
+    </div>
+    <p style="font-size:14px;color:#4A5568;line-height:1.75;margin:0 0 20px;font-family:Arial,sans-serif">You may be further ahead than you think. Your responses showed strong pattern recognition across multiple AI scenarios — but without seeing your full breakdown, you cannot know which specific skills to leverage right now.</p>
+    <p style="font-size:14px;color:#4A5568;line-height:1.75;margin:0 0 24px;font-family:Arial,sans-serif">Two things I want you to know — regardless of where you scored:</p>
+    <div style="margin-bottom:28px">
+      <table style="width:100%;border-collapse:collapse;margin-bottom:16px">
+        <tr>
+          <td style="width:36px;vertical-align:top;padding-top:3px"><div style="width:28px;height:28px;background:#C9A84C;border-radius:50%;text-align:center;line-height:28px;font-size:13px;font-weight:700;color:#FFFFFF;font-family:Arial,sans-serif">1</div></td>
+          <td style="padding-left:12px;font-size:14px;color:#2D3748;line-height:1.65;font-family:Arial,sans-serif"><strong>Knowing your unique strengths is the first step to using them.</strong> Your personalized report shows exactly where you stand — a category-by-category breakdown with peer comparisons across ${D.industry}.</td>
+        </tr>
+      </table>
+      <table style="width:100%;border-collapse:collapse">
+        <tr>
+          <td style="width:36px;vertical-align:top;padding-top:3px"><div style="width:28px;height:28px;background:#C9A84C;border-radius:50%;text-align:center;line-height:28px;font-size:13px;font-weight:700;color:#FFFFFF;font-family:Arial,sans-serif">2</div></td>
+          <td style="padding-left:12px;font-size:14px;color:#2D3748;line-height:1.65;font-family:Arial,sans-serif"><strong>AI readiness can always be improved</strong> — but only when you know what to work on first. Without your report, you're guessing.</td>
+        </tr>
+      </table>
+    </div>
+    <div style="background:#F9F5EE;border-radius:10px;padding:20px 24px;margin-bottom:28px;border:1px solid #E8DFC8">
+      <p style="font-size:12px;color:#8B7355;letter-spacing:1px;text-transform:uppercase;font-weight:700;margin:0 0 16px;font-family:Arial,sans-serif">What others said after claiming their results</p>
+      <div style="border-left:3px solid #C9A84C;padding-left:14px;margin-bottom:16px">
+        <p style="font-size:13px;color:#4A5568;line-height:1.65;margin:0 0 6px;font-style:italic;font-family:Arial,sans-serif">"I was hesitant because I thought the results might be discouraging. Instead, the breakdown showed me where I was already strong — I just hadn't recognized it. Worth every penny."</p>
+        <p style="font-size:12px;color:#4A5568;margin:0;font-weight:600;font-family:Arial,sans-serif">— Marcus T., Operations Director</p>
+      </div>
+      <div style="border-left:3px solid #C9A84C;padding-left:14px">
+        <p style="font-size:13px;color:#4A5568;line-height:1.65;margin:0 0 6px;font-style:italic;font-family:Arial,sans-serif">"The category breakdown and peer comparison were eye-opening. I knew AI was important — I didn't know I was already ahead of most people in my field. That confidence alone was worth it."</p>
+        <p style="font-size:12px;color:#4A5568;margin:0;font-weight:600;font-family:Arial,sans-serif">— Priya S., Marketing Lead</p>
+      </div>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(10,31,21,0.04),rgba(238,175,0,0.06));border:2px solid #C9A84C;border-radius:10px;padding:22px 26px;margin-bottom:28px;text-align:center">
+      <p style="font-size:13px;color:#718096;text-decoration:line-through;margin:0 0 4px;font-family:Arial,sans-serif">Regular price: $9.99</p>
+      <p style="font-size:30px;color:#006644;font-weight:700;margin:0 0 4px;font-family:Arial,sans-serif">$1.00</p>
+      <p style="font-size:13px;color:#4A5568;margin:0 0 8px;font-family:Arial,sans-serif">Complete personalized AI Skills report · Instant access · PDF download</p>
+      <p style="font-size:12px;color:#C0392B;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:0;font-family:Arial,sans-serif">⏰ Final offer — we won't email you again after today</p>
+    </div>
+    <div style="text-align:center;margin-bottom:28px">
+      <a href="${D.checkoutUrl}" style="display:inline-block;background:linear-gradient(135deg,#EEAF00,#D4A017);color:#071810;font-weight:700;font-size:17px;padding:18px 56px;border-radius:8px;text-decoration:none;font-family:Arial,sans-serif">See My Full AI IQ Results →</a>
+      <p style="font-size:12px;color:#718096;margin:10px 0 0;font-family:Arial,sans-serif">Secure checkout · 30-day money-back guarantee</p>
+    </div>
+    <p style="font-size:14px;color:#4A5568;line-height:1.75;margin:0 0 20px;font-family:Arial,sans-serif">You already invested the time to take the assessment. Don't let uncertainty about the results be the thing that stops you from understanding your own strengths.</p>
+    <p style="font-size:14px;color:#4A5568;line-height:1.75;margin:0 0 24px;font-family:Arial,sans-serif">This is the last email I'll send. Whatever you decide — keep building your AI skills. The window for advantage is still open, but it won't be forever.</p>
+    <p style="font-size:14px;color:#2D3748;margin:0;font-family:Arial,sans-serif">Scott Magnacca<br/><span style="color:#718096;font-size:13px">Practical AI Skills IQ | salesforlife.ai</span></p>
+  </div>
+  <div style="background:#F7FAFC;padding:16px 24px;text-align:center;border-top:1px solid #E2E8F0">
+    <p style="font-size:11px;color:#4A5568;margin:0;line-height:1.6;font-family:Arial,sans-serif">© 2026 Practical AI Skills IQ. All rights reserved.<br/><a href="#" style="color:#4A5568;text-decoration:underline">Unsubscribe</a> · salesforlife.ai</p>
+  </div>
+</div>
+</body></html>`
+  }
+];
+
+let current = 0;
+
+function showEmail(idx) {
+  current = idx;
+  // Update tabs
+  document.querySelectorAll('.email-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
+  // Update topbar
+  document.getElementById('topbar-num').textContent = `Email ${idx+1} of 6`;
+  document.getElementById('topbar-subject').textContent = emails[idx].label;
+  document.getElementById('topbar-timing').textContent = emails[idx].timing;
+  // Progress bar
+  document.getElementById('progress').style.width = ((idx+1)/6*100) + '%';
+  // Render email
+  const frame = document.getElementById('preview-frame');
+  frame.style.animation = 'none';
+  frame.offsetHeight; // reflow
+  frame.style.animation = '';
+  frame.innerHTML = emails[idx].html;
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') showEmail(Math.min(5, current+1));
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   showEmail(Math.max(0, current-1));
+});
+
+// Init
+showEmail(0);
+</script>
+</body>
+</html>

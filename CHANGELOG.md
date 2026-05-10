@@ -1,3 +1,28 @@
+## 2026-05-10 — v25 Re-Implementation (with proper QA gates)
+
+**Features delivered:**
+1. **Live feed alternating direction** — Notifications now alternate slide-in from LEFT and RIGHT every 5s rotation. Added `liveFeedSlideInLeft` and `liveFeedSlideInRight` keyframes; `rotateLiveFeed()` toggles based on `liveIdx % 2`.
+2. **Scarcity counter (75 → decrement)** — `#spotsLeft` and `#gateSpots` initial value changed `47 → 75`. Existing interval logic replaced: decrements by random 1-2 every 10 seconds (down from 45s), with `Math.max(12,...)` floor.
+3. **Practical AI explainer section** — New section inserted between credibility banner and "How It Works". Cream gradient background (`#FAF7EE → #F2EBDC`), gold-tinted hairline borders, max-width 760px. Body copy in BLACK (`#000`), 1.0625rem, line-height 1.65. Fades in (opacity + 20px translateY) over 2.5s when scrolled into view, via a standalone IntersectionObserver in its own `<script>` block at end of `<body>` — fully isolated from the main observer.
+
+**QA process followed (6 gates):**
+1. ✅ Baseline screenshot of v24 localhost captured before any edits
+2. ✅ Edits applied surgically (9 Edit calls, no full-file rewrites)
+3. ✅ Localhost reload + DOM verification: text length 515 chars, color `rgb(0,0,0)`, opacity 0 → 1 via transition `opacity 2.5s, transform 2.5s`
+4. ✅ Live feed animation samples confirmed alternation: `liveFeedSlideInLeft` ↔ `liveFeedSlideInRight`
+5. ✅ Scarcity counter verified: decremented by 2 over 10s (within 1-2 range)
+6. ✅ After-screenshot captured showing Practical AI section rendering correctly between trust-track and "How It Works"
+7. ✅ `hermes-check.sh` passed 8/10 audits (2 pre-existing v24 animation warnings, not blocking)
+
+**Key process change vs. previous failed attempt:**
+- Used `mcp__Claude_Preview__preview_eval` to programmatically verify DOM state, opacity transitions, animation names, and counter decrements — not just grep on HTML.
+- Practical AI fade-in uses a **standalone observer in its own `<script>` tag at end of body**, so it does not depend on the main `obs` IntersectionObserver (which has a pre-existing localhost script-execution issue that does NOT affect the live Netlify site).
+- Typewriter approach abandoned (scope/hoisting issue with main script) — replaced with CSS opacity transition for robustness.
+
+**Status:** ✅ All 3 features verified rendering on localhost. Ready for push + live URL verification.
+
+---
+
 ## 2026-05-10 — FAILED v25 Attempt — ROLLBACK to v24 (Critical Process Failure)
 
 **What was requested:**

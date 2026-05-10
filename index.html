@@ -95,6 +95,8 @@ a{color:inherit;text-decoration:none}
 @keyframes ctaFlash{0%,100%{background:var(--mango);box-shadow:0 4px 16px rgba(238,175,0,.3)}50%{background:var(--peacock);box-shadow:0 4px 20px rgba(54,127,128,.4)}}
 @keyframes iconBounce{0%,100%{transform:scale(1) translateY(0)}25%{transform:scale(1.15) translateY(-6px)}50%{transform:scale(1) translateY(0)}75%{transform:scale(1.08) translateY(-3px)}}
 @keyframes liveFeedSlideIn{0%{opacity:0;transform:translateY(12px) scale(.96)}100%{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes liveFeedSlideInLeft{0%{opacity:0;transform:translateX(-60px) scale(.96)}100%{opacity:1;transform:translateX(0) scale(1)}}
+@keyframes liveFeedSlideInRight{0%{opacity:0;transform:translateX(60px) scale(.96)}100%{opacity:1;transform:translateX(0) scale(1)}}
 
 /* ═══ HERO ═══ */
 .hero{background:#0A1F15;padding:72px 28px 60px;position:relative;overflow:hidden}
@@ -577,6 +579,10 @@ a{color:inherit;text-decoration:none}
 .inspire-quote-dark blockquote{color:rgba(255,255,255,.85)}
 .inspire-quote-dark blockquote::before{color:var(--bright-gold);opacity:.5}
 .inspire-quote-dark cite{color:var(--bright-gold);opacity:.7}
+.practical-ai-section{padding:60px 24px;width:100%;text-align:center;background:linear-gradient(180deg,#FAF7EE 0%,#F2EBDC 100%);border-top:1px solid rgba(201,168,76,.18);border-bottom:1px solid rgba(201,168,76,.18)}
+.practical-ai-explainer{max-width:760px;margin:0 auto}
+.practical-ai-copy{font-family:'Inter',sans-serif;font-size:1.0625rem;line-height:1.65;color:#000;letter-spacing:.01em;opacity:0;transform:translateY(20px);transition:opacity 2.5s ease,transform 2.5s ease}
+.practical-ai-copy.visible{opacity:1;transform:translateY(0)}
 .inspire-quiz{text-align:center;padding:10px 20px;margin-bottom:16px;opacity:0;animation:quoteReveal .8s ease forwards}
 .inspire-quiz blockquote{font-family:'Merriweather',serif;font-style:italic;font-size:.9rem;color:var(--alfresco);line-height:1.55}
 .inspire-quiz cite{font-style:normal;font-family:'Inter',sans-serif;font-size:.72rem;font-weight:600;color:var(--peacock);letter-spacing:.05em}
@@ -1502,6 +1508,13 @@ a{color:inherit;text-decoration:none}
   </div>
 </div>
 
+<!-- Practical AI Explainer (fade-in on scroll) -->
+<section class="practical-ai-section" id="practicalAISection">
+  <div class="practical-ai-explainer">
+    <p id="practicalAIText" class="practical-ai-copy">The window to lead the AI-driven market is closing. Practical AI is the shift from theory to high-impact workflows that eliminate drudgery and amplify your results. While your peers use these benchmarks to outpace the competition, staying stagnant is the greatest risk to your career. Don&rsquo;t rely on guesswork&mdash;join the top-performing professionals who have already secured their edge. Take the Practical AI Skills IQ Quiz now to get your score and instantly boost your productivity, profits, and performance with AI.</p>
+  </div>
+</section>
+
 <!-- How It Works -->
 <div id="howSection" class="how-section">
   <h2 class="how-title">How It Works</h2>
@@ -1558,7 +1571,7 @@ a{color:inherit;text-decoration:none}
 
 <!-- Urgency banner -->
 <div class="urgency-bar">
-  <div class="urgency-text">⏰ <span id="spotsLeft">47</span> personalized reports remaining today — <span>assessment closes at midnight</span></div>
+  <div class="urgency-text">⏰ <span id="spotsLeft">75</span> personalized reports remaining today — <span>assessment closes at midnight</span></div>
 </div>
 
 </section>
@@ -1732,7 +1745,7 @@ a{color:inherit;text-decoration:none}
         </div>
         <button class="btn-start" id="btnStartQuiz" onclick="startQuiz()">Start My Assessment →</button>
         <p class="gate-privacy">🔒 Your information is 100% secure and never shared.</p>
-        <p class="gate-spots"><span id="gateSpots">47</span> personalized reports remaining today</p>
+        <p class="gate-spots"><span id="gateSpots">75</span> personalized reports remaining today</p>
       </div>
     </div>
     </div><!-- /gate-layout -->
@@ -2101,7 +2114,8 @@ function rotateLiveFeed(){
     document.getElementById('liveCity').textContent=d.city;
     document.getElementById('liveScore').textContent=d.score;
     document.getElementById('liveTime').textContent=d.time;
-    inner.style.animation='liveFeedSlideIn .5s ease forwards';
+    const direction=liveIdx%2===0?'liveFeedSlideInLeft':'liveFeedSlideInRight';
+    inner.style.animation=`${direction} .5s ease forwards`;
   },300);
 }
 
@@ -3680,8 +3694,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
   });
 
-  // Spots scarcity timer
-  let spots=47;setInterval(()=>{if(spots>12){spots--;document.getElementById('spotsLeft').textContent=spots;document.getElementById('gateSpots').textContent=spots}},45000);
+  // Spots scarcity timer (v25: starts at 75, decrements 1-2 every 10s)
+  let spots=75;setInterval(()=>{if(spots>12){const dec=Math.floor(Math.random()*2)+1;spots=Math.max(12,spots-dec);const sL=document.getElementById('spotsLeft');const gS=document.getElementById('gateSpots');if(sL)sL.textContent=spots;if(gS)gS.textContent=spots}},10000);
 
   // Form validation
   ['firstName','email','industry'].forEach(id=>{document.getElementById(id).addEventListener('input',()=>{const f=document.getElementById('firstName').value.trim(),e=document.getElementById('email').value.trim(),i=document.getElementById('industry').value;document.getElementById('btnStartQuiz').disabled=!(f&&e&&i)})});
@@ -3855,6 +3869,34 @@ document.addEventListener('DOMContentLoaded',()=>{
 </div>
 
 <!-- Quick Tips: no animation, always visible -->
+</script>
+
+<!-- Standalone fade-in observer for Practical AI section (v25 — isolated from main script) -->
+<script>
+(function(){
+  function init(){
+    var el=document.getElementById('practicalAIText');
+    if(!el)return;
+    if('IntersectionObserver' in window){
+      var paiObs=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){
+            e.target.classList.add('visible');
+            paiObs.unobserve(e.target);
+          }
+        });
+      },{threshold:0.15,rootMargin:'0px 0px -40px 0px'});
+      paiObs.observe(el);
+    } else {
+      el.classList.add('visible');
+    }
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',init);
+  } else {
+    init();
+  }
+})();
 </script>
 
 </body>

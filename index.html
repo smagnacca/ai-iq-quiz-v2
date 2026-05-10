@@ -581,6 +581,8 @@ a{color:inherit;text-decoration:none}
 .inspire-quote-dark cite{color:var(--bright-gold);opacity:.7}
 .practical-ai-section{padding:60px 24px;width:100%;text-align:center;background:linear-gradient(180deg,#FAF7EE 0%,#F2EBDC 100%);border-top:1px solid rgba(201,168,76,.18);border-bottom:1px solid rgba(201,168,76,.18)}
 .practical-ai-explainer{max-width:760px;margin:0 auto}
+.practical-ai-subheader{font-family:'Merriweather',serif;font-size:1.75rem;color:var(--babson-green);margin-bottom:24px;opacity:0;transform:translateY(20px);transition:opacity 2.5s ease,transform 2.5s ease}
+.practical-ai-subheader.visible{opacity:1;transform:translateY(0)}
 .practical-ai-copy{font-family:'Inter',sans-serif;font-size:1.0625rem;line-height:1.65;color:#000;letter-spacing:.01em;opacity:0;transform:translateY(20px);transition:opacity 2.5s ease,transform 2.5s ease}
 .practical-ai-copy.visible{opacity:1;transform:translateY(0)}
 .inspire-quiz{text-align:center;padding:10px 20px;margin-bottom:16px;opacity:0;animation:quoteReveal .8s ease forwards}
@@ -1511,6 +1513,7 @@ a{color:inherit;text-decoration:none}
 <!-- Practical AI Explainer (fade-in on scroll) -->
 <section class="practical-ai-section" id="practicalAISection">
   <div class="practical-ai-explainer">
+    <h2 class="practical-ai-subheader">Why Learning Practical AI Matters Right Now</h2>
     <p id="practicalAIText" class="practical-ai-copy">The window to lead the AI-driven market is closing. Practical AI is the shift from theory to high-impact workflows that eliminate drudgery and amplify your results. While your peers use these benchmarks to outpace the competition, staying stagnant is the greatest risk to your career. Don&rsquo;t rely on guesswork&mdash;join the top-performing professionals who have already secured their edge. Take the Practical AI Skills IQ Quiz now to get your score and instantly boost your productivity, profits, and performance with AI.</p>
   </div>
 </section>
@@ -3875,8 +3878,9 @@ document.addEventListener('DOMContentLoaded',()=>{
 <script>
 (function(){
   function init(){
-    var el=document.getElementById('practicalAIText');
-    if(!el)return;
+    var copyEl=document.getElementById('practicalAIText');
+    var subheaderEl=document.querySelector('.practical-ai-subheader');
+    if(!copyEl)return;
     if('IntersectionObserver' in window){
       var paiObs=new IntersectionObserver(function(entries){
         entries.forEach(function(e){
@@ -3886,9 +3890,11 @@ document.addEventListener('DOMContentLoaded',()=>{
           }
         });
       },{threshold:0.15,rootMargin:'0px 0px -40px 0px'});
-      paiObs.observe(el);
+      paiObs.observe(copyEl);
+      if(subheaderEl)paiObs.observe(subheaderEl);
     } else {
-      el.classList.add('visible');
+      copyEl.classList.add('visible');
+      if(subheaderEl)subheaderEl.classList.add('visible');
     }
   }
   if(document.readyState==='loading'){

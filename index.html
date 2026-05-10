@@ -95,8 +95,6 @@ a{color:inherit;text-decoration:none}
 @keyframes ctaFlash{0%,100%{background:var(--mango);box-shadow:0 4px 16px rgba(238,175,0,.3)}50%{background:var(--peacock);box-shadow:0 4px 20px rgba(54,127,128,.4)}}
 @keyframes iconBounce{0%,100%{transform:scale(1) translateY(0)}25%{transform:scale(1.15) translateY(-6px)}50%{transform:scale(1) translateY(0)}75%{transform:scale(1.08) translateY(-3px)}}
 @keyframes liveFeedSlideIn{0%{opacity:0;transform:translateY(12px) scale(.96)}100%{opacity:1;transform:translateY(0) scale(1)}}
-@keyframes liveFeedSlideInLeft{0%{opacity:0;transform:translateX(-60px) scale(.96)}100%{opacity:1;transform:translateX(0) scale(1)}}
-@keyframes liveFeedSlideInRight{0%{opacity:0;transform:translateX(60px) scale(.96)}100%{opacity:1;transform:translateX(0) scale(1)}}
 
 /* ═══ HERO ═══ */
 .hero{background:#0A1F15;padding:72px 28px 60px;position:relative;overflow:hidden}
@@ -579,10 +577,6 @@ a{color:inherit;text-decoration:none}
 .inspire-quote-dark blockquote{color:rgba(255,255,255,.85)}
 .inspire-quote-dark blockquote::before{color:var(--bright-gold);opacity:.5}
 .inspire-quote-dark cite{color:var(--bright-gold);opacity:.7}
-
-.practical-ai-section{padding:60px 20px;width:100%;text-align:center;background:var(--cream)}
-.practical-ai-explainer{max-width:700px;margin:0 auto}
-.practical-ai-copy{font-family:'Inter',sans-serif;font-size:1rem;line-height:1.6;color:var(--text);letter-spacing:.02em}
 .inspire-quiz{text-align:center;padding:10px 20px;margin-bottom:16px;opacity:0;animation:quoteReveal .8s ease forwards}
 .inspire-quiz blockquote{font-family:'Merriweather',serif;font-style:italic;font-size:.9rem;color:var(--alfresco);line-height:1.55}
 .inspire-quiz cite{font-style:normal;font-family:'Inter',sans-serif;font-size:.72rem;font-weight:600;color:var(--peacock);letter-spacing:.05em}
@@ -1508,13 +1502,6 @@ a{color:inherit;text-decoration:none}
   </div>
 </div>
 
-<!-- Practical AI Explainer (typewriter) -->
-<section class="practical-ai-section">
-  <div class="practical-ai-explainer">
-    <p id="practicalAIText" class="practical-ai-copy"></p>
-  </div>
-</section>
-
 <!-- How It Works -->
 <div id="howSection" class="how-section">
   <h2 class="how-title">How It Works</h2>
@@ -2114,22 +2101,10 @@ function rotateLiveFeed(){
     document.getElementById('liveCity').textContent=d.city;
     document.getElementById('liveScore').textContent=d.score;
     document.getElementById('liveTime').textContent=d.time;
-    const direction=liveIdx%2===0?'liveFeedSlideInLeft':'liveFeedSlideInRight';
-    inner.style.animation=`${direction} .5s ease forwards`;
+    inner.style.animation='liveFeedSlideIn .5s ease forwards';
   },300);
 }
 
-function initScarcityCounter(){
-  let currentCount=75;
-  document.getElementById('spotsLeft').textContent=currentCount;
-  document.getElementById('gateSpots').textContent=currentCount;
-  setInterval(()=>{
-    const decrement=Math.floor(Math.random()*2)+1;
-    currentCount=Math.max(1,currentCount-decrement);
-    document.getElementById('spotsLeft').textContent=currentCount;
-    document.getElementById('gateSpots').textContent=currentCount;
-  },10000);
-}
 function showSection(id){
   closeExitModal();
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
@@ -2684,7 +2659,6 @@ function launchCelebration(pct){
 function typewriterEffect(el,text,speed=35){
   return new Promise(r=>{el.textContent='';el.classList.add('typewriter-wrap');let i=0;const t=()=>{if(i<text.length){el.textContent+=text[i];i++;setTimeout(t,speed)}else{el.classList.remove('typewriter-wrap');r()}};t()});
 }
-window.typewriter = typewriter;
 
 function revealSequence(ids,delay=700){
   ids.forEach((id,i)=>{setTimeout(()=>{const el=document.getElementById(id);if(el){el.classList.add('visible');el.querySelectorAll('.breakdown-row,.insight').forEach((ch,j)=>{setTimeout(()=>ch.classList.add('visible'),j*200)})}},i*delay)});
@@ -3057,7 +3031,6 @@ function typewriter(el, text, speed=28){
     t();
   });
 }
-window.typewriter = typewriter;
 
 /* ─── PARTICLE NETWORK ───────────────────────────────────────── */
 (function initParticles(){
@@ -3165,12 +3138,6 @@ const obs = new IntersectionObserver((entries)=>{
 
     /* Generic fade-up reveals */
     el.classList.add('visible');
-
-    /* Practical AI explainer typewriter */
-    if(id==='practicalAIText'){
-      const practicalText='The window to lead the AI-driven market is closing. Practical AI is the shift from theory to high-impact workflows that eliminate drudgery and amplify your results. While your peers use these benchmarks to outpace the competition, staying stagnant is the greatest risk to your career. Don\'t rely on guesswork—join the top-performing professionals who have already secured their edge. Take Practical AI Skills IQ Quiz now to get your score and instantly boost your productivity, profits, and performance with AI.';
-      typewriter(el, practicalText, 28);
-    }
 
     /* Section divider lines */
     if(id==='breakdownIntro'){ setTimeout(()=>{ document.getElementById('breakdownLine').classList.add('drawn'); document.getElementById('breakdownHeading').classList.add('visible'); },100); }
@@ -3442,7 +3409,7 @@ const obs = new IntersectionObserver((entries)=>{
   'statsIntro','statsStrip',
   'whyIntro','whyCard','credCard',
   'testiIntro','testiGrid',
-  'practicalAIText','quoteSection','ctaInner'
+  'quoteSection','ctaInner'
 ].forEach(id=>{ const el=document.getElementById(id); if(el) obs.observe(el); });
 
 /* Ensure particle canvas sizes correctly on load */
@@ -3631,7 +3598,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     animateCounter(el, visitorCount);
   })();
   setInterval(rotateLiveFeed,5000);
-  initScarcityCounter();
 
   // Handle return from Stripe checkout (cancelled)
   const urlParams=new URLSearchParams(window.location.search);

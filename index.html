@@ -1834,7 +1834,7 @@ a{color:inherit;text-decoration:none}
 
   <!-- Radar chart -->
   <div class="radar-wrap reveal" id="radarWrap">
-    <svg class="radar-svg" viewBox="0 0 320 280" id="radarSVG">
+    <svg class="radar-svg" viewBox="-20 -20 360 320" id="radarSVG" overflow="visible">
       <!-- drawn by JS -->
     </svg>
   </div>
@@ -2677,12 +2677,26 @@ function _renderResults(r){
   let cdInterval = null;
   function startResultsCountdown(){
     if(cdInterval) return;
-    const el = document.getElementById('ctaCountdown');
-    if(!el) return;
+    const ctaEl = document.getElementById('ctaCountdown');
+    const upsellEl = document.getElementById('countdownTimer');
+    if(!ctaEl && !upsellEl) return;
     cdInterval = setInterval(()=>{
       cdSecs--; const m=Math.floor(cdSecs/60), s=cdSecs%60;
-      el.textContent=`${m}:${s.toString().padStart(2,'0')}`;
-      if(cdSecs<=0){ clearInterval(cdInterval); el.textContent='Expired'; }
+      const timeStr = `${m}:${s.toString().padStart(2,'0')}`;
+      if(ctaEl) ctaEl.textContent = timeStr;
+      if(upsellEl) {
+        upsellEl.textContent = timeStr;
+        if(cdSecs <= 60) upsellEl.classList.add('urgent');
+      }
+      if(cdSecs<=0){
+        clearInterval(cdInterval);
+        if(ctaEl) ctaEl.textContent='Expired';
+        if(upsellEl) {
+          upsellEl.textContent='Expired';
+          document.getElementById('btnPay').textContent='Offer Expired';
+          document.getElementById('btnPay').disabled=true;
+        }
+      }
     },1000);
   }
 
@@ -2986,10 +3000,11 @@ function _renderResults(r){
   // Build paragraphs with word spans for the word-by-word reveal
   el.innerHTML = paragraphs.map((para, pi) => {
     const words = para.split(' ');
-    const spans = words.map(w => {
+    const spans = words.map((w, wi) => {
       const clean = w.replace(/[^a-zA-Z-]/g,'').toLowerCase();
       const g = goldWords.has(clean) ? ' gold' : '';
-      return `<span class="word${g}">${w} </span>`;
+      const space = wi < words.length - 1 ? ' ' : '';
+      return `<span class="word${g}">${w}</span>${space}`;
     }).join('');
     return `<p class="bridge-para" id="bp${pi}" style="margin-bottom:${pi<paragraphs.length-1?'12px':'0'};opacity:0;transform:translateY(6px);transition:opacity .5s ease,transform .5s ease">${spans}</p>`;
   }).join('');

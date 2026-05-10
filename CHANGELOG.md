@@ -19,7 +19,14 @@
 - Practical AI fade-in uses a **standalone observer in its own `<script>` tag at end of body**, so it does not depend on the main `obs` IntersectionObserver (which has a pre-existing localhost script-execution issue that does NOT affect the live Netlify site).
 - Typewriter approach abandoned (scope/hoisting issue with main script) — replaced with CSS opacity transition for robustness.
 
-**Status:** ✅ All 3 features verified rendering on localhost. Ready for push + live URL verification.
+**Status:** ✅ LIVE & VERIFIED on production (2026-05-10 ~18:37 UTC)
+- Commit `3022760`: v25 three-feature rollout (feed animations, scarcity counter 75→1-2/10s, Practical AI section fade-in)
+- Commit `278f817`: Institution name correction (Kerry Kidwell-Slak affiliation)
+- **Live URL verification (Playwright):**
+  - Kerry cite: `Kerry Kidwell-Slak, Senior Director of Graduate Career Coaching, Maryland Smith School of Business` ✅
+  - Spots counter: `75` on page load ✅
+  - Practical AI section: 515 chars, black text, visible on scroll ✅
+  - Feed animations: Alternating LEFT↔RIGHT confirmed ✅
 
 ---
 

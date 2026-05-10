@@ -580,10 +580,9 @@ a{color:inherit;text-decoration:none}
 .inspire-quote-dark blockquote::before{color:var(--bright-gold);opacity:.5}
 .inspire-quote-dark cite{color:var(--bright-gold);opacity:.7}
 
-/* ── Practical AI Explainer Section ── */
-.practical-ai-section{padding:60px 20px;width:100%;text-align:center}
+.practical-ai-section{padding:60px 20px;width:100%;text-align:center;background:var(--cream)}
 .practical-ai-explainer{max-width:700px;margin:0 auto}
-.practical-ai-copy{font-family:'Inter',sans-serif;font-size:1rem;line-height:1.6;color:var(--text-dark);letter-spacing:.02em}
+.practical-ai-copy{font-family:'Inter',sans-serif;font-size:1rem;line-height:1.6;color:var(--text);letter-spacing:.02em}
 .inspire-quiz{text-align:center;padding:10px 20px;margin-bottom:16px;opacity:0;animation:quoteReveal .8s ease forwards}
 .inspire-quiz blockquote{font-family:'Merriweather',serif;font-style:italic;font-size:.9rem;color:var(--alfresco);line-height:1.55}
 .inspire-quiz cite{font-style:normal;font-family:'Inter',sans-serif;font-size:.72rem;font-weight:600;color:var(--peacock);letter-spacing:.05em}
@@ -2131,7 +2130,6 @@ function initScarcityCounter(){
     document.getElementById('gateSpots').textContent=currentCount;
   },10000);
 }
-
 function showSection(id){
   closeExitModal();
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
@@ -2686,6 +2684,7 @@ function launchCelebration(pct){
 function typewriterEffect(el,text,speed=35){
   return new Promise(r=>{el.textContent='';el.classList.add('typewriter-wrap');let i=0;const t=()=>{if(i<text.length){el.textContent+=text[i];i++;setTimeout(t,speed)}else{el.classList.remove('typewriter-wrap');r()}};t()});
 }
+window.typewriter = typewriter;
 
 function revealSequence(ids,delay=700){
   ids.forEach((id,i)=>{setTimeout(()=>{const el=document.getElementById(id);if(el){el.classList.add('visible');el.querySelectorAll('.breakdown-row,.insight').forEach((ch,j)=>{setTimeout(()=>ch.classList.add('visible'),j*200)})}},i*delay)});
@@ -3058,6 +3057,7 @@ function typewriter(el, text, speed=28){
     t();
   });
 }
+window.typewriter = typewriter;
 
 /* ─── PARTICLE NETWORK ───────────────────────────────────────── */
 (function initParticles(){

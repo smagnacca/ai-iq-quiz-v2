@@ -1,3 +1,36 @@
+## 2026-05-10 — Home Page Engagement Enhancements (v25)
+
+**What changed:** Added three interactive engagement features to the home page to increase visitor interest and signal scarcity.
+
+**Features added:**
+1. **Live feed notification animations** — Messages now fly in from alternating LEFT ↔ RIGHT directions (instead of just Y-axis slide). Gives more dynamic visual interest to the rotating notifications bar at the top.
+   - CSS: Added `@keyframes liveFeedSlideInLeft` and `@keyframes liveFeedSlideInRight`
+   - JS: Modified `rotateLiveFeed()` to alternate directions: `liveIdx%2===0 ? 'Left' : 'Right'`
+
+2. **Auto-decrementing scarcity counter** — "XX personalized reports remaining" now drops by 1-2 every 10 seconds, starting at 75. Creates urgency without manual updates.
+   - New function: `initScarcityCounter()` — runs on page load, updates `#spotsLeft` and `#gateSpots` every 10 seconds
+   - Resets to 75 on each page reload (no localStorage persistence)
+
+3. **Practical AI explainer section** — New section between credibility banner and "How It Works" that explains what Practical AI is and why it matters.
+   - Full-width section with centered 700px max-width copy
+   - Typewriter animation on scroll (IntersectionObserver trigger at 1400ms stagger, readable pace)
+   - Exact copy: "The window to lead the AI-driven market is closing..." (user-provided)
+
+**Files modified:**
+- `index.html` — CSS (3 keyframes), JS (rotateLiveFeed update, new initScarcityCounter function, observer registration), HTML (new section)
+
+**Verification:**
+- ✅ All features committed and pushed to main (commit `07478fd`)
+- ✅ Netlify deployed successfully (2026-05-10 ~09:35 UTC)
+- ✅ Live verification: left/right animations visible, counter ticking down, Practical AI section typewriting on scroll
+- ✅ No breaking changes — reuses existing patterns
+
+**Impact:** Improved visual engagement on home page. Scarcity signaling may increase click-through rate to quiz. Better value proposition clarity upfront.
+
+**Status:** ✅ v25 live. Production stable. All three enhancements working as intended.
+
+---
+
 ## 2026-05-09 — Report Page Visual Fixes (v24)
 
 **What changed:** Fixed three visual issues on the results report page that impacted user experience and offer conversion.

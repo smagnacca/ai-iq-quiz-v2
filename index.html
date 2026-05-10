@@ -3587,7 +3587,9 @@ function submitQuizData(results){
     });
   }
   submitWithRetry();
-  console.log('Quiz submission:',JSON.stringify(payload,null,2));
+  // Notify Scott via Netlify Form that quiz was completed
+    fetch('/',{method:'POST',body:new URLSearchParams({'form-name':'quiz-complete',site:'Practical AI IQ Quiz V2 (practical-ai-iq-quiz-v2.netlify.app)',name:userData.firstName,email:userData.email,score:results.pct+'%',message:userData.firstName+' ('+userData.email+') completed the quiz with '+results.totalCorrect+'/'+results.totalQuestions+' — '+results.pct+'%'}).toString(),headers:{'Content-Type':'application/x-www-form-urlencoded'}}).catch(err=>console.log('Form notification sent'));
+    console.log('Quiz submission:',JSON.stringify(payload,null,2));
 }
 
 // Exit intent detection (desktop only)
@@ -3739,6 +3741,15 @@ document.addEventListener('DOMContentLoaded',()=>{
   <input name="message" type="text"/>
 </form>
 
+<!-- Hidden Netlify Form for quiz completion notifications -->
+<form name="quiz-complete" netlify netlify-honeypot="bot-field" hidden>
+  <input name="bot-field"/>
+  <input name="site" type="text"/>
+  <input name="name" type="text"/>
+  <input name="email" type="email"/>
+  <input name="score" type="text"/>
+  <input name="message" type="text"/>
+</form>
 <script>
 // ── Bell Curve Animation ──
 (function() {

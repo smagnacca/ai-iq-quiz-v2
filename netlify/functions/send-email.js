@@ -107,9 +107,9 @@ function followUp1Email(data) {
     </ul>
     <div style="background:#006644;border-radius:12px;padding:24px;text-align:center;margin-bottom:20px">
       <p style="color:rgba(255,255,255,.8);font-size:14px;margin:0 0 6px;text-decoration:line-through;font-family:Arial,sans-serif">$9.99</p>
-      <p style="color:#EEAF00;font-size:28px;font-weight:900;margin:0 0 4px;font-family:Georgia,serif">Just $1.00</p>
-      <p style="color:rgba(255,255,255,.5);font-size:12px;margin:0 0 16px;font-family:Arial,sans-serif">90% off — limited time offer</p>
-      <a href="${data.checkoutUrl}" style="display:inline-block;background:#EEAF00;color:#1B4332;font-weight:bold;font-size:15px;padding:14px 36px;border-radius:8px;text-decoration:none;border:2px solid #C9A84C;font-family:Arial,sans-serif">Get My Full Report — $1 →</a>
+      <p style="color:#EEAF00;font-size:28px;font-weight:900;margin:0 0 4px;font-family:Georgia,serif">Just $4.99</p>
+      <p style="color:rgba(255,255,255,.5);font-size:12px;margin:0 0 16px;font-family:Arial,sans-serif">50% off — limited time offer</p>
+      <a href="${data.checkoutUrl}" style="display:inline-block;background:#EEAF00;color:#1B4332;font-weight:bold;font-size:15px;padding:14px 36px;border-radius:8px;text-decoration:none;border:2px solid #C9A84C;font-family:Arial,sans-serif">Get My Full Report — $4.99 →</a>
     </div>
     <p style="font-size:12px;color:#A0AEC0;text-align:center;font-family:Arial,sans-serif">
       PwC reports a <strong style="color:#718096">56% wage premium</strong> for AI-skilled professionals. Your report shows exactly where to invest.
@@ -438,7 +438,7 @@ function followUp5Email(data) {
 
     <div style="background:linear-gradient(135deg,rgba(27,67,50,.05),rgba(238,175,0,.05));border:2px solid #C9A84C;border-radius:10px;padding:24px;margin-bottom:28px;text-align:center">
       <p style="font-size:13px;color:#718096;text-decoration:line-through;margin:0 0 4px;font-family:Arial,sans-serif">Regular price: $9.99</p>
-      <p style="font-size:28px;color:#006644;font-weight:700;margin:0 0 4px;font-family:Arial,sans-serif">$1.00 <span style="font-size:14px;color:#718096;font-weight:400">— 90% off, tonight only</span></p>
+      <p style="font-size:28px;color:#006644;font-weight:700;margin:0 0 4px;font-family:Arial,sans-serif">$4.99 <span style="font-size:14px;color:#718096;font-weight:400">— 50% off, tonight only</span></p>
       <p style="font-size:12px;color:#C0392B;font-weight:700;margin:0;font-family:Arial,sans-serif;text-transform:uppercase;letter-spacing:.5px">⏰ Expires midnight tonight</p>
     </div>
 

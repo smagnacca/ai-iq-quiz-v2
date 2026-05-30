@@ -1,5 +1,5 @@
 // Netlify Function: create-checkout.js
-// Creates a Stripe Checkout Session for the $9.99→$1 AI Skills IQ Report
+// Creates a Stripe Checkout Session for the $9.99→$4.99 AI Skills IQ Report
 // Env vars needed: STRIPE_SECRET_KEY
 
 const stripe = require('stripe');
@@ -39,7 +39,7 @@ exports.handler = async (event) => {
             name: 'Practical AI Skills IQ — Personalized Report',
             description: `Complete AI skills analysis for ${firstName} with personalized action plan, category breakdown, industry benchmarks, and recommended next steps.`,
           },
-          unit_amount: 100, // $1.00 in cents
+          unit_amount: 499, // $4.99 in cents
         },
         quantity: 1,
       }],
@@ -56,7 +56,7 @@ exports.handler = async (event) => {
       // Show the discount
       custom_text: {
         submit: {
-          message: 'Original price $9.99 — You\'re getting 90% off today!'
+          message: 'Original price $9.99 — You\'re getting 50% off today!'
         }
       }
     });

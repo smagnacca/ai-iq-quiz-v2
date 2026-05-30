@@ -1,3 +1,29 @@
+## 2026-05-30 — v27 Price Update ($4.99) + Mobile Click Sound Fix + Stripe Functions Deploy
+
+**Changes delivered:**
+
+1. **Stripe Payment Fully Restored (Functions Were Never Deployed)**
+   - Root cause: previous deploys uploaded only `index.html` (drag-drop UI) — all 8 Netlify Functions were missing, causing a 404 on `/.netlify/functions/create-checkout`
+   - Fix: ran `netlify deploy --prod` via CLI to include `netlify/functions/` directory
+   - `STRIPE_SECRET_KEY` and `STRIPE_PUBLISHABLE_KEY` set in Netlify environment (were absent on V2 site)
+   - Verified: function returns HTTP 200 + live Stripe `cs_live_...` session ID
+
+2. **Report Price Changed: $1.00 → $4.99 (6 files)**
+   - Stripe `unit_amount` updated: `100` → `499` cents in `netlify/functions/create-checkout.js`
+   - Discount messaging updated: "90% off" → "50% off" everywhere
+   - `$9.99` anchor/strikethrough price preserved on all touchpoints
+   - Files updated: `index.html`, `create-checkout.js`, `send-email.js`, `check-followups.js`, `email-preview.html`, `email-sequence-all6.html`
+   - Verified live: page shows `$9.99` crossed out, `$4.99` offer, Stripe charges $4.99
+
+3. **Mobile Click Sound Fix (iOS Safari / Android Chrome)**
+   - Root cause: `playClickSound()` created a new `AudioContext` on every tap — mobile browsers start AudioContext in `suspended` state, silently blocking the sound
+   - Fix: singleton `_audioCtx` variable reuses one context; calls `ctx.resume().then(play)` if suspended before firing the tone
+   - No change to the sound itself (880→440 Hz sine, 130ms) — only the context lifecycle
+   - Commits: `90fac0f` (price), `47dddef` (audio fix)
+   - Deploy: `6a1a59cd` — live at https://practical-ai-iq-quiz-v2.netlify.app
+
+---
+
 ## 2026-05-14 — v26 Storyselling Research Insights + Q17 UX Enhancements
 
 **Features delivered:**

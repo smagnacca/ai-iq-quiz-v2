@@ -1,3 +1,20 @@
+## 2026-05-30 — v28 iOS Click Sound Fix (correct)
+
+**Problem:** Audio click sound on quiz option selection was silent on iPhone (iOS Chrome/Safari). Worked fine on Windows PC Chrome.
+
+**Root cause:** iOS WebKit (used by all iOS browsers, including Chrome) requires that `AudioContext.resume()` and audio node `.start()` be called synchronously within the same user-gesture event handler. Two failed attempts:
+- **Attempt 1 (v27, previous session):** Called `resume().then(play)` — the `.then()` callback runs asynchronously, outside the iOS gesture trust window, so WebKit silently blocked it.
+- **Attempt 2 (this session, first try):** Added a `touchstart` listener to pre-create AudioContext + silent buffer. Bug: `ctx.resume()` was never called in the unlock function, so context stayed suspended. `playClickSound()` then called `resume()` in a separate click event — a different gesture — which iOS did not honour.
+
+**Solution:** Removed the touchstart pre-unlock entirely. `playClickSound()` now does everything in one synchronous call within the `onclick` handler: create context if needed → `resume()` if suspended → start oscillator. All within the same call stack iOS WebKit trusts.
+
+**Lesson learned:** On iOS WebKit, you cannot split AudioContext unlock across event boundaries (touchstart → click). Everything must happen synchronously in one gesture handler. Audio verification requires a real device test — code analysis and screenshots cannot confirm sound plays.
+
+**Commits:** `2b2fb24` + `3ea9742` (correct fix)
+**GitHub:** `main` branch — Netlify manually deployed, state `ready`, 2026-05-30T13:06:10
+
+---
+
 ## 2026-05-30 — v27 Price Update ($4.99) + Mobile Click Sound Fix + Stripe Functions Deploy
 
 **Changes delivered:**

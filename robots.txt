@@ -1,2 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /.netlify
+Disallow: /.env*
+Sitemap: https://practical-ai-iq-quiz-v2.netlify.app/sitemap.xml
